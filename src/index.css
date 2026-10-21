@@ -1,0 +1,97 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+/* Dark theme (default) */
+:root,
+.theme-dark {
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
+  --canvas: 15 23 42;
+  --primary-soft: 129 140 248;
+  --success-soft: 52 211 153;
+  --warn: 252 211 77;
+  --danger: 251 113 133;
+  color-scheme: dark;
+}
+/* Light theme: the slate scale is mirrored so every surface, border and text tone inverts cleanly */
+html.light {
+  --slate-50: 15 23 42;
+  --slate-100: 30 41 59;
+  --slate-200: 51 65 85;
+  --slate-300: 71 85 105;
+  --slate-400: 90 104 125;
+  --slate-500: 100 116 139;
+  --slate-600: 160 172 189;
+  --slate-700: 203 213 225;
+  --slate-800: 226 232 240;
+  --slate-900: 255 255 255;
+  --slate-950: 241 245 249;
+  --canvas: 248 250 252;
+  --primary-soft: 79 70 229;
+  --success-soft: 5 150 105;
+  --warn: 180 83 9;
+  --danger: 225 29 72;
+  color-scheme: light;
+}
+/* Device mockups always render their own dark UI */
+html.light .theme-dark {
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
+  --primary-soft: 129 140 248;
+  --success-soft: 52 211 153;
+  --warn: 252 211 77;
+  color-scheme: dark;
+}
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: rgb(var(--canvas));
+  color: rgb(var(--slate-50));
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+  transition: background-color 200ms ease-out;
+}
+html.light .glass-card {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+}
+@layer components {
+  .glass-card {
+    @apply rounded-xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-black/20 backdrop-blur-xl;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-soft focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-700 bg-slate-900/60 px-4 py-2.5 text-sm font-semibold text-slate-100 transition-colors duration-150 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500;
+  }
+  .field {
+    @apply mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2.5 text-sm text-slate-100 outline-none transition-colors duration-150 placeholder:text-slate-500 focus:border-primary;
+  }
+  .field-label {
+    @apply text-sm font-medium text-slate-300;
+  }
+}
