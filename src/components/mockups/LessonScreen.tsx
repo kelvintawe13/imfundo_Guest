@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckIcon, XIcon, ZapIcon } from 'lucide-react';
 
 const options = ['(x + 2)(x + 3)', '(x + 1)(x + 6)', '(x − 2)(x − 3)', '(x + 5)(x + 1)'];
@@ -16,9 +15,9 @@ export function LessonScreen() {
           120
         </span>
       </div>
-      <p className="mt-5 text-[10px] font-medium text-slate-500">Quadratics · Question 3 of 5</p>
+      <p className="mt-4 text-[10px] font-medium text-slate-500">Quadratics · Question 3 of 5</p>
       <p className="mt-1 text-[15px] font-semibold leading-snug text-slate-50">Factor x² + 5x + 6</p>
-      <div className="mt-4 space-y-2">
+      <div className="mt-3 space-y-2">
         {options.map((o, i) =>
         <div
           key={o}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Segmented } from '../ui/Segmented';
 import { useLanguage } from '../../contexts/LanguageContext';
 import type { Lang } from '../../types/app';

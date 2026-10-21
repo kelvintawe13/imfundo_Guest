@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRightIcon, WifiOffIcon } from 'lucide-react';
@@ -18,20 +17,20 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-slate-800">
       <GridPattern className="text-slate-800/50" />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:py-12">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:py-10">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, ease }}>
           <p className="flex items-center gap-2 text-sm font-medium text-success-soft">
             <WifiOffIcon className="h-4 w-4" /> {t('hero.kicker')}
           </p>
-          <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight text-slate-50 sm:text-5xl lg:text-[3.5rem]">
+          <h1 className="mt-3 text-3xl font-semibold leading-[1.12] tracking-tight text-slate-50 sm:text-4xl lg:text-5xl">
             {t('hero.title')}
           </h1>
-          <p className="mt-4 max-w-xl text-base text-slate-400 sm:text-lg">{t('hero.subtitle')}</p>
+          <p className="mt-3 max-w-xl text-base text-slate-400 sm:text-lg">{t('hero.subtitle')}</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link to="/dashboard" className="btn-primary !px-5 !py-3">
+            <Link to="/dashboard" className="btn-primary">
               {t('cta.openApp')} <ArrowRightIcon className="h-4 w-4" />
             </Link>
-            <button type="button" onClick={() => openModal('partner')} className="btn-secondary !px-5 !py-3">
+            <button type="button" onClick={() => openModal('partner')} className="btn-secondary">
               {t('cta.partner')}
             </button>
           </div>

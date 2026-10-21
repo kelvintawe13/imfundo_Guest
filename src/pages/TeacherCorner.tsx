@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BarChart3Icon, FolderOpenIcon } from 'lucide-react';
 import { AnalyticsTab } from '../components/teacher/AnalyticsTab';
 import { ResourcesTab } from '../components/teacher/ResourcesTab';
@@ -22,8 +22,8 @@ export function TeacherCorner() {
 
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm text-slate-400">
             {teacherClass.name} · {teacherClass.school} · {teacherClass.learners} learners
@@ -35,7 +35,7 @@ export function TeacherCorner() {
         </button>
       </div>
 
-      <div role="tablist" aria-label="Teacher views" className="mt-6 flex gap-1 border-b border-slate-800">
+      <div role="tablist" aria-label="Teacher views" className="mt-4 flex gap-1 border-b border-slate-800">
         {tabs.map(({ id, label, icon: Icon }) =>
         <button
           key={id}
@@ -52,7 +52,7 @@ export function TeacherCorner() {
         )}
       </div>
 
-      <div className="mt-5" role="tabpanel">
+      <div className="mt-4" role="tabpanel">
         {loading ?
         <div className="-mx-4 -my-8 sm:-mx-6">
             <PageSkeleton />

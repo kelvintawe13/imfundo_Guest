@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Settings2Icon } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Toggle } from '../ui/Toggle';
@@ -44,7 +44,7 @@ export function LessonSettingsModal() {
         </>
       }>
       
-      <div className="space-y-5">
+      <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-medium text-slate-100">Explanation language</p>

@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import { useId } from 'react';
 
 const TOTAL = 50; // each cell = 2% of households
 const CONNECTED = 5; // ~10% fixed / in-home internet

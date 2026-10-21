@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CircleCheckIcon, LoaderCircleIcon, SchoolIcon } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { useApp } from '../../contexts/AppContext';
@@ -42,18 +42,18 @@ export function PartnerModal() {
       icon={<SchoolIcon className="h-4 w-4" />}>
       
       {status === 'success' ?
-      <div className="flex flex-col items-center py-6 text-center" role="status">
+      <div className="flex flex-col items-center py-4 text-center" role="status">
           <span className="grid h-12 w-12 place-items-center rounded-full bg-success/15 text-success">
             <CircleCheckIcon className="h-6 w-6" />
           </span>
-          <p className="mt-4 text-base font-semibold">Application received</p>
+          <p className="mt-3 text-base font-semibold">Application received</p>
           <p className="mt-1 max-w-xs text-sm text-slate-400">We’ll contact you within five school days to arrange a visit.</p>
-          <button type="button" onClick={close} className="btn-secondary mt-6">
+          <button type="button" onClick={close} className="btn-secondary mt-4">
             {t('common.close')}
           </button>
         </div> :
 
-      <form onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+      <form onSubmit={submit} noValidate className="grid gap-3 sm:grid-cols-2">
           <label className="field-label sm:col-span-2">
             School name
             <input name="school" className="field" placeholder="e.g. Idutywa Senior Secondary" aria-invalid={!!errors.school} />

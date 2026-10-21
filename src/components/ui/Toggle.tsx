@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import { useId } from 'react';
 
 type ToggleProps = {
   checked: boolean;
@@ -10,7 +10,7 @@ type ToggleProps = {
 export function Toggle({ checked, onChange, label, description }: ToggleProps) {
   const id = useId();
   return (
-    <div className="flex items-center justify-between gap-4 py-3">
+    <div className="flex items-center justify-between gap-3 py-2.5">
       <div>
         <p id={id} className="text-sm font-medium text-slate-100">
           {label}

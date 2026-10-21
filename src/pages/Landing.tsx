@@ -1,4 +1,3 @@
-import React from 'react';
 import { Hero } from '../components/landing/Hero';
 import { InsightBand } from '../components/landing/InsightBand';
 import { ProblemOpportunity } from '../components/landing/ProblemOpportunity';

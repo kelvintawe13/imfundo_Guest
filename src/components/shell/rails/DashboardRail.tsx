@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckIcon } from 'lucide-react';
 import { RailSection, UpdateList } from '../RailSection';
 import { SyncQueuePanel } from '../../dashboard/SyncQueuePanel';
@@ -12,7 +11,7 @@ export function DashboardRail() {
   return (
     <>
       <RailSection title={t('shell.progress')}>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <svg viewBox="0 0 44 44" className="h-16 w-16 -rotate-90" aria-hidden="true">
             <circle cx="22" cy="22" r="18" className="stroke-slate-800" strokeWidth="5" fill="none" />
             <circle
@@ -33,7 +32,7 @@ export function DashboardRail() {
             <p className="text-xs text-slate-400">Daily goal · {dailyGoal.unit}</p>
           </div>
         </div>
-        <ul className="mt-4 flex justify-between" aria-label="This week">
+        <ul className="mt-3 flex justify-between" aria-label="This week">
           {weekStreak.map((d, i) =>
           <li key={i} className="flex flex-col items-center gap-1">
               <span
@@ -51,7 +50,7 @@ export function DashboardRail() {
           )}
         </ul>
       </RailSection>
-      <div className="border-b border-slate-800 px-4 py-4">
+      <div className="border-b border-slate-800 px-4 py-3">
         <SyncQueuePanel plain />
       </div>
       <RailSection title={t('shell.updates')}>

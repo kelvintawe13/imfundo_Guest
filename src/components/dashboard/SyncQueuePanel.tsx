@@ -1,4 +1,3 @@
-import React from 'react';
 import { CircleCheckIcon, CloudDownloadIcon, CloudUploadIcon, WifiOffIcon } from 'lucide-react';
 import { Skeleton } from '../ui/Skeleton';
 import { useApp } from '../../contexts/AppContext';
@@ -12,7 +11,7 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
   const pending = queue.filter((q) => q.progress < 100).length;
 
   return (
-    <section className={plain ? '' : 'glass-card p-4'} aria-labelledby="sync-title">
+    <section className={plain ? '' : 'glass-card p-3'} aria-labelledby="sync-title">
       <div className="flex items-center justify-between">
         <h2 id="sync-title" className="text-sm font-semibold">
           {t('dash.syncQueue')}
@@ -30,7 +29,7 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
       </p>
 
       {loading ?
-      <div className="mt-4 space-y-3" role="status" aria-label="Loading sync queue">
+      <div className="mt-3 space-y-3" role="status" aria-label="Loading sync queue">
           {Array.from({ length: 4 }).map((_, i) =>
         <div key={i} className="space-y-2">
               <Skeleton className="h-3.5 w-3/4" />
@@ -39,7 +38,7 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
         )}
         </div> :
 
-      <ul className="mt-4 space-y-3.5">
+      <ul className="mt-3 space-y-3.5">
           {queue.map((q) => {
           const done = q.progress >= 100;
           const Icon = done ? CircleCheckIcon : q.direction === 'up' ? CloudUploadIcon : CloudDownloadIcon;
@@ -64,7 +63,7 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
         })}
         </ul>
       }
-      <button type="button" onClick={() => openModal('sync')} className="btn-secondary mt-5 w-full">
+      <button type="button" onClick={() => openModal('sync')} className="btn-secondary mt-4 w-full">
         {t('dash.viewDetails')}
       </button>
     </section>);

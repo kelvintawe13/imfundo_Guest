@@ -1,4 +1,3 @@
-import React from 'react';
 import { AtomIcon, FlameIcon, MonitorIcon, SigmaIcon, WifiOffIcon, ZapIcon } from 'lucide-react';
 
 const rows = [
@@ -32,7 +31,7 @@ export function DashboardScreen() {
           <div className="h-full w-3/5 rounded-full bg-primary" />
         </div>
       </div>
-      <p className="mt-4 text-[10px] font-semibold text-slate-400">Ready offline</p>
+      <p className="mt-3 text-[10px] font-semibold text-slate-400">Ready offline</p>
       <div className="mt-2 space-y-1.5">
         {rows.map(({ icon: Icon, title, meta }) =>
         <div key={title} className="flex items-center gap-2 rounded-lg border border-slate-800 p-2">

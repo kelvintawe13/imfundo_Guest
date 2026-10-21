@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { XIcon } from 'lucide-react';
 
@@ -35,7 +35,7 @@ export function Modal({ open, onClose, title, description, icon, children, foote
   return (
     <AnimatePresence>
       {open &&
-      <div className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <div className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center sm:p-3" role="dialog" aria-modal="true" aria-labelledby={titleId}>
           <motion.div
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
@@ -51,7 +51,7 @@ export function Modal({ open, onClose, title, description, icon, children, foote
           transition={{ duration: 0.22, ease }}
           className="relative flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-slate-800 bg-slate-900 shadow-2xl shadow-black/50 sm:rounded-xl">
           
-            <div className="flex items-start gap-3 border-b border-slate-800 px-5 py-4">
+            <div className="flex items-start gap-3 border-b border-slate-800 px-4 py-3">
               {icon &&
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-700 bg-slate-800 text-primary-soft">
                   {icon}
@@ -73,8 +73,8 @@ export function Modal({ open, onClose, title, description, icon, children, foote
                 <XIcon className="h-4 w-4" />
               </button>
             </div>
-            <div className="overflow-y-auto px-4 py-4">{children}</div>
-            {footer && <div className="flex justify-end gap-2 border-t border-slate-800 px-5 py-3.5">{footer}</div>}
+            <div className="overflow-y-auto px-4 py-3">{children}</div>
+            {footer && <div className="flex justify-end gap-2 border-t border-slate-800 px-4 py-3.5">{footer}</div>}
           </motion.div>
         </div>
       }

@@ -1,4 +1,3 @@
-import React from 'react';
 
 type SegmentedProps<T extends string> = {
   value: T;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Logo } from './Logo';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -11,7 +10,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-800 bg-canvas/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
         <Link to="/" aria-label="Imfundo Quest home" className="shrink-0">
           <Logo />
         </Link>

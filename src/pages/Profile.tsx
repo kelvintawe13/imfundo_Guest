@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { HardDriveIcon, Settings2Icon } from 'lucide-react';
 import { Toggle } from '../components/ui/Toggle';
 import { LanguageSwitcher } from '../components/layout/LanguageSwitcher';
@@ -17,12 +17,12 @@ export function Profile() {
   const earned = badges.filter((b) => b.earned).length;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
       <h1 className="sr-only">{t('profile.title')}</h1>
-      <div className="grid gap-4 2xl:grid-cols-[340px_1fr]">
-        <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-1 2xl:content-start">
-          <section className="glass-card p-4">
-            <div className="flex items-center gap-4">
+      <div className="grid gap-3 2xl:grid-cols-[340px_1fr]">
+        <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-1 2xl:content-start">
+          <section className="glass-card p-3">
+            <div className="flex items-center gap-3">
               <span className="grid h-14 w-14 place-items-center rounded-full bg-primary/20 text-lg font-semibold text-primary-soft">
                 {learner.initials}
               </span>
@@ -33,7 +33,7 @@ export function Profile() {
                 </p>
               </div>
             </div>
-            <div className="mt-5">
+            <div className="mt-4">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-400">Level {learnerStats.level}</span>
                 <span className="tabular-nums text-success-soft">{learnerStats.xp.toLocaleString()} XP</span>
@@ -42,10 +42,10 @@ export function Profile() {
                 <div className="h-full rounded-full bg-success" style={{ width: `${xpPct}%` }} />
               </div>
             </div>
-            <p className="mt-4 text-xs text-slate-500">{learner.joined}</p>
+            <p className="mt-3 text-xs text-slate-500">{learner.joined}</p>
           </section>
 
-          <section className="glass-card p-4" aria-labelledby="storage-title">
+          <section className="glass-card p-3" aria-labelledby="storage-title">
             <h2 id="storage-title" className="flex items-center gap-2 text-sm font-semibold">
               <HardDriveIcon className="h-4 w-4 text-slate-400" /> On-device storage
             </h2>
@@ -70,8 +70,8 @@ export function Profile() {
           </section>
         </div>
 
-        <div className="space-y-4">
-          <section className="glass-card p-4" aria-labelledby="badges-title">
+        <div className="space-y-3">
+          <section className="glass-card p-3" aria-labelledby="badges-title">
             <div className="flex items-center justify-between">
               <h2 id="badges-title" className="text-sm font-semibold">
                 {t('profile.badges')}
@@ -80,11 +80,11 @@ export function Profile() {
                 {earned} of {badges.length} earned
               </span>
             </div>
-            <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {badges.map(({ name, icon: Icon, earned: got }) =>
               <li
                 key={name}
-                className={`flex flex-col items-center rounded-lg border p-4 text-center ${
+                className={`flex flex-col items-center rounded-lg border p-3 text-center ${
                 got ? 'border-slate-700 bg-slate-800/40' : 'border-dashed border-slate-800 opacity-50'}`
                 }>
                 
@@ -98,12 +98,12 @@ export function Profile() {
             </ul>
           </section>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <section className="glass-card p-4" aria-labelledby="prefs-title">
+          <div className="grid gap-3 md:grid-cols-2">
+            <section className="glass-card p-3" aria-labelledby="prefs-title">
               <h2 id="prefs-title" className="text-sm font-semibold">
                 {t('profile.preferences')}
               </h2>
-              <div className="mt-2 flex items-center justify-between gap-4 py-3">
+              <div className="mt-2 flex items-center justify-between gap-3 py-2.5">
                 <div>
                   <p className="text-sm font-medium text-slate-100">App language</p>
                   <p className="mt-0.5 text-xs text-slate-400">English or isiXhosa</p>
@@ -120,11 +120,11 @@ export function Profile() {
               </button>
             </section>
 
-            <section className="glass-card p-4" aria-labelledby="activity-title">
+            <section className="glass-card p-3" aria-labelledby="activity-title">
               <h2 id="activity-title" className="text-sm font-semibold">
                 Recent activity
               </h2>
-              <ol className="mt-4 space-y-4 border-l border-slate-800 pl-4">
+              <ol className="mt-3 space-y-3 border-l border-slate-800 pl-4">
                 {recentActivity.map((a) =>
                 <li key={a.title} className="relative">
                     <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-primary" />

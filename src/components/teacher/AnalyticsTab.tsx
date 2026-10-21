@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { TrendingUpIcon } from 'lucide-react';
 import { attentionLearners, kpis, primaryKpi, topicMastery, weeklyActivity } from '../../data/teacher';
@@ -18,9 +17,9 @@ export function AnalyticsTab() {
   { grid: '#1E293B', axis: '#64748B', cursor: '#1E293B', bg: '#0F172A', border: '#1E293B', label: '#F8FAFC' };
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr_1fr]">
-        <div className="glass-card p-4">
+    <div className="space-y-3">
+      <div className="grid gap-3 lg:grid-cols-[2fr_1fr_1fr]">
+        <div className="glass-card p-3">
           <p className="text-sm text-slate-400">{primaryKpi.label}</p>
           <div className="mt-1 flex items-baseline gap-3">
             <p className="text-4xl font-semibold tracking-tight">{primaryKpi.value}</p>
@@ -33,20 +32,20 @@ export function AnalyticsTab() {
           </div>
         </div>
         {kpis.map((k) =>
-        <div key={k.label} className="glass-card p-4">
+        <div key={k.label} className="glass-card p-3">
             <p className="text-sm text-slate-400">{k.label}</p>
             <p className="mt-1 text-2xl font-semibold">{k.value}</p>
           </div>
         )}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <section className="glass-card p-4" aria-labelledby="activity-title">
+      <div className="grid gap-3 lg:grid-cols-[1.6fr_1fr]">
+        <section className="glass-card p-3" aria-labelledby="activity-title">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 id="activity-title" className="text-sm font-semibold">
               Lessons completed this week
             </h3>
-            <div className="flex gap-4 text-xs text-slate-400">
+            <div className="flex gap-3 text-xs text-slate-400">
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-sm bg-success" /> Offline
               </span>
@@ -55,7 +54,7 @@ export function AnalyticsTab() {
               </span>
             </div>
           </div>
-          <div className="mt-4 h-60">
+          <div className="mt-3 h-60">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyActivity} barSize={22}>
                 <CartesianGrid vertical={false} stroke={c.grid} />
@@ -73,11 +72,11 @@ export function AnalyticsTab() {
           </div>
         </section>
 
-        <section className="glass-card p-4" aria-labelledby="mastery-title">
+        <section className="glass-card p-3" aria-labelledby="mastery-title">
           <h3 id="mastery-title" className="text-sm font-semibold">
             Topic mastery
           </h3>
-          <ul className="mt-4 space-y-4">
+          <ul className="mt-3 space-y-3">
             {topicMastery.map((m) =>
             <li key={m.topic}>
                 <div className="flex justify-between text-sm">
@@ -94,28 +93,28 @@ export function AnalyticsTab() {
       </div>
 
       <section className="glass-card overflow-hidden" aria-labelledby="attention-title">
-        <h3 id="attention-title" className="px-5 pt-5 text-sm font-semibold">
+        <h3 id="attention-title" className="px-4 pt-5 text-sm font-semibold">
           Learners who may need support
         </h3>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
             <thead>
               <tr className="border-y border-slate-800 text-left text-xs text-slate-500">
-                <th className="px-5 py-2.5 font-medium">Learner</th>
-                <th className="px-5 py-2.5 font-medium">Weakest topic</th>
-                <th className="px-5 py-2.5 font-medium">Mastery</th>
-                <th className="px-5 py-2.5 font-medium">Last synced</th>
+                <th className="px-4 py-2.5 font-medium">Learner</th>
+                <th className="px-4 py-2.5 font-medium">Weakest topic</th>
+                <th className="px-4 py-2.5 font-medium">Mastery</th>
+                <th className="px-4 py-2.5 font-medium">Last synced</th>
               </tr>
             </thead>
             <tbody>
               {attentionLearners.map((l) =>
               <tr key={l.name} className="border-b border-slate-800/70 last:border-0">
-                  <td className="px-5 py-3 font-medium text-slate-100">{l.name}</td>
-                  <td className="px-5 py-3 text-slate-400">{l.topic}</td>
-                  <td className="px-5 py-3">
+                  <td className="px-4 py-2.5 font-medium text-slate-100">{l.name}</td>
+                  <td className="px-4 py-2.5 text-slate-400">{l.topic}</td>
+                  <td className="px-4 py-2.5">
                     <span className="rounded-full bg-warn/10 px-2 py-0.5 text-xs font-medium text-warn">{l.mastery}%</span>
                   </td>
-                  <td className="px-5 py-3 text-slate-400">{l.lastSync}</td>
+                  <td className="px-4 py-2.5 text-slate-400">{l.lastSync}</td>
                 </tr>
               )}
             </tbody>

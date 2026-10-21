@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BotIcon, CpuIcon, MessageCircleIcon, SendIcon, XIcon } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
@@ -44,7 +44,7 @@ export function ChatWidget() {
           style={{ transformOrigin: 'bottom right' }}
           className="fixed bottom-24 right-4 z-50 flex h-[min(520px,calc(100vh-8rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/95 shadow-2xl shadow-black/50 backdrop-blur-xl sm:right-5">
           
-            <header className="flex items-center gap-3 border-b border-slate-800 px-4 py-3">
+            <header className="flex items-center gap-3 border-b border-slate-800 px-4 py-2.5">
               <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary/15 text-primary-soft">
                 <BotIcon className="h-4 w-4" />
               </span>
@@ -64,7 +64,7 @@ export function ChatWidget() {
               </button>
             </header>
 
-            <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4" aria-live="polite">
+            <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3" aria-live="polite">
               {messages.map((m) =>
             <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <p
@@ -79,7 +79,7 @@ export function ChatWidget() {
                 </div>
             )}
               {typing &&
-            <div className="flex gap-1 rounded-xl border border-slate-800 bg-slate-800/60 px-3 py-3 w-14" aria-label="Tutor is typing">
+            <div className="flex gap-1 rounded-xl border border-slate-800 bg-slate-800/60 px-3 py-2.5 w-14" aria-label="Tutor is typing">
                   {[0, 1, 2].map((i) =>
               <motion.span
                 key={i}

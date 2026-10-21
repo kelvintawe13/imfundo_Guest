@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import { useId } from 'react';
 
 const nodes = [
 { x: 30, y: 90, state: 'done' },

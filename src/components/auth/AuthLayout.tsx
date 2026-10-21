@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from '../layout/Logo';
@@ -14,7 +13,7 @@ export function AuthLayout() {
 
   return (
     <div className="grid min-h-screen w-full bg-canvas text-slate-50 lg:grid-cols-[1fr_1.05fr]">
-      <div className="flex flex-col px-4 py-4 sm:px-10">
+      <div className="flex flex-col px-4 py-3 sm:px-8">
         <div className="flex items-center justify-between">
           <Link to="/" aria-label="Imfundo Quest home">
             <Logo />
@@ -24,7 +23,7 @@ export function AuthLayout() {
             <LanguageSwitcher />
           </div>
         </div>
-        <main className="flex flex-1 items-center justify-center py-10">
+        <main className="flex flex-1 items-center justify-center py-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
@@ -45,11 +44,11 @@ export function AuthLayout() {
         <GridPattern className="text-slate-800/50" />
         <div className="relative flex max-w-md flex-col items-center text-center">
           <SecureDeviceIllustration />
-          <h2 className="mt-6 text-2xl font-semibold tracking-tight">Your progress lives on your phone.</h2>
+          <h2 className="mt-4 text-2xl font-semibold tracking-tight">Your progress lives on your phone.</h2>
           <p className="mt-2 text-sm text-slate-400">
             Sign in once at school. After that, every lesson, quiz and AI tutor answer works offline.
           </p>
-          <ul className="mt-6 space-y-2 text-left text-sm text-slate-300">
+          <ul className="mt-4 space-y-2 text-left text-sm text-slate-300">
             {points.map((p) =>
             <li key={p} className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-success" /> {p}

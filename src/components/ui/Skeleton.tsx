@@ -1,4 +1,3 @@
-import React from 'react';
 
 type SkeletonProps = {className?: string;};
 
@@ -25,17 +24,17 @@ export function SkeletonRows({ rows = 4 }: {rows?: number;}) {
 
 export function PageSkeleton() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6" role="status" aria-label="Loading page">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6" role="status" aria-label="Loading page">
       <Skeleton className="h-4 w-40" />
       <Skeleton className="mt-3 h-8 w-80 max-w-full" />
       <Skeleton className="mt-2 h-4 w-96 max-w-full" />
-      <div className="mt-6 grid gap-4 lg:grid-cols-[2fr_1fr_1fr]">
+      <div className="mt-4 grid gap-3 lg:grid-cols-[2fr_1fr_1fr]">
         <Skeleton className="h-28 rounded-xl" />
         <Skeleton className="h-28 rounded-xl" />
         <Skeleton className="h-28 rounded-xl" />
       </div>
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <div className="glass-card p-4">
+      <div className="mt-3 grid gap-3 lg:grid-cols-[1.6fr_1fr]">
+        <div className="glass-card p-3">
           <SkeletonRows rows={4} />
         </div>
         <Skeleton className="h-72 rounded-xl" />

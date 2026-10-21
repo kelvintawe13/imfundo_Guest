@@ -1,4 +1,3 @@
-import React from 'react';
 
 type RailSectionProps = {
   title: string;
@@ -8,7 +7,7 @@ type RailSectionProps = {
 
 export function RailSection({ title, action, children }: RailSectionProps) {
   return (
-    <section className="border-b border-slate-800 px-4 py-4 last:border-0">
+    <section className="border-b border-slate-800 px-4 py-3 last:border-0">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xs font-semibold text-slate-400">{title}</h2>
         {action}
@@ -22,7 +21,7 @@ type UpdateItem = {title: string;text: string;when: string;};
 
 export function UpdateList({ items }: {items: UpdateItem[];}) {
   return (
-    <ol className="space-y-4">
+    <ol className="space-y-3">
       {items.map((u) =>
       <li key={u.title} className="relative pl-4">
           <span className="absolute left-0 top-1.5 h-1.5 w-1.5 rounded-full bg-primary" />

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
 import { navItems } from '../../data/nav';
@@ -8,14 +7,14 @@ export function Footer() {
   const { t } = useLanguage();
   return (
     <footer className="border-t border-slate-800 bg-slate-950/40">
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 pb-24 pt-8 sm:px-6 md:grid-cols-[1.5fr_1fr] lg:pb-10">
+      <div className="mx-auto grid max-w-7xl gap-5 px-4 pb-24 pt-8 sm:px-6 md:grid-cols-[1.5fr_1fr] lg:pb-10">
         <div>
           <Logo />
           <p className="mt-3 max-w-md text-sm text-slate-400">
             An offline AI tutor for secondary school learners in Idutywa, Eastern Cape. University project prototype,
             not yet available.
           </p>
-          <p className="mt-4 text-xs text-slate-500">
+          <p className="mt-3 text-xs text-slate-500">
             Sources: The State of the ICT Sector Report of South Africa, 2025 · Statistics South Africa, 2024.
           </p>
         </div>
@@ -29,7 +28,7 @@ export function Footer() {
               </li>
             )}
           </ul>
-          <p className="mt-4 text-xs text-slate-500">© 2026 Imfundo Quest · Proposed initiative</p>
+          <p className="mt-3 text-xs text-slate-500">© 2026 Imfundo Quest · Proposed initiative</p>
         </nav>
       </div>
     </footer>);

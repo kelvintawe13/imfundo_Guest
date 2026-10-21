@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LayoutGridIcon, XIcon } from 'lucide-react';
@@ -42,7 +42,7 @@ export function MobileNavFab() {
                 to={to}
                 end={to === '/'}
                 className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors duration-150 ${
+                `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                 isActive ? 'bg-slate-800 text-slate-50' : 'text-slate-300 hover:bg-slate-800/60'}`
 
                 }>

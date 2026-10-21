@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -40,7 +40,7 @@ export function LessonPlayer() {
   const progress = (quiz.index + (quiz.checked ? 1 : 0)) / quiz.total * 100;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
       <div className="flex items-center gap-3 sm:gap-4">
         <Link to="/dashboard" className="rounded-md p-2 text-slate-400 transition-colors duration-150 hover:bg-slate-800 hover:text-slate-100" aria-label="Back to dashboard">
           <ArrowLeftIcon className="h-4 w-4" />
@@ -62,12 +62,12 @@ export function LessonPlayer() {
       </div>
 
       {quiz.finished ?
-      <div className="py-6">
+      <div className="py-4">
           <LessonComplete xp={quiz.xp} correct={quiz.correctCount} total={quiz.total} bestCombo={quiz.bestCombo} onRestart={quiz.restart} />
         </div> :
 
-      <div className="mt-6 grid gap-4">
-          <section className="glass-card p-4 sm:p-4" aria-live="polite">
+      <div className="mt-4 grid gap-3">
+          <section className="glass-card p-3 sm:p-3" aria-live="polite">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-medium text-slate-400">
                 Question {quiz.index + 1} of {quiz.total}
@@ -96,7 +96,7 @@ export function LessonPlayer() {
               </div>
           }
 
-            <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+            <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
               {q.options.map((opt, i) => {
               const isAnswer = i === q.answer;
               const isSelected = quiz.selected === i;
@@ -114,7 +114,7 @@ export function LessonPlayer() {
                   onClick={() => quiz.setSelected(i)}
                   disabled={quiz.checked}
                   aria-pressed={isSelected}
-                  className={`flex min-h-[52px] items-center gap-3 rounded-lg border px-3.5 py-3 text-left text-sm font-medium text-slate-100 transition-colors duration-150 ${tone}`}>
+                  className={`flex min-h-[52px] items-center gap-3 rounded-lg border px-3.5 py-2.5 text-left text-sm font-medium text-slate-100 transition-colors duration-150 ${tone}`}>
                   
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md border border-slate-700 text-[11px] font-semibold text-slate-400">
                       {letters[i]}
@@ -135,7 +135,7 @@ export function LessonPlayer() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-              className={`mt-5 rounded-lg border p-4 ${quiz.isCorrect ? 'border-success/30 bg-success/10' : 'border-danger/30 bg-danger/10'}`}>
+              className={`mt-4 rounded-lg border p-3 ${quiz.isCorrect ? 'border-success/30 bg-success/10' : 'border-danger/30 bg-danger/10'}`}>
               
                   <p className={`text-sm font-semibold ${quiz.isCorrect ? 'text-success-soft' : 'text-danger'}`}>
                     {quiz.isCorrect ? `${t('lesson.correct')} +${quiz.lastGain} XP` : quiz.selected === null ? 'Time’s up' : t('lesson.incorrect')}
@@ -151,7 +151,7 @@ export function LessonPlayer() {
             }
             </AnimatePresence>
 
-            <div className="mt-6 flex justify-end border-t border-slate-800 pt-5">
+            <div className="mt-4 flex justify-end border-t border-slate-800 pt-5">
               {quiz.checked ?
             <button type="button" onClick={quiz.next} className="btn-primary w-full sm:w-auto">
                   {quiz.index === quiz.total - 1 ? t('lesson.finish') : t('lesson.next')}
@@ -164,11 +164,11 @@ export function LessonPlayer() {
             </div>
           </section>
 
-          <aside className="space-y-4 xl:hidden">
-            <div className="glass-card p-4">
+          <aside className="space-y-3 xl:hidden">
+            <div className="glass-card p-3">
               <p className="text-xs text-slate-500">{quizMeta.subject}</p>
               <p className="mt-1 font-semibold">{quizMeta.title}</p>
-              <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
+              <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-lg bg-slate-800/60 py-2.5">
                   <dd className="text-lg font-semibold text-success-soft">{quiz.xp}</dd>
                   <dt className="text-[11px] text-slate-500">XP</dt>
@@ -187,7 +187,7 @@ export function LessonPlayer() {
               </dl>
               {settings.difficulty === 'challenge' && <p className="mt-3 text-xs text-primary-soft">Challenge mode · 2× XP, no hints</p>}
             </div>
-            <div className="glass-card space-y-3 p-4">
+            <div className="glass-card space-y-3 p-3">
               <p className="flex items-start gap-2 text-sm text-slate-400">
                 <CpuIcon className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 Answers are checked on this phone. Feedback is instant with no data used.

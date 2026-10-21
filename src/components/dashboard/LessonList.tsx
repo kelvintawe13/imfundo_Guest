@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AtomIcon, CircleCheckIcon, DownloadIcon, LanguagesIcon, MonitorIcon, SigmaIcon } from 'lucide-react';
 import { SkeletonRows } from '../ui/Skeleton';
@@ -23,7 +23,7 @@ export function LessonList() {
   const visible = filter === 'All' ? lessons : lessons.filter((l) => l.subject === filter);
 
   return (
-    <section className="glass-card p-4" aria-labelledby="lessons-title">
+    <section className="glass-card p-3" aria-labelledby="lessons-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 id="lessons-title" className="text-sm font-semibold">
           {t('dash.lessons')}
@@ -46,7 +46,7 @@ export function LessonList() {
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-3">
         {loading ?
         <SkeletonRows rows={Math.min(visible.length || 3, 4)} /> :
 

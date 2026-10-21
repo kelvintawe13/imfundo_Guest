@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoaderCircleIcon } from 'lucide-react';
 import { PasswordInput } from '../../components/auth/PasswordInput';
@@ -32,7 +32,7 @@ export function Login() {
       <h1 className="text-2xl font-semibold tracking-tight">{t('auth.loginTitle')}</h1>
       <p className="mt-1 text-sm text-slate-400">{t('auth.loginSub')}</p>
 
-      <form onSubmit={submit} noValidate className="mt-6 space-y-4">
+      <form onSubmit={submit} noValidate className="mt-4 space-y-3">
         <div>
           <label htmlFor="email" className="field-label">
             {t('auth.email')}
@@ -71,7 +71,7 @@ export function Login() {
           
           Keep me signed in on this device
         </label>
-        <button type="submit" disabled={submitting} className="btn-primary w-full !py-3">
+        <button type="submit" disabled={submitting} className="btn-primary w-full">
           {submitting && <LoaderCircleIcon className="h-4 w-4 animate-spin" />}
           {t('auth.login')}
         </button>
@@ -84,7 +84,7 @@ export function Login() {
         Explore the demo without an account
       </Link>
 
-      <p className="mt-6 text-center text-sm text-slate-400">
+      <p className="mt-4 text-center text-sm text-slate-400">
         {t('auth.noAccount')}{' '}
         <Link to="/signup" className="font-medium text-primary-soft hover:underline">
           {t('auth.signup')}

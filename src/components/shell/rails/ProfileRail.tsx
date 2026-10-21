@@ -1,4 +1,3 @@
-import React from 'react';
 import { RailSection, UpdateList } from '../RailSection';
 import { accountUpdates, badgeProgress } from '../../../data/rail';
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -8,7 +7,7 @@ export function ProfileRail() {
   return (
     <>
       <RailSection title="Next badges">
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           {badgeProgress.map((b) =>
           <li key={b.name}>
               <div className="flex justify-between text-sm">

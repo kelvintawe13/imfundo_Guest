@@ -1,4 +1,3 @@
-import React from 'react';
 import { scorePassword } from '../../utils/password';
 
 const tones = ['bg-danger', 'bg-danger', 'bg-warn', 'bg-primary', 'bg-success'];

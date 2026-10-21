@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="Inter, system-ui, sans-serif" role="img" aria-label="Offline-first flow: school hotspot syncs once to a device, the device works offline, progress queues and syncs when online">
+  <defs>
+    <linearGradient id="b-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#0B1120"/>
+    </linearGradient>
+    <linearGradient id="b-card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E293B"/>
+      <stop offset="1" stop-color="#131C2E"/>
+    </linearGradient>
+    <linearGradient id="b-indigo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#818CF8"/>
+      <stop offset="1" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="b-emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34D399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="b-gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="b-ground" x1="0" x2="1">
+      <stop offset="0" stop-color="#334155" stop-opacity="0"/>
+      <stop offset="0.12" stop-color="#334155" stop-opacity="1"/>
+      <stop offset="0.88" stop-color="#334155" stop-opacity="1"/>
+      <stop offset="1" stop-color="#334155" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="b-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <marker id="b-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#818CF8"/>
+    </marker>
+    <marker id="b-arrowg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#34D399"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="400" fill="url(#b-bg)"/>
+  <text x="48" y="50" fill="#F1F5F9" font-size="20" font-weight="600">Offline-first data flow</text>
+  <text x="48" y="72" fill="#94A3B8" font-size="13">One-time sync at the hotspot · fully local execution · deferred progress upload</text>
+
+  <!-- LAP 1: hotspot -->
+  <g>
+    <text x="150" y="130" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600">School hotspot</text>
+    <rect x="92" y="140" width="116" height="64" rx="10" fill="url(#b-card)" stroke="#334155"/>
+    <path d="M86 144 L150 108 L214 144 Z" fill="#253048" stroke="#334155"/>
+    <rect x="108" y="152" width="18" height="10" rx="2" fill="#818CF8" opacity="0.5"/>
+    <rect x="172" y="152" width="18" height="10" rx="2" fill="#818CF8" opacity="0.5"/>
+    <ellipse cx="150" cy="188" rx="14" ry="10" fill="#6366F1" opacity="0.25" filter="url(#b-glow)"/>
+    <rect x="138" y="196" width="24" height="8" rx="2.5" fill="url(#b-indigo)"/>
+    <g fill="none" stroke="#34D399" stroke-linecap="round">
+      <path d="M226 156 a13 13 0 0 1 13 -13" stroke-width="2"/>
+      <path d="M226 168 a24 24 0 0 1 24 -24" stroke-width="2" opacity="0.5"/>
+      <path d="M226 180 a35 35 0 0 1 35 -35" stroke-width="2" opacity="0.2"/>
+    </g>
+  </g>
+
+  <!-- step marker -->
+  <g>
+    <circle cx="352" cy="120" r="15" fill="url(#b-indigo)"/>
+    <text x="352" y="124" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">1</text>
+  </g>
+  <!-- wifi transfer -->
+  <path d="M240 168 C 280 168 280 130 328 130" fill="none" stroke="#818CF8" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round" marker-end="url(#b-arrow)"/>
+  <text x="300" y="160" text-anchor="middle" fill="#A5B4FC" font-size="11">lessons packed for device</text>
+
+  <!-- LAP 2: phone offline -->
+  <g>
+    <text x="432" y="118" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600">Learner device</text>
+    <rect x="390" y="132" width="84" height="140" rx="16" fill="url(#b-card)" stroke="#475569"/>
+    <rect x="390" y="132" width="84" height="140" rx="16" fill="url(#b-gloss)" opacity="0.1"/>
+    <rect x="398" y="142" width="68" height="120" rx="10" fill="#0F172A"/>
+    <rect x="406" y="152" width="52" height="4" rx="2" fill="#334155"/>
+    <rect x="406" y="152" width="30" height="4" rx="2" fill="#10B981"/>
+    <rect x="406" y="162" width="52" height="14" rx="4" fill="none" stroke="#10B981" stroke-width="1.2"/>
+    <text x="410" y="172" fill="#6EE7B7" font-size="8">Quadratic eq. · done</text>
+    <rect x="406" y="182" width="52" height="14" rx="4" fill="none" stroke="#334155" stroke-width="1.2"/>
+    <rect x="406" y="212" width="52" height="16" rx="5" fill="url(#b-indigo)"/>
+    <text x="432" y="223" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="600">Start lesson</text>
+    <circle cx="466" cy="140" r="12" fill="url(#b-emerald)"/>
+    <path d="M460 140 l4 4 l7 -8" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <!-- step marker -->
+  <g>
+    <circle cx="560" cy="200" r="15" fill="url(#b-indigo)"/>
+    <text x="560" y="204" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">2</text>
+  </g>
+  <text x="560" y="176" text-anchor="middle" fill="#A5B4FC" font-size="11">runs with zero data usage</text>
+
+  <!-- cloud offline -->
+  <g>
+    <ellipse cx="660" cy="118" rx="40" ry="26" fill="#64748B" opacity="0.08" filter="url(#b-glow)"/>
+    <path d="M636 136 h48 a12 12 0 0 0 0 -24 a17 17 0 0 0 -32 -3 a12 12 0 0 0 -16 27 z" fill="url(#b-card)" stroke="#475569"/>
+    <line x1="626" y1="96" x2="696" y2="146" stroke="#F43F5E" stroke-width="3" stroke-linecap="round"/>
+    <text x="662" y="166" text-anchor="middle" fill="#FDA4AF" font-size="11">cloud unavailable</text>
+  </g>
+
+  <!-- queue -->
+  <g>
+    <text x="796" y="118" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600">Offline sync queue</text>
+    <rect x="738" y="132" width="164" height="96" rx="10" fill="url(#b-card)" stroke="#334155"/>
+    <rect x="752" y="148" width="136" height="14" rx="7" fill="#0F172A"/>
+    <rect x="752" y="148" width="102" height="14" rx="7" fill="url(#b-emerald)" opacity="0.85"/>
+    <text x="760" y="159" fill="#0F172A" font-size="9" font-weight="600">Quiz 3 of 5 · 100%</text>
+    <rect x="752" y="170" width="136" height="14" rx="7" fill="#0F172A"/>
+    <rect x="752" y="170" width="58" height="14" rx="7" fill="url(#b-emerald)" opacity="0.55"/>
+    <text x="760" y="181" fill="#34D399" font-size="9" font-weight="600">XP delta · 43%</text>
+    <rect x="752" y="192" width="136" height="14" rx="7" fill="#0F172A"/>
+    <rect x="752" y="192" width="1" height="14" rx="7" fill="#334155"/>
+    <text x="760" y="203" fill="#64748B" font-size="9">Combo log · queued</text>
+  </g>
+
+  <!-- step 3 -->
+  <g>
+    <circle cx="796" cy="258" r="15" fill="url(#b-indigo)"/>
+    <text x="796" y="262" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">3</text>
+  </g>
+  <path d="M796 246 L796 236" stroke="#64748B" stroke-width="1.5"/>
+
+  <!-- LAP 3: back online -->
+  <g>
+    <rect x="390" y="300" width="512" height="64" rx="12" fill="url(#b-card)" stroke="#10B981" stroke-opacity="0.5" stroke-width="1.5"/>
+    <circle cx="428" cy="332" r="14" fill="url(#b-emerald)"/>
+    <path d="M422 332 l4.5 4.5 l8 -9.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="456" y="326" fill="#F1F5F9" font-size="13" font-weight="600">Connection restored — queue drains automatically</text>
+    <text x="456" y="344" fill="#86EFAC" font-size="11">AppContext timers advance each item 25% every 400ms · lastSynced updates to “Just now”</text>
+  </g>
+  <path d="M796 274 Q 760 332 912 332" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="4 6" marker-end="url(#b-arrowg)"/>
+  <line x1="452" y1="332" x2="420" y2="332" stroke="#34D399" stroke-width="2" marker-end="url(#b-arrowg)"/>
+
+  <!-- ground -->
+  <rect x="60" y="252" width="560" height="2" fill="url(#b-ground)"/>
+  <text x="48" y="392" fill="#475569" font-size="11" font-family="ui-monospace, monospace">src/contexts/AppContext.tsx · src/data/syncQueue.ts</text>
+
+  <!-- step 1 detail line -->
+  <text x="352" y="148" text-anchor="middle" fill="#A5B4FC" font-size="11"/>
+</svg>

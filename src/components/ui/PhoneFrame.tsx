@@ -1,4 +1,3 @@
-import React from 'react';
 import { BatteryFullIcon, SignalIcon, WifiOffIcon } from 'lucide-react';
 
 type PhoneFrameProps = {
@@ -18,7 +17,7 @@ export function PhoneFrame({ children, label, className = '' }: PhoneFrameProps)
       <span className="absolute -right-[3px] top-32 h-16 w-[3px] rounded-r bg-slate-700" />
       <div className="relative aspect-[9/19.5] overflow-hidden rounded-[2.2rem] bg-device">
         <div className="absolute left-1/2 top-2 z-20 h-[22px] w-[80px] -translate-x-1/2 rounded-full bg-black" />
-        <div className="relative z-10 flex items-center justify-between px-6 pt-3 text-[10px] font-semibold text-slate-200">
+        <div className="relative z-10 flex items-center justify-between px-4 pt-3 text-[10px] font-semibold text-slate-200">
           <span>9:41</span>
           <span className="flex items-center gap-1">
             <SignalIcon className="h-3 w-3" />

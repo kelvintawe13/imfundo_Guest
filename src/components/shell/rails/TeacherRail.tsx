@@ -1,4 +1,3 @@
-import React from 'react';
 import { RailSection, UpdateList } from '../RailSection';
 import { classTasks, classUpdates } from '../../../data/rail';
 import { primaryKpi, teacherClass } from '../../../data/teacher';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { XIcon } from 'lucide-react';
@@ -26,7 +26,7 @@ export function AppShell() {
         <div className="flex flex-1">
           <main className="min-w-0 flex-1 pb-24 lg:pb-8">{loading ? <PageSkeleton /> : <Outlet />}</main>
           <aside
-            className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-72 shrink-0 overflow-y-auto border-l border-slate-800 bg-slate-900/30 md:block xl:w-80"
+            className="sticky top-12 hidden h-[calc(100vh-3rem)] w-72 shrink-0 overflow-y-auto border-l border-slate-800 bg-slate-900/30 md:block xl:w-80"
             aria-label={t('shell.activity')}>
             
             <RightRail />
@@ -52,7 +52,7 @@ export function AppShell() {
             transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
             className="absolute inset-y-0 right-0 w-[min(340px,90vw)] overflow-y-auto border-l border-slate-800 bg-canvas">
             
-              <div className="flex h-14 items-center justify-between border-b border-slate-800 px-5">
+              <div className="flex h-12 items-center justify-between border-b border-slate-800 px-4">
                 <p className="text-sm font-semibold">{t('shell.activity')}</p>
                 <button
                 type="button"

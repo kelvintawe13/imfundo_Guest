@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GraduationCapIcon, LoaderCircleIcon, PresentationIcon } from 'lucide-react';
 import { PasswordInput } from '../../components/auth/PasswordInput';
@@ -43,7 +43,7 @@ export function Signup() {
       <h1 className="text-2xl font-semibold tracking-tight">{t('auth.signupTitle')}</h1>
       <p className="mt-1 text-sm text-slate-400">{t('auth.signupSub')}</p>
 
-      <form onSubmit={submit} noValidate className="mt-7 space-y-4">
+      <form onSubmit={submit} noValidate className="mt-7 space-y-3">
         <fieldset>
           <legend className="field-label">I am a</legend>
           <div className="mt-1.5 grid grid-cols-2 gap-2">
@@ -122,13 +122,13 @@ export function Signup() {
           </label>
           {errors.terms && <p className="mt-1 text-xs text-danger">{errors.terms}</p>}
         </div>
-        <button type="submit" disabled={submitting} className="btn-primary w-full !py-3">
+        <button type="submit" disabled={submitting} className="btn-primary w-full !py-2.5">
           {submitting && <LoaderCircleIcon className="h-4 w-4 animate-spin" />}
           {t('auth.signup')}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-400">
+      <p className="mt-4 text-center text-sm text-slate-400">
         {t('auth.haveAccount')}{' '}
         <Link to="/login" className="font-medium text-primary-soft hover:underline">
           {t('auth.login')}

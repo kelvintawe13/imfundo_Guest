@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckIcon, FlameIcon, LightbulbIcon, LockIcon, Settings2Icon, ZapIcon } from 'lucide-react';
 import { RailSection } from '../RailSection';
 import { lessonPath, lessonTips } from '../../../data/rail';
@@ -23,7 +22,7 @@ export function LessonRail() {
           <span key={i} className={`h-1.5 flex-1 rounded-full ${i < answered ? 'bg-success' : 'bg-slate-800'}`} />
           )}
         </div>
-        <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
+        <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-lg bg-slate-800/60 py-2">
             <dd className="flex items-center justify-center gap-1 font-semibold text-success-soft">
               <ZapIcon className="h-3.5 w-3.5" />
