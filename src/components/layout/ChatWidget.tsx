@@ -42,7 +42,7 @@ export function ChatWidget() {
           exit={{ opacity: 0, scale: 0.96, y: 12 }}
           transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
           style={{ transformOrigin: 'bottom right' }}
-          className="fixed bottom-24 right-4 z-50 flex h-[min(520px,calc(100vh-8rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/95 shadow-2xl shadow-black/50 backdrop-blur-xl sm:right-5">
+          className="fixed bottom-[9.4rem] lg:bottom-24 right-4 z-50 flex h-[min(520px,calc(100vh-8rem))] lg:h-[min(520px,calc(100vh-10rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/95 shadow-2xl shadow-black/50 backdrop-blur-xl sm:right-5">
           
             <header className="flex items-center gap-3 border-b border-slate-800 px-4 py-2.5">
               <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary/15 text-primary-soft">
@@ -132,7 +132,7 @@ export function ChatWidget() {
         onClick={() => setChatOpen(!chatOpen)}
         aria-expanded={chatOpen}
         aria-label={chatOpen ? t('common.close') : t('chat.title')}
-        className="fixed bottom-5 right-4 z-50 grid h-14 w-14 place-items-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 transition-[transform,background-color] duration-150 hover:bg-primary-hover active:scale-95 sm:right-5">
+        className="fixed bottom-[4.9rem] right-4 z-50 grid h-12 w-12 place-items-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 transition-[transform,background-color] duration-150 hover:bg-primary-hover active:scale-95 lg:bottom-5 sm:right-5">
         
         {chatOpen ? <XIcon className="h-5 w-5" /> : <MessageCircleIcon className="h-5 w-5" />}
       </button>

@@ -12,8 +12,8 @@ export function AuthLayout() {
   const { pathname } = useLocation();
 
   return (
-    <div className="grid min-h-screen w-full bg-canvas text-slate-50 lg:grid-cols-[1fr_1.05fr]">
-      <div className="flex flex-col px-4 py-3 sm:px-8">
+    <div className="grid min-h-screen w-full bg-canvas text-slate-50 sm:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+      <div className="flex min-w-0 flex-col px-4 py-3 pb-[4.25rem] sm:px-5 sm:pb-3 md:px-8">
         <div className="flex items-center justify-between">
           <Link to="/" aria-label="Imfundo Quest home">
             <Logo />
@@ -40,7 +40,7 @@ export function AuthLayout() {
         <p className="text-xs text-slate-500">University project prototype · © 2026 Imfundo Quest</p>
       </div>
 
-      <aside className="relative hidden overflow-hidden border-l border-slate-800 bg-slate-900/50 lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-10">
+      <aside className="relative hidden min-w-0 overflow-hidden border-l border-slate-800 bg-slate-900/50 sm:flex sm:flex-col sm:items-center sm:justify-center sm:p-5 md:p-8 lg:p-10">
         <GridPattern className="text-slate-800/50" />
         <div className="relative flex max-w-md flex-col items-center text-center">
           <SecureDeviceIllustration />

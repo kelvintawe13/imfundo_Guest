@@ -75,7 +75,6 @@ body {
 html,
 body {
   overflow-x: clip;
-  overflow-y: auto;
 }
 /* Uniform, unobtrusive scrollbars on every scroll region */
 * {

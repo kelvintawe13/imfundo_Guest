@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AppProvider } from './contexts/AppContext';
 import { Layout } from './components/layout/Layout';
+import { BottomNav } from './components/layout/BottomNav';
 import { AppShell } from './components/shell/AppShell';
 import { AuthLayout } from './components/auth/AuthLayout';
 import { PageSkeleton } from './components/ui/Skeleton';
@@ -48,6 +49,8 @@ export function App() {
                   </Route>
                 </Routes>
               </Suspense>
+              {/* Bottom navigation renders on every layout: public, auth and app shell */}
+              <BottomNav />
             </BrowserRouter>
           </AppProvider>
         </LanguageProvider>

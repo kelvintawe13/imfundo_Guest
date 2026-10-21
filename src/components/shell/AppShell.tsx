@@ -25,7 +25,7 @@ export function AppShell() {
         <AppTopbar onOpenRail={() => setRailOpen(true)} />
         <div className="flex min-h-0 flex-1">
           <main className="min-w-0 flex-1 overflow-y-auto overscroll-contain">
-            <div className="min-h-full pb-24 md:pb-6">
+            <div className="min-h-full pb-[4.25rem] lg:pb-5">
               {loading ? <PageSkeleton /> : <Outlet />}
             </div>
           </main>
