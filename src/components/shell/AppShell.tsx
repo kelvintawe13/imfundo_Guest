@@ -19,14 +19,18 @@ export function AppShell() {
   useEffect(() => setRailOpen(false), [pathname]);
 
   return (
-    <div className="flex min-h-screen w-full bg-canvas text-slate-50">
+    <div className="flex h-screen w-full overflow-hidden bg-canvas text-slate-50">
       <AppSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 min-h-0 flex-1 flex-col">
         <AppTopbar onOpenRail={() => setRailOpen(true)} />
-        <div className="flex flex-1">
-          <main className="min-w-0 flex-1 pb-24 lg:pb-8">{loading ? <PageSkeleton /> : <Outlet />}</main>
+        <div className="flex min-h-0 flex-1">
+          <main className="min-w-0 flex-1 overflow-y-auto overscroll-contain">
+            <div className="min-h-full pb-24 md:pb-6">
+              {loading ? <PageSkeleton /> : <Outlet />}
+            </div>
+          </main>
           <aside
-            className="sticky top-12 hidden h-[calc(100vh-3rem)] w-72 shrink-0 overflow-y-auto border-l border-slate-800 bg-slate-900/30 md:block xl:w-80"
+            className="hidden h-full w-72 shrink-0 overscroll-contain overflow-y-auto overflow-x-hidden border-l border-slate-800 bg-slate-900/30 md:block xl:w-80"
             aria-label={t('shell.activity')}>
             
             <RightRail />

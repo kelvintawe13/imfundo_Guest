@@ -16,7 +16,7 @@ export function AppTopbar({ onOpenRail }: AppTopbarProps) {
   const current = appNav.find((n) => pathname.startsWith(n.to));
 
   return (
-    <header className="sticky top-0 z-30 flex h-12 items-center justify-between gap-3 border-b border-slate-800 bg-canvas/80 px-4 backdrop-blur-xl sm:px-6">
+    <header className="relative z-30 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-slate-800 bg-canvas px-4 sm:px-6">
       <div className="flex min-w-0 items-center gap-3">
         <Link to="/" className="lg:hidden" aria-label="Imfundo Quest home">
           <Logo />

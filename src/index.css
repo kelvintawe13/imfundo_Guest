@@ -71,6 +71,31 @@ body {
   font-feature-settings: 'cv11', 'ss01';
   transition: background-color 200ms ease-out;
 }
+/* Kill horizontal page scroll globally ('clip' never creates a scroll container, so sticky layout stays intact) */
+html,
+body {
+  overflow-x: clip;
+  overflow-y: auto;
+}
+/* Uniform, unobtrusive scrollbars on every scroll region */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--slate-700)) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--slate-700));
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--slate-600));
+}
 html.light .glass-card {
   box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
 }

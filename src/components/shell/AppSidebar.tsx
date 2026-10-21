@@ -12,12 +12,12 @@ export function AppSidebar() {
   const navigate = useNavigate();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40 lg:flex">
+    <aside className="hidden h-screen w-60 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40 lg:flex">
       <Link to="/" className="flex h-12 items-center border-b border-slate-800 px-4" aria-label="Imfundo Quest home">
         <Logo />
       </Link>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-3" aria-label="App">
+      <nav className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-3 py-3" aria-label="App">
         <p className="px-3 pb-2 text-[11px] font-medium text-slate-500">Learn & teach</p>
         <ul className="space-y-0.5">
           {appNav.map(({ key, to, icon: Icon }) =>
