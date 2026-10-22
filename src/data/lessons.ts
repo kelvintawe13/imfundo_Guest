@@ -3,8 +3,6 @@ import type { Lesson } from '../types/learning';
 export const continueLesson = {
   title: 'Solving quadratic equations by factoring',
   subject: 'Mathematics',
-  progress: 60,
-  remaining: '2 questions left',
   xp: 50
 };
 
@@ -17,7 +15,7 @@ export const learnerStats = {
 };
 
 export const lessons: Lesson[] = [
-{ id: 'm1', title: 'Quadratic equations by factoring', subject: 'Mathematics', minutes: 4, xp: 50, progress: 60, downloaded: true, size: '2.1 MB' },
+{ id: 'm1', title: 'Quadratic equations by factoring', subject: 'Mathematics', minutes: 4, xp: 50, progress: 0, downloaded: true, size: '2.1 MB' },
 { id: 'm2', title: 'Number patterns and sequences', subject: 'Mathematics', minutes: 3, xp: 40, progress: 100, downloaded: true, size: '1.8 MB' },
 { id: 'p1', title: 'Newton’s laws in everyday life', subject: 'Physical Sciences', minutes: 5, xp: 60, progress: 20, downloaded: true, size: '3.4 MB' },
 { id: 'p2', title: 'Balancing chemical equations', subject: 'Physical Sciences', minutes: 4, xp: 50, progress: 0, downloaded: false, size: '2.9 MB' },

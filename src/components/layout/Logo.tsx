@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-export function Logo() {
+export function Logo({ compactOnMobile = false }: { compactOnMobile?: boolean }) {
   const uid = useId().replace(/:/g, '');
   return (
     <span className="flex items-center gap-2">
@@ -32,7 +32,7 @@ export function Logo() {
         <circle cx="21" cy="19.5" r="2.25" fill="#34D399" />
         <circle cx="21" cy="19.5" r="4" fill="#34D399" opacity="0.25" />
       </svg>
-      <span className="text-[15px] font-semibold tracking-tight text-slate-50">
+      <span className={`${compactOnMobile ? 'hidden sm:inline' : ''} text-[15px] font-semibold tracking-tight text-slate-50`}>
         Imfundo <span className="text-slate-400">Quest</span>
       </span>
     </span>);

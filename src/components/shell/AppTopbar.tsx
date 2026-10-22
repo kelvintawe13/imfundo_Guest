@@ -17,13 +17,13 @@ export function AppTopbar({ onOpenRail }: AppTopbarProps) {
 
   return (
     <header className="relative z-30 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-slate-800 bg-canvas px-4 sm:px-6">
-      <div className="flex min-w-0 items-center gap-3">
-        <Link to="/" className="lg:hidden" aria-label="Imfundo Quest home">
-          <Logo />
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <Link to="/" className="min-w-0 shrink lg:hidden" aria-label="Imfundo Quest home">
+          <Logo compactOnMobile />
         </Link>
         {current && <p className="hidden truncate text-sm font-medium text-slate-300 lg:block">{t(current.key)}</p>}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
         <button
           type="button"
           onClick={() => openModal('sync')}

@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { initialSyncQueue, tutorModel } from '../data/syncQueue';
-import type { LessonSettings, LessonStats, ModalName, SyncItem } from '../types/app';
+import type { LessonSettings, LessonStats, ModalName, QuizProgress, SyncItem } from '../types/app';
+import { readLearningProgress, writeLearningProgress } from '../utils/learningProgress';
 
 type AppContextValue = {
   online: boolean;
@@ -16,6 +17,8 @@ type AppContextValue = {
   lastSynced: string;
   lessonStats: LessonStats;
   setLessonStats: (s: LessonStats) => void;
+  quizProgress: Record<string, QuizProgress>;
+  saveQuizProgress: (lessonId: string, progress: QuizProgress) => void;
 };
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -25,7 +28,8 @@ const defaultSettings: LessonSettings = {
   difficulty: 'standard',
   sound: true,
   autoHints: false,
-  timer: false
+  timer: true,
+  autoAdvance: false
 };
 
 export function AppProvider({ children }: {children: React.ReactNode;}) {
@@ -43,6 +47,15 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
     correct: 0,
     finished: false
   });
+  const [quizProgress, setQuizProgress] = useState<Record<string, QuizProgress>>(readLearningProgress);
+
+  const saveQuizProgress = useCallback((lessonId: string, progress: QuizProgress) => {
+    setQuizProgress((current) => ({ ...current, [lessonId]: progress }));
+  }, []);
+
+  useEffect(() => {
+    writeLearningProgress(quizProgress);
+  }, [quizProgress]);
 
   useEffect(() => {
     if (!online) return;
@@ -74,9 +87,11 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
       queue,
       lastSynced,
       lessonStats,
-      setLessonStats
+      setLessonStats,
+      quizProgress,
+      saveQuizProgress
     }),
-    [online, modal, chatOpen, settings, queue, lastSynced, lessonStats]
+    [online, modal, chatOpen, settings, queue, lastSynced, lessonStats, quizProgress, saveQuizProgress]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

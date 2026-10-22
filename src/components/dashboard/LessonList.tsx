@@ -6,6 +6,8 @@ import { lessons, subjectFilters } from '../../data/lessons';
 import { useSimulatedLoad } from '../../hooks/useSimulatedLoad';
 import { useLanguage } from '../../contexts/LanguageContext';
 import type { Subject } from '../../types/learning';
+import { useApp } from '../../contexts/AppContext';
+import { quizMeta, quizQuestions } from '../../data/quiz';
 
 const subjectIcon: Record<Subject, React.ComponentType<{className?: string;}>> = {
   Mathematics: SigmaIcon,
@@ -18,6 +20,8 @@ type Filter = (typeof subjectFilters)[number];
 
 export function LessonList() {
   const { t } = useLanguage();
+  const { quizProgress } = useApp();
+  const savedQuiz = quizProgress[quizMeta.lessonId];
   const [filter, setFilter] = useState<Filter>('All');
   const loading = useSimulatedLoad(filter, 380, true);
   const visible = filter === 'All' ? lessons : lessons.filter((l) => l.subject === filter);
@@ -53,7 +57,14 @@ export function LessonList() {
         <ul className="space-y-2">
             {visible.map((l) => {
             const Icon = subjectIcon[l.subject];
-            const done = l.progress >= 100;
+            const progress = l.id === quizMeta.lessonId && savedQuiz
+              ? savedQuiz.finished
+                ? 100
+                : Math.round((savedQuiz.index + (savedQuiz.checked ? 1 : 0)) / quizQuestions.length * 100)
+              : l.progress;
+            const done = l.id === quizMeta.lessonId && savedQuiz
+              ? savedQuiz.finished
+              : progress >= 100;
             return (
               <li key={l.id}>
                   <Link
@@ -68,9 +79,9 @@ export function LessonList() {
                       <p className="text-xs text-slate-500">
                         {l.subject} · {l.minutes} min · {l.xp} XP
                       </p>
-                      {l.progress > 0 && !done &&
+                      {progress > 0 && !done &&
                     <div className="mt-1.5 h-1 w-32 rounded-full bg-slate-800">
-                          <div className="h-full rounded-full bg-primary" style={{ width: `${l.progress}%` }} />
+                          <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
                         </div>
                     }
                     </div>

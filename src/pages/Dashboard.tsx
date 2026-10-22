@@ -5,11 +5,17 @@ import { LessonList } from '../components/dashboard/LessonList';
 import { continueLesson, learnerStats } from '../data/lessons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useApp } from '../contexts/AppContext';
+import { quizMeta, quizQuestions } from '../data/quiz';
 
 export function Dashboard() {
   const { t } = useLanguage();
-  const { online, setOnline } = useApp();
-  const xpPct = Math.round(learnerStats.xp / learnerStats.xpForNext * 100);
+  const { online, setOnline, quizProgress } = useApp();
+  const progress = quizProgress[quizMeta.lessonId];
+  const xp = learnerStats.xp + Object.values(quizProgress).reduce((total, lesson) => total + lesson.earnedXp, 0);
+  const xpPct = Math.min(100, Math.round(xp / learnerStats.xpForNext * 100));
+  const answered = progress ? progress.index + (progress.checked ? 1 : 0) : 0;
+  const lessonProgress = progress?.finished ? 100 : Math.round(answered / quizQuestions.length * 100);
+  const remaining = Math.max(0, quizQuestions.length - answered);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
@@ -35,14 +41,14 @@ export function Dashboard() {
               {t('dash.level')} <span className="text-xl font-semibold text-slate-50">{learnerStats.level}</span>
             </p>
             <p className="text-sm tabular-nums text-slate-400">
-              <span className="font-semibold text-success-soft">{learnerStats.xp.toLocaleString()}</span> /{' '}
+              <span className="font-semibold text-success-soft">{xp.toLocaleString()}</span> /{' '}
               {learnerStats.xpForNext.toLocaleString()} XP
             </p>
           </div>
           <div className="mt-3 h-2 rounded-full bg-slate-800">
             <div className="h-full rounded-full bg-success" style={{ width: `${xpPct}%` }} />
           </div>
-          <p className="mt-2 text-xs text-slate-500">{learnerStats.xpForNext - learnerStats.xp} XP to Level 8</p>
+          <p className="mt-2 text-xs text-slate-500">{Math.max(0, learnerStats.xpForNext - xp)} XP to Level 8</p>
         </div>
         <div className="glass-card flex items-center gap-3 p-3">
           <FlameIcon className="h-6 w-6 text-warn" />
@@ -63,7 +69,9 @@ export function Dashboard() {
       <div className="mt-3">
         <div className="space-y-3">
           <section className="rounded-xl border border-primary/30 bg-primary/10 p-3 sm:p-4" aria-labelledby="continue-title">
-            <p className="text-xs font-medium text-primary-soft">{t('dash.continue')}</p>
+            <p className="text-xs font-medium text-primary-soft">
+              {progress?.finished ? t('dash.lessonComplete') : progress ? t('dash.continue') : t('dash.start')}
+            </p>
             <div className="mt-3 grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center xl:grid-cols-[auto_minmax(0,1fr)_auto]">
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/20 text-primary-soft">
                 <SigmaIcon className="h-6 w-6" />
@@ -73,14 +81,24 @@ export function Dashboard() {
                   {continueLesson.title}
                 </h2>
                 <p className="text-sm text-slate-400">
-                  {continueLesson.subject} · {continueLesson.remaining} · +{continueLesson.xp} XP
+                  {continueLesson.subject} ·{' '}
+                  {progress?.finished
+                    ? t('lesson.complete')
+                    : remaining === 0
+                      ? t('dash.readyToFinish')
+                      : `${remaining} ${t('dash.questionsLeft')}`} · +{continueLesson.xp} XP
                 </p>
                 <div className="mt-3 h-1.5 max-w-sm rounded-full bg-slate-800">
-                  <div className="h-full rounded-full bg-primary" style={{ width: `${continueLesson.progress}%` }} />
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${lessonProgress}%` }} />
                 </div>
               </div>
               <Link to="/lesson" className="btn-primary justify-self-start sm:col-start-2 xl:col-start-auto">
-                {t('cta.continue')} <ArrowRightIcon className="h-4 w-4" />
+                {progress?.finished
+                  ? t('dash.reviewResults')
+                  : progress
+                    ? t('cta.continue')
+                    : t('dash.startLesson')}{' '}
+                <ArrowRightIcon className="h-4 w-4" />
               </Link>
             </div>
           </section>

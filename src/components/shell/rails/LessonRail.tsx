@@ -3,13 +3,17 @@ import { RailSection } from '../RailSection';
 import { lessonPath, lessonTips } from '../../../data/rail';
 import { useApp } from '../../../contexts/AppContext';
 import { useLanguage } from '../../../contexts/LanguageContext';
+import { quizMeta, quizQuestions } from '../../../data/quiz';
 
 const langLabel = { en: 'English', xh: 'isiXhosa', both: 'English + isiXhosa' };
 
 export function LessonRail() {
-  const { lessonStats: s, settings, openModal } = useApp();
+  const { lessonStats: s, settings, openModal, quizProgress } = useApp();
   const { t } = useLanguage();
-  const answered = s.finished ? s.total : s.index;
+  const progress = quizProgress[quizMeta.lessonId];
+  const answered = s.finished ? s.total : progress
+    ? Math.min(quizQuestions.length, progress.index + (progress.checked ? 1 : 0))
+    : s.index;
 
   return (
     <>
@@ -41,6 +45,24 @@ export function LessonRail() {
             <dd className="font-semibold">{s.correct}</dd>
             <dt className="text-[11px] text-slate-500">Correct</dt>
           </div>
+        </dl>
+      </RailSection>
+
+      <RailSection title="Lesson details">
+        <p className="text-sm font-semibold leading-snug text-slate-100">{quizMeta.title}</p>
+        <dl className="mt-3 space-y-2 text-xs">
+          {[
+            ['Lesson ID', quizMeta.lessonId.toUpperCase()],
+            ['Subject', quizMeta.subject],
+            ['Grade', quizMeta.grade],
+            ['Unit', quizMeta.unit],
+            ['Est. time', `${quizMeta.estimatedMinutes} min`]
+          ].map(([label, value]) => (
+            <div key={label} className="flex items-start justify-between gap-3">
+              <dt className="shrink-0 text-slate-500">{label}</dt>
+              <dd className={`text-right text-slate-300 ${label === 'Lesson ID' ? 'font-mono' : ''}`}>{value}</dd>
+            </div>
+          ))}
         </dl>
       </RailSection>
 
@@ -83,7 +105,8 @@ export function LessonRail() {
           {[
           ['Explanations', langLabel[settings.explanationLanguage]],
           ['Difficulty', settings.difficulty === 'challenge' ? 'Challenge (2× XP)' : 'Standard'],
-          ['Timer', settings.timer ? '30s per question' : 'Off']].
+          ['Timer', settings.timer ? '30s per question' : 'Off'],
+          ['Auto-advance', settings.autoAdvance ? 'On' : 'Off']].
           map(([k, v]) =>
           <div key={k} className="flex justify-between gap-2">
               <dt className="text-slate-400">{k}</dt>

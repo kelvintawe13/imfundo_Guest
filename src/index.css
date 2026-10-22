@@ -4,6 +4,22 @@
 @import 'tailwindcss';
 @config '../tailwind.config.js';
 
+@theme {
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.375rem;
+  --text-3xl: 1.625rem;
+  --text-4xl: 2rem;
+  --text-5xl: 2.625rem;
+  --text-6xl: 3.25rem;
+  --text-7xl: 4rem;
+  --text-8xl: 5.25rem;
+  --text-9xl: 7rem;
+}
+
 /* Dark theme (default) */
 :root,
 .theme-dark {

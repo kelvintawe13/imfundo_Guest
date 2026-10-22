@@ -84,7 +84,8 @@ export function LessonSettingsModal() {
             checked={draft.autoHints}
             onChange={(v) => update('autoHints', v)} />
           
-          <Toggle label="Question timer" description="30 seconds per question" checked={draft.timer} onChange={(v) => update('timer', v)} />
+          <Toggle label="Question timer" description="30 seconds; unanswered questions advance automatically" checked={draft.timer} onChange={(v) => update('timer', v)} />
+          <Toggle label="Auto-advance after answering" description="Move on after 4 seconds; choose Next to move sooner" checked={draft.autoAdvance} onChange={(v) => update('autoAdvance', v)} />
         </div>
       </div>
     </Modal>);

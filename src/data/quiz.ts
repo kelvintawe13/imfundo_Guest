@@ -1,8 +1,13 @@
 import type { QuizQuestion } from '../types/learning';
 
 export const quizMeta = {
+  lessonId: 'm1',
   title: 'Solving quadratic equations by factoring',
-  subject: 'Mathematics · Grade 11',
+  subject: 'Mathematics',
+  grade: 'Grade 11',
+  unit: 'Quadratics · Factoring trinomials',
+  objective: 'Factor quadratic expressions and use the factors to solve equations.',
+  estimatedMinutes: 4,
   xpPerQuestion: 10,
   comboBonus: 5
 };
