@@ -16,10 +16,9 @@ export function CoreProblem() {
             The core problem & market opportunity
           </h2>
           <p className="mt-3 text-sm text-ink-soft sm:text-base line-clamp-4">
-            While South Africa's national internet penetration has steadily expanded in most high schools, the rural town
-            of Idutywa, and the Eastern Cape as a whole, still faces severe exclusion due to a multi-tiered digital divide.
-            Systemic infrastructure failure segregates key stakeholders, creating an ongoing educational gap that denies
-            rural students a fair chance at modern academic progression.
+            In the Eastern Cape, only 8% to 10.4% of households have a fixed or in-home internet connection. Yet 96.1% of
+            South African households own at least one mobile phone. The opportunity is to make learning work on the
+            devices learners already have, without relying on a home internet connection.
           </p>
         </div>
 

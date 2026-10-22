@@ -13,10 +13,11 @@ type PasswordInputProps = {
 
 export function PasswordInput({ name, label, value, onChange, error, autoComplete, aside }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
+
   return (
     <div>
       <div className="flex items-center justify-between">
-        <label htmlFor={name} className="field-label">
+        <label htmlFor={name} className="field-label-pop">
           {label}
         </label>
         {aside}
@@ -31,22 +32,23 @@ export function PasswordInput({ name, label, value, onChange, error, autoComplet
           autoComplete={autoComplete}
           aria-invalid={!!error}
           aria-describedby={error ? `${name}-error` : undefined}
-          className="field pr-10" />
-        
+          className="field-pop pr-11"
+        />
+
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          className="absolute right-2 top-1/2 mt-[3px] -translate-y-1/2 rounded p-1 text-slate-400 transition-colors duration-150 hover:text-slate-100"
-          aria-label={visible ? 'Hide password' : 'Show password'}>
-          
+          className="absolute right-2 top-1/2 mt-[3px] grid h-7 w-7 -translate-y-1/2 place-items-center rounded-md text-ink/60 transition-colors duration-150 hover:bg-sun-light hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+          aria-label={visible ? 'Hide password' : 'Show password'}
+        >
           {visible ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
         </button>
       </div>
-      {error &&
-      <p id={`${name}-error`} className="mt-1 text-xs text-danger">
+      {error && (
+        <p id={`${name}-error`} className="mt-1 text-xs font-semibold text-danger">
           {error}
         </p>
-      }
-    </div>);
-
+      )}
+    </div>
+  );
 }

@@ -151,6 +151,8 @@ flowchart TB
 
 Tokens are CSS custom properties re-mapped per theme; Tailwind reads them through `rgb(var(--token) / alpha)`. Both themes render real contrast rather than tinted duplicates.
 
+New visitors start in light mode. The topbar theme toggle switches to dark and persists the choice in `localStorage`; an inline script in `index.html` applies the saved theme before first paint to avoid a flash. Public marketing and auth surfaces are intentionally always light via a scoped `.theme-light` wrapper.
+
 | Token | Dark value | Light handling |
 | --- | --- | --- |
 | `slate-50..950` | inverse-scaled ramp | mirrored so borders and text invert cleanly |

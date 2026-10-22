@@ -14,15 +14,15 @@ const demoAccounts = [
     label: 'Student demo',
     email: 'student@imfundo.demo',
     password: 'Student123!',
-    icon: GraduationCapIcon
+    icon: GraduationCapIcon,
   },
   {
     role: 'staff',
     label: 'Teacher demo',
     email: 'teacher@imfundo.demo',
     password: 'Teacher123!',
-    icon: PresentationIcon
-  }
+    icon: PresentationIcon,
+  },
 ] as const;
 
 export function Login() {
@@ -50,12 +50,12 @@ export function Login() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight">{t('auth.loginTitle')}</h1>
-      <p className="mt-1 text-sm text-slate-400">{t('auth.loginSub')}</p>
+      <h1 className="font-display text-3xl font-extrabold leading-tight">{t('auth.loginTitle')}</h1>
+      <p className="mt-2 text-sm text-ink-soft">{t('auth.loginSub')}</p>
 
-      <form onSubmit={submit} noValidate className="mt-4 space-y-3">
+      <form onSubmit={submit} noValidate className="mt-6 space-y-4">
         <div>
-          <label htmlFor="email" className="field-label">
+          <label htmlFor="email" className="field-label-pop">
             {t('auth.email')}
           </label>
           <input
@@ -65,11 +65,12 @@ export function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-invalid={!!errors.email}
-            className="field"
-            placeholder="you@school.co.za" />
-          
-          {errors.email && <p className="mt-1 text-xs text-danger">{errors.email}</p>}
+            className="field-pop"
+            placeholder="you@school.co.za"
+          />
+          {errors.email && <p className="mt-1 text-xs font-semibold text-danger">{errors.email}</p>}
         </div>
+
         <PasswordInput
           name="password"
           label={t('auth.password')}
@@ -78,30 +79,34 @@ export function Login() {
           error={errors.password}
           autoComplete="current-password"
           aside={
-          <Link to="/forgot-password" className="text-xs font-medium text-primary-soft hover:underline">
+            <Link to="/forgot-password" className="text-xs font-bold text-sky-dark hover:underline">
               {t('auth.forgotLink')}
             </Link>
-          } />
-        
-        <label className="flex items-center gap-2 text-sm text-slate-300">
+          }
+        />
+
+        <label className="flex items-center gap-2 text-sm text-ink-soft">
           <input
             type="checkbox"
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
-            className="h-4 w-4 rounded border-slate-600 accent-primary" />
-          
+            className="h-4 w-4 rounded border-2 border-ink accent-ink"
+          />
           Keep me signed in on this device
         </label>
-        <button type="submit" disabled={submitting} className="btn-primary w-full">
-          {submitting && <LoaderCircleIcon className="h-4 w-4 animate-spin" />}
+
+        <button type="submit" disabled={submitting} className="btn-pop w-full">
+          {submitting && <LoaderCircleIcon className="h-4 w-4 animate-spin" aria-hidden="true" />}
           {t('auth.login')}
         </button>
       </form>
 
-      <section className="mt-4 rounded-xl border border-slate-800 bg-slate-900/50 p-3" aria-labelledby="demo-accounts-title">
-        <div className="mb-2">
-          <h2 id="demo-accounts-title" className="text-xs font-semibold text-slate-200">Try a demo account</h2>
-          <p className="mt-0.5 text-[11px] text-slate-500">Prototype only · select an account to fill the form</p>
+      <section className="mt-6 rounded-2xl border-2 border-ink bg-white p-4" aria-labelledby="demo-accounts-title">
+        <div className="mb-3">
+          <h2 id="demo-accounts-title" className="font-display text-sm font-bold">
+            Try a demo account
+          </h2>
+          <p className="mt-0.5 text-xs text-ink-soft">Prototype only · select an account to fill the form</p>
         </div>
         <div className="grid gap-2 sm:grid-cols-2">
           {demoAccounts.map(({ role, label, email: demoEmail, password: demoPassword, icon: Icon }) => (
@@ -113,36 +118,39 @@ export function Login() {
                 setPassword(demoPassword);
                 setErrors({});
               }}
-              className="flex min-w-0 items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/40 p-2 text-left transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-soft">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary/10 text-primary-soft">
-                <Icon className="h-4 w-4" />
+              className="flex min-w-0 items-center gap-2 rounded-xl border-2 border-ink bg-cream p-2.5 text-left transition-colors hover:bg-sun-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+            >
+              <span
+                className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg border-2 border-ink ${
+                  role === 'learner' ? 'bg-sun' : 'bg-teal'
+                }`}
+              >
+                <Icon className="h-4 w-4 text-ink" aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block text-xs font-semibold text-slate-200">{label}</span>
-                <span className="block truncate text-[10px] text-slate-500">{demoEmail}</span>
-                <span className="block truncate font-mono text-[10px] text-slate-500">{demoPassword}</span>
+                <span className="block font-display text-xs font-bold">{label}</span>
+                <span className="block truncate text-[10px] text-ink-soft">{demoEmail}</span>
+                <span className="block truncate font-mono text-[10px] text-ink-soft">{demoPassword}</span>
               </span>
             </button>
           ))}
         </div>
       </section>
 
-      <div className="my-6 flex items-center gap-3 text-xs text-slate-500">
-        <span className="h-px flex-1 bg-slate-800" /> or <span className="h-px flex-1 bg-slate-800" />
+      <div className="my-6 flex items-center gap-3 text-xs font-semibold text-ink-soft">
+        <span className="h-px flex-1 bg-ink/15" /> or <span className="h-px flex-1 bg-ink/15" />
       </div>
-      <Link
-        to="/dashboard"
-        onClick={() => setRole('learner')}
-        className="btn-secondary w-full">
+
+      <Link to="/dashboard" onClick={() => setRole('learner')} className="btn-pop-ghost w-full">
         Explore the demo without an account
       </Link>
 
-      <p className="mt-4 text-center text-sm text-slate-400">
+      <p className="mt-5 text-center text-sm text-ink-soft">
         {t('auth.noAccount')}{' '}
-        <Link to="/signup" className="font-medium text-primary-soft hover:underline">
+        <Link to="/signup" className="font-bold text-coral hover:underline">
           {t('auth.signup')}
         </Link>
       </p>
-    </>);
-
+    </>
+  );
 }

@@ -9,13 +9,17 @@ export const navLinks = [
 ];
 
 export const featuredStat = {
-  value: '1.6%',
-  label: 'of Eastern Cape households had access to public Wi-Fi in 2023, the lowest of all provinces.',
+  value: '8%–10.4%',
+  label: 'of Eastern Cape households have a fixed or in-home internet connection.',
+  source: 'The State of the ICT Sector Report of South Africa, 2025',
 };
 
 export const stats = [
-  { value: '70.2%', label: 'of Eastern Cape households had internet access by any means in 2023' },
-  { value: '96.1%', label: 'of South African households own a mobile phone' },
+  {
+    value: '96.1%',
+    label: 'of South African households own at least one mobile phone.',
+    source: 'Statistics South Africa, 2024',
+  },
 ];
 
 export const stakeholders = [

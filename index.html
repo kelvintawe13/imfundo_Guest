@@ -7,7 +7,15 @@
       name="description"
       content="Learn anywhere with Imfundo Quest: bite-sized lessons, interactive quizzes, and offline-friendly learning for South African learners."
     />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#FFFAF0" />
+    <script>
+      // Apply the saved theme before React mounts so the first paint matches the app.
+      try {
+        document.documentElement.classList.toggle('light', localStorage.getItem('iq-theme-v2') !== 'dark');
+      } catch {
+        document.documentElement.classList.add('light');
+      }
+    </script>
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Imfundo Quest — Learn anywhere" />
     <meta

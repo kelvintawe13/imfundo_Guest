@@ -11,18 +11,19 @@ import { useApp } from '../../contexts/AppContext';
 type Role = 'learner' | 'teacher';
 type Errors = Partial<Record<'name' | 'email' | 'password' | 'terms', string>>;
 
-const roles: {value: Role;label: string;text: string;icon: typeof GraduationCapIcon;}[] = [
-{ value: 'learner', label: 'Learner', text: 'Grades 10–12', icon: GraduationCapIcon },
-{ value: 'teacher', label: 'Teacher', text: 'Class analytics', icon: PresentationIcon }];
+const roles: { value: Role; label: string; text: string; icon: typeof GraduationCapIcon }[] = [
+  { value: 'learner', label: 'Learner', text: 'Grades 10–12', icon: GraduationCapIcon },
+  { value: 'teacher', label: 'Teacher', text: 'Class analytics', icon: PresentationIcon },
+];
 
 const formVariants = {
   hidden: {},
   visible: {
     transition: {
       delayChildren: 0.08,
-      staggerChildren: 0.045
-    }
-  }
+      staggerChildren: 0.045,
+    },
+  },
 };
 
 const fieldVariants = {
@@ -30,8 +31,8 @@ const fieldVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.22, ease: 'easeOut' }
-  }
+    transition: { duration: 0.22, ease: 'easeOut' },
+  },
 };
 
 export function Signup() {
@@ -62,8 +63,8 @@ export function Signup() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight">{t('auth.signupTitle')}</h1>
-      <p className="mt-1 text-sm text-slate-400">{t('auth.signupSub')}</p>
+      <h1 className="font-display text-3xl font-extrabold leading-tight">{t('auth.signupTitle')}</h1>
+      <p className="mt-2 text-sm text-ink-soft">{t('auth.signupSub')}</p>
 
       <motion.form
         onSubmit={submit}
@@ -71,9 +72,10 @@ export function Signup() {
         variants={formVariants}
         initial="hidden"
         animate="visible"
-        className="mt-4 grid grid-cols-1 gap-x-3 gap-y-2 [&_.field]:!mt-1 [&_.field]:!py-1.5 sm:grid-cols-2">
-        <motion.fieldset variants={fieldVariants} className="sm:col-span-2">
-          <legend className="field-label">I am a</legend>
+        className="mt-6 grid grid-cols-1 gap-x-3 gap-y-3 sm:grid-cols-2"
+      >
+        <motion.fieldset variants={fieldVariants} className="min-w-0 sm:col-span-2">
+          <legend className="field-label-pop">I am a</legend>
           <div className="mt-1 grid grid-cols-2 gap-2">
             {roles.map(({ value, label, text, icon: Icon }) => {
               const active = role === value;
@@ -83,30 +85,45 @@ export function Signup() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setRole(value)}
-                  className={`flex items-center gap-2 rounded-lg border p-2.5 text-left transition-colors duration-150 ${
-                  active ? 'border-primary bg-primary/10' : 'border-slate-700 hover:border-slate-600'}`
-                  }>
-                  
-                  <Icon className={`h-4 w-4 ${active ? 'text-primary-soft' : 'text-slate-400'}`} />
-                  <span>
-                    <span className="block text-sm font-medium text-slate-100">{label}</span>
-                    <span className="block text-xs text-slate-500">{text}</span>
+                  className={`flex items-center gap-2 rounded-xl border-2 border-ink p-3 text-left transition-colors duration-150 ${
+                    active ? 'bg-sun shadow-pop-sm' : 'bg-white hover:bg-sun-light'
+                  }`}
+                >
+                  <span
+                    className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg border-2 border-ink ${
+                      active ? 'bg-white' : 'bg-cream'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 text-ink" aria-hidden="true" />
                   </span>
-                </button>);
-
+                  <span>
+                    <span className="block font-display text-sm font-bold text-ink">{label}</span>
+                    <span className="block text-xs text-ink-soft">{text}</span>
+                  </span>
+                </button>
+              );
             })}
           </div>
         </motion.fieldset>
 
         <motion.div variants={fieldVariants} className="min-w-0">
-          <label htmlFor="name" className="field-label">
+          <label htmlFor="name" className="field-label-pop">
             Full name
           </label>
-          <input id="name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} aria-invalid={!!errors.name} className="field" />
-          {errors.name && <p className="mt-1 text-xs text-danger">{errors.name}</p>}
+          <input
+            id="name"
+            autoComplete="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            aria-invalid={!!errors.name}
+            className="field-pop"
+            placeholder="Lwazi Ndlovu"
+          />
+          {errors.name && <p className="mt-1 text-xs font-semibold text-danger">{errors.name}</p>}
         </motion.div>
+
         <motion.div variants={fieldVariants} className="min-w-0">
-          <label htmlFor="email" className="field-label">
+          <label htmlFor="email" className="field-label-pop">
             {t('auth.email')}
           </label>
           <input
@@ -116,52 +133,69 @@ export function Signup() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-invalid={!!errors.email}
-            className="field" />
-          
-          {errors.email && <p className="mt-1 text-xs text-danger">{errors.email}</p>}
+            className="field-pop"
+            placeholder="you@school.co.za"
+          />
+          {errors.email && <p className="mt-1 text-xs font-semibold text-danger">{errors.email}</p>}
         </motion.div>
+
         <motion.div variants={fieldVariants} className="min-w-0">
-          <label htmlFor="grade" className="field-label">
+          <label htmlFor="grade" className="field-label-pop">
             {role === 'learner' ? 'Grade' : 'Subject you teach'}
           </label>
-          {role === 'learner' ?
-          <select id="grade" className="field" defaultValue="11">
+          {role === 'learner' ? (
+            <select id="grade" className="field-pop" defaultValue="11">
               <option value="10">Grade 10</option>
               <option value="11">Grade 11</option>
               <option value="12">Grade 12</option>
-            </select> :
-
-          <select id="grade" className="field" defaultValue="maths">
+            </select>
+          ) : (
+            <select id="grade" className="field-pop" defaultValue="maths">
               <option value="maths">Mathematics</option>
               <option value="science">Physical Sciences</option>
               <option value="cl">Computer Literacy</option>
               <option value="english">English</option>
             </select>
-          }
+          )}
         </motion.div>
+
         <motion.div variants={fieldVariants} className="min-w-0">
-          <PasswordInput name="password" label={t('auth.password')} value={password} onChange={setPassword} error={errors.password} autoComplete="new-password" />
+          <PasswordInput
+            name="password"
+            label={t('auth.password')}
+            value={password}
+            onChange={setPassword}
+            error={errors.password}
+            autoComplete="new-password"
+          />
           <PasswordStrengthMeter password={password} />
         </motion.div>
+
         <motion.div variants={fieldVariants} className="sm:col-span-2">
-          <label className="flex items-start gap-2 text-xs text-slate-300 sm:text-sm">
-            <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" />
+          <label className="flex items-start gap-2 text-xs text-ink-soft sm:text-sm">
+            <input
+              type="checkbox"
+              checked={terms}
+              onChange={(e) => setTerms(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-2 border-ink accent-ink"
+            />
             I agree to the Terms and understand my progress is stored on my device.
           </label>
-          {errors.terms && <p className="mt-1 text-xs text-danger">{errors.terms}</p>}
+          {errors.terms && <p className="mt-1 text-xs font-semibold text-danger">{errors.terms}</p>}
         </motion.div>
-        <motion.button variants={fieldVariants} type="submit" disabled={submitting} className="btn-primary w-full !py-2 sm:col-span-2">
-          {submitting && <LoaderCircleIcon className="h-4 w-4 animate-spin" />}
+
+        <motion.button variants={fieldVariants} type="submit" disabled={submitting} className="btn-pop w-full sm:col-span-2">
+          {submitting && <LoaderCircleIcon className="h-4 w-4 animate-spin" aria-hidden="true" />}
           {t('auth.signup')}
         </motion.button>
       </motion.form>
 
-      <p className="mt-3 text-center text-sm text-slate-400">
+      <p className="mt-4 text-center text-sm text-ink-soft">
         {t('auth.haveAccount')}{' '}
-        <Link to="/login" className="font-medium text-primary-soft hover:underline">
+        <Link to="/login" className="font-bold text-coral hover:underline">
           {t('auth.login')}
         </Link>
       </p>
-    </>);
-
+    </>
+  );
 }

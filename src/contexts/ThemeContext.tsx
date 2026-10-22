@@ -5,13 +5,14 @@ export type Theme = 'dark' | 'light';
 type ThemeContextValue = {theme: Theme;setTheme: (t: Theme) => void;};
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const THEME_STORAGE_KEY = 'iq-theme-v2';
 
 function readStored(): Theme {
   try {
-    const stored = window.localStorage.getItem('iq-theme');
-    return stored === 'light' ? 'light' : 'dark';
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return stored === 'dark' ? 'dark' : 'light';
   } catch {
-    return 'dark';
+    return 'light';
   }
 }
 
@@ -21,7 +22,7 @@ export function ThemeProvider({ children }: {children: React.ReactNode;}) {
   useEffect(() => {
     document.documentElement.classList.toggle('light', theme === 'light');
     try {
-      window.localStorage.setItem('iq-theme', theme);
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
     } catch {
 
       /* storage unavailable */}

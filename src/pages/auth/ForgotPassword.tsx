@@ -24,33 +24,37 @@ export function ForgotPassword() {
   if (status === 'sent') {
     return (
       <div role="status">
-        <span className="grid h-11 w-11 place-items-center rounded-xl bg-success/15 text-success-soft">
-          <MailCheckIcon className="h-5 w-5" />
+        <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-ink bg-teal-light">
+          <MailCheckIcon className="h-5 w-5 text-ink" aria-hidden="true" />
         </span>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight">Check your email</h1>
-        <p className="mt-1 text-sm text-slate-400">
-          We sent a reset link to <span className="font-medium text-slate-200">{email}</span>. It expires in 30 minutes.
+        <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight">Check your email</h1>
+        <p className="mt-2 text-sm text-ink-soft">
+          We sent a reset link to <span className="font-semibold text-ink">{email}</span>. It expires in 30 minutes.
         </p>
-        <Link to="/reset-password" className="btn-primary mt-7 w-full !py-2.5">
+        <Link to="/reset-password" className="btn-pop mt-7 w-full">
           Open reset link (demo)
         </Link>
-        <button type="button" onClick={() => setStatus('idle')} className="btn-secondary mt-2 w-full">
+        <button type="button" onClick={() => setStatus('idle')} className="btn-pop-ghost mt-2 w-full">
           Use a different email
         </button>
-        <Link to="/login" className="mt-4 flex items-center justify-center gap-1.5 text-sm text-slate-400 hover:text-slate-100">
-          <ArrowLeftIcon className="h-4 w-4" /> {t('auth.backToLogin')}
+        <Link
+          to="/login"
+          className="mt-5 flex items-center justify-center gap-1.5 text-sm font-semibold text-ink-soft transition-colors hover:text-coral"
+        >
+          <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" /> {t('auth.backToLogin')}
         </Link>
-      </div>);
-
+      </div>
+    );
   }
 
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight">{t('auth.forgotTitle')}</h1>
-      <p className="mt-1 text-sm text-slate-400">{t('auth.forgotSub')}</p>
-      <form onSubmit={submit} noValidate className="mt-4 space-y-3">
+      <h1 className="font-display text-3xl font-extrabold leading-tight">{t('auth.forgotTitle')}</h1>
+      <p className="mt-2 text-sm text-ink-soft">{t('auth.forgotSub')}</p>
+
+      <form onSubmit={submit} noValidate className="mt-6 space-y-4">
         <div>
-          <label htmlFor="email" className="field-label">
+          <label htmlFor="email" className="field-label-pop">
             {t('auth.email')}
           </label>
           <input
@@ -60,19 +64,27 @@ export function ForgotPassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-invalid={!!error}
-            className="field" />
-          
-          {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+            className="field-pop"
+            placeholder="you@school.co.za"
+          />
+          {error && <p className="mt-1 text-xs font-semibold text-danger">{error}</p>}
         </div>
-        <button type="submit" disabled={status === 'sending'} className="btn-primary w-full !py-2.5">
-          {status === 'sending' && <LoaderCircleIcon className="h-4 w-4 animate-spin" />}
+        <button type="submit" disabled={status === 'sending'} className="btn-pop w-full">
+          {status === 'sending' && <LoaderCircleIcon className="h-4 w-4 animate-spin" aria-hidden="true" />}
           {t('auth.sendLink')}
         </button>
       </form>
-      <p className="mt-4 text-xs text-slate-500">No email access? Ask your teacher to reset your password from Teacher Corner.</p>
-      <Link to="/login" className="mt-4 flex items-center justify-center gap-1.5 text-sm text-slate-400 hover:text-slate-100">
-        <ArrowLeftIcon className="h-4 w-4" /> {t('auth.backToLogin')}
-      </Link>
-    </>);
 
+      <p className="mt-5 rounded-xl border-2 border-ink/15 bg-white/60 p-3 text-xs text-ink-soft">
+        No email access? Ask your teacher to reset your password from Teacher Corner.
+      </p>
+
+      <Link
+        to="/login"
+        className="mt-5 flex items-center justify-center gap-1.5 text-sm font-semibold text-ink-soft transition-colors hover:text-coral"
+      >
+        <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" /> {t('auth.backToLogin')}
+      </Link>
+    </>
+  );
 }
