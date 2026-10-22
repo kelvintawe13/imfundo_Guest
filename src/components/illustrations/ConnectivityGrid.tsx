@@ -10,12 +10,12 @@ const PHONES = 48; // ~96% own a mobile phone
  */
 export function ConnectivityGrid() {
   return (
-    <figure className="mt-8">
+    <figure className="mt-4">
       <SiteImage
         src="/images/connectivity.png"
         alt={`Of 50 households, about ${CONNECTED} have in-home internet while ${PHONES} own a mobile phone`}
-        className="h-auto w-full max-w-md" />
-      <figcaption className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-slate-400">
+        className="h-auto w-full max-w-xs rounded-lg border border-slate-800/60" />
+      <figcaption className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-slate-400">
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm border border-primary bg-primary/25" /> In-home internet
         </span>

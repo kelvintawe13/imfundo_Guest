@@ -27,7 +27,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary mobile"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-800 bg-slate-900/95 pb-[env(safe-area-inset-bottom)] pt-1 backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-800 bg-slate-900/95 pb-[env(safe-area-inset-bottom)] pt-2 backdrop-blur-xl lg:hidden"
       style={{ boxShadow: '0 -10px 30px -18px rgb(2 6 23 / 0.9)' }}>
       <ul className="mx-auto flex max-w-md items-stretch justify-between px-2 sm:px-4">
         {roleNav.map(({ label, to, icon: Icon }) =>
@@ -36,18 +36,18 @@ export function BottomNav() {
             to={to}
             end={to === '/teachers'}
             className={({ isActive }) =>
-            `group flex flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[10px] font-medium transition-colors duration-150 ${
+            `group flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-[11px] font-medium transition-all duration-200 ${
             isActive ? 'text-primary-soft' : 'text-slate-400 hover:text-slate-200'}`
           }
           >
               {({ isActive }) =>
           <>
                 <span
-              className={`grid h-8 w-12 place-items-center rounded-full transition-colors duration-150 ${
-              isActive ? 'bg-primary/20' : 'bg-transparent group-hover:bg-slate-800/70'}`}>
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-primary-soft' : ''}`} aria-hidden="true" />
+              className={`grid h-10 w-14 place-items-center rounded-xl transition-all duration-200 ${
+              isActive ? 'bg-primary/20 shadow-lg shadow-primary/10' : 'bg-transparent group-hover:bg-slate-800/70'}`}>
+                  <Icon className={`h-5 w-5 ${isActive ? 'text-primary-soft' : ''}`} aria-hidden="true" />
                 </span>
-                <span className="max-w-full truncate leading-none">{label}</span>
+                <span className="max-w-full truncate leading-tight">{label}</span>
               </>
           }
             </NavLink>

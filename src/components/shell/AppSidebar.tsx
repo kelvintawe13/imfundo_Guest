@@ -7,7 +7,12 @@ import { learner } from '../../data/profile';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  isOpen?: boolean;
+  onClose?: () => void;
+};
+
+export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
   const { t } = useLanguage();
   const { role, openModal, setRole } = useApp();
   const navigate = useNavigate();
@@ -26,11 +31,27 @@ export function AppSidebar() {
   const hasSearchResults = visibleRoutes.length > 0 || (role === 'staff' && staffTools.length > 0);
   const roleLabel = role === 'staff' ? 'Staff workspace' : 'Learner space';
 
-  return (
-    <aside className="hidden h-screen w-60 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40 lg:flex">
-      <Link to="/" className="flex h-12 items-center border-b border-slate-800 px-4" aria-label="Imfundo Quest home">
-        <Logo />
-      </Link>
+  const handleNavClick = (to: string) => {
+    navigate(to);
+    if (onClose) onClose();
+  };
+
+  const sidebarContent = (
+    <>
+      <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
+        <Link to="/" className="flex items-center gap-2" aria-label="Imfundo Quest home" onClick={() => onClose?.()}>
+          <Logo />
+        </Link>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-100 lg:hidden"
+            aria-label="Close sidebar">
+            <XIcon className="h-5 w-5" />
+          </button>
+        )}
+      </div>
 
       <div className="border-b border-slate-800 px-3 py-3">
         <div className="mb-3 flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/40 px-2.5 py-2">
@@ -74,6 +95,7 @@ export function AppSidebar() {
               <li key={to}>
                 <NavLink
                   to={to}
+                  onClick={() => handleNavClick(to)}
                   className={({ isActive }) =>
                     `group flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                       isActive || active
@@ -104,6 +126,7 @@ export function AppSidebar() {
                 <li key={label}>
                   <NavLink
                     to={to}
+                    onClick={() => handleNavClick(to)}
                     className={({ isActive }) =>
                       `group flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                         isActive
@@ -152,14 +175,35 @@ export function AppSidebar() {
           onClick={() => {
             setRole('learner');
             navigate('/login');
+            onClose?.();
           }}
           className="rounded-md p-1.5 text-slate-400 transition-colors duration-150 hover:bg-slate-800 hover:text-slate-100"
           aria-label={t('auth.logout')}
           title={t('auth.logout')}>
-          
+
           <LogOutIcon className="h-4 w-4" />
         </button>
       </div>
+    </>
+  );
+
+  if (isOpen) {
+    return (
+      <div className="fixed inset-0 z-50 lg:hidden">
+        <div
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={onClose}
+        />
+        <aside className="absolute inset-y-0 left-0 h-full w-72 flex-col border-r border-slate-800 bg-slate-900/95 backdrop-blur-xl">
+          {sidebarContent}
+        </aside>
+      </div>
+    );
+  }
+
+  return (
+    <aside className="hidden h-screen w-60 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40 lg:flex">
+      {sidebarContent}
     </aside>);
 
 }
