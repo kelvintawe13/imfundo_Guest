@@ -23,6 +23,20 @@ export function unlockAudio() {
   if (context.state === 'suspended') void context.resume();
 }
 
+async function resumeAudio(): Promise<AudioContext | null> {
+  const context = getAudioContext();
+  if (!context) return null;
+  if (context.state === 'suspended') {
+    try {
+      await context.resume();
+    } catch (error) {
+      console.warn('Unable to resume audio for quiz sounds.', error);
+      return null;
+    }
+  }
+  return context;
+}
+
 type ToneOptions = {
   duration?: number;
   delay?: number;
@@ -53,31 +67,40 @@ function playTone(frequency: number, { duration = 0.08, delay = 0, volume = 0.05
 }
 
 export function playTimerTick() {
-  playTone(1180, { duration: 0.04, volume: 0.035, type: 'triangle' });
+  playTone(1180, { duration: 0.05, volume: 0.11, type: 'triangle' });
 }
 
 export function playTimerWarning() {
-  playTone(760, { duration: 0.09, volume: 0.05, type: 'square' });
-  playTone(980, { duration: 0.11, delay: 0.13, volume: 0.05, type: 'square' });
+  playTone(760, { duration: 0.11, volume: 0.15, type: 'square' });
+  playTone(980, { duration: 0.13, delay: 0.13, volume: 0.15, type: 'square' });
 }
 
 export function playTimerTimeout() {
-  playTone(240, { duration: 0.2, volume: 0.06, type: 'sawtooth' });
-  playTone(170, { duration: 0.28, delay: 0.22, volume: 0.06, type: 'sawtooth' });
+  playTone(240, { duration: 0.2, volume: 0.16, type: 'sawtooth' });
+  playTone(170, { duration: 0.28, delay: 0.22, volume: 0.16, type: 'sawtooth' });
 }
 
 export function playAnswerSound(correct: boolean) {
   if (correct) {
-    playTone(660, { duration: 0.08, volume: 0.045, type: 'triangle' });
-    playTone(990, { duration: 0.12, delay: 0.09, volume: 0.045, type: 'triangle' });
+    playTone(660, { duration: 0.08, volume: 0.12, type: 'triangle' });
+    playTone(990, { duration: 0.12, delay: 0.09, volume: 0.12, type: 'triangle' });
     return;
   }
-  playTone(300, { duration: 0.1, volume: 0.045, type: 'sine' });
-  playTone(210, { duration: 0.16, delay: 0.1, volume: 0.045, type: 'sine' });
+  playTone(300, { duration: 0.1, volume: 0.12, type: 'sine' });
+  playTone(210, { duration: 0.16, delay: 0.1, volume: 0.12, type: 'sine' });
 }
 
-export function playQuizStart() {
-  playTone(520, { duration: 0.09, volume: 0.05, type: 'triangle' });
-  playTone(780, { duration: 0.13, delay: 0.11, volume: 0.055, type: 'triangle' });
-  playTone(1040, { duration: 0.18, delay: 0.25, volume: 0.045, type: 'sine' });
+export async function playQuizStart() {
+  const context = await resumeAudio();
+  if (!context) return;
+  playTone(520, { duration: 0.11, volume: 0.25, type: 'triangle' });
+  playTone(780, { duration: 0.15, delay: 0.12, volume: 0.28, type: 'triangle' });
+  playTone(1040, { duration: 0.22, delay: 0.28, volume: 0.22, type: 'sine' });
+}
+
+export async function playSoundCheck() {
+  const context = await resumeAudio();
+  if (!context) return;
+  playTone(880, { duration: 0.09, volume: 0.2, type: 'triangle' });
+  playTone(1180, { duration: 0.12, delay: 0.1, volume: 0.18, type: 'sine' });
 }

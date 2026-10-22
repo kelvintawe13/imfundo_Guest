@@ -12,6 +12,8 @@ import {
   LightbulbIcon,
   PlayIcon,
   Settings2Icon,
+  Volume2Icon,
+  VolumeXIcon,
   WifiOffIcon,
   XIcon,
   ZapIcon } from
@@ -24,7 +26,7 @@ import { useQuiz } from '../hooks/useQuiz';
 import { useQuizSounds } from '../hooks/useQuizSounds';
 import { useApp } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { playQuizStart } from '../utils/sound';
+import { playQuizStart, playSoundCheck } from '../utils/sound';
 
 const letters = ['A', 'B', 'C', 'D'];
 
@@ -70,7 +72,7 @@ export function LessonPlayer() {
   const resuming = quiz.index > 0 || quiz.selected !== null || quiz.checked || quiz.xp > 0 || quiz.timeLeft < QUIZ_TIME_LIMIT;
   const startQuiz = () => {
     setQuizStarted(true);
-    if (settings.sound) playQuizStart();
+    if (settings.sound) void playQuizStart();
   };
 
   return (
@@ -200,7 +202,11 @@ export function LessonPlayer() {
                     secondsLeft={quiz.timeLeft}
                     totalSeconds={QUIZ_TIME_LIMIT}
                     soundOn={settings.sound}
-                    onToggleSound={() => setSettings({ ...settings, sound: !settings.sound })} />
+                    onToggleSound={() => {
+                      const nextSound = !settings.sound;
+                      setSettings({ ...settings, sound: nextSound });
+                      if (nextSound) void playSoundCheck();
+                    }} />
                 )}
               </div>
             </div>
@@ -410,6 +416,34 @@ export function LessonPlayer() {
               </dd>
             </div>
           </dl>
+
+          <div className="flex items-center justify-between gap-2 rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2">
+            <button
+              type="button"
+              onClick={() => {
+                const nextSound = !settings.sound;
+                setSettings({ ...settings, sound: nextSound });
+                if (nextSound) void playSoundCheck();
+              }}
+              aria-pressed={settings.sound}
+              className="flex min-w-0 items-center gap-2 text-left text-xs font-semibold text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+              {settings.sound ? <Volume2Icon className="h-4 w-4 shrink-0 text-teal" /> : <VolumeXIcon className="h-4 w-4 shrink-0 text-slate-500" />}
+              <span>Sound effects</span>
+              <span className={`rounded-full border-2 border-ink px-2 py-0.5 text-[10px] font-bold ${
+                settings.sound ? 'bg-teal-light text-ink' : 'bg-slate-950/40 text-slate-400'
+              }`}>
+                {settings.sound ? 'On' : 'Off'}
+              </span>
+            </button>
+            {settings.sound && (
+              <button
+                type="button"
+                onClick={() => void playSoundCheck()}
+                className="shrink-0 rounded-full border-2 border-ink bg-sun px-2.5 py-1 text-[10px] font-bold text-ink transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+                Test beep
+              </button>
+            )}
+          </div>
 
           {settings.timer && (
             <p className="flex items-start gap-2 rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2 text-xs leading-relaxed text-slate-400">
