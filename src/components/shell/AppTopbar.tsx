@@ -18,6 +18,13 @@ export function AppTopbar({ onOpenRail, onOpenSidebar }: AppTopbarProps) {
   const { online, openModal } = useApp();
   const { t } = useLanguage();
   const current = appNav.find((n) => pathname.startsWith(n.to));
+  const staffPages: { to: string; label: string }[] = [
+    { to: '/teachers/classes', label: 'Class management' },
+    { to: '/teachers/resources', label: 'Teaching resources' },
+    { to: '/teachers/support', label: 'Learner support' }
+  ];
+  const staffCurrent = staffPages.find((page) => pathname.startsWith(page.to));
+  const pageTitle = staffCurrent?.label ?? (current ? t(current.key) : null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -34,13 +41,13 @@ export function AppTopbar({ onOpenRail, onOpenSidebar }: AppTopbarProps) {
   }, [menuOpen]);
 
   return (
-    <header className="relative z-30 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-slate-800 bg-canvas px-3 sm:px-4 md:px-6">
+    <header className="relative z-30 flex h-14 shrink-0 items-center justify-between gap-2 border-b-2 border-ink bg-slate-900 px-3 sm:px-4 md:px-6">
       <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
         {onOpenSidebar && (
           <button
             type="button"
             onClick={onOpenSidebar}
-            className="rounded-lg border border-slate-700 p-1.5 text-slate-300 transition-colors duration-150 hover:bg-slate-800 lg:hidden"
+            className="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-slate-900 text-slate-300 transition-colors duration-150 hover:bg-sun-light hover:text-ink lg:hidden"
             aria-label="Open navigation">
             <MenuIcon className="h-5 w-5" />
           </button>
@@ -48,14 +55,14 @@ export function AppTopbar({ onOpenRail, onOpenSidebar }: AppTopbarProps) {
         <Link to="/" className="min-w-0 shrink lg:hidden" aria-label="Imfundo Quest home">
           <Logo compactOnMobile />
         </Link>
-        {current && <p className="hidden truncate text-sm font-medium text-slate-300 sm:block lg:block">{t(current.key)}</p>}
+        {pageTitle && <p className="hidden truncate font-display text-sm font-bold text-slate-300 sm:block lg:block">{pageTitle}</p>}
       </div>
       <div className="flex shrink-0 items-center gap-1 sm:gap-1.5 md:gap-2">
         <button
           type="button"
           onClick={() => openModal('sync')}
-          className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2 py-1 text-xs font-medium transition-colors duration-150 sm:px-2.5 sm:py-1 ${
-          online ? 'border-success/40 bg-success/10 text-success-soft hover:bg-success/20' : 'border-slate-700 text-slate-300 hover:bg-slate-800'}`
+          className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border-2 border-ink px-2 py-1 text-xs font-bold transition-colors duration-150 sm:px-2.5 sm:py-1 ${
+          online ? 'bg-teal-light text-ink hover:bg-teal/60' : 'bg-slate-900 text-slate-300 hover:bg-sun-light hover:text-ink'}`
           }
           aria-label={`${online ? t('status.online') : t('status.offline')}. Open sync details`}>
 
@@ -70,13 +77,13 @@ export function AppTopbar({ onOpenRail, onOpenSidebar }: AppTopbarProps) {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="rounded-lg border border-slate-700 p-1.5 text-slate-300 transition-colors duration-150 hover:bg-slate-800"
+            className="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-slate-900 text-slate-300 transition-colors duration-150 hover:bg-sun-light hover:text-ink"
             aria-label="Settings"
             aria-expanded={menuOpen}>
             <MoreVerticalIcon className="h-4 w-4" />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-slate-800 bg-slate-900/95 p-3 shadow-xl backdrop-blur-xl">
+            <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border-2 border-ink bg-slate-900 p-3 shadow-pop-sm">
               <div className="flex flex-col gap-3">
                 <ThemeSwitcher />
                 <LanguageSwitcher />
@@ -87,7 +94,7 @@ export function AppTopbar({ onOpenRail, onOpenSidebar }: AppTopbarProps) {
         <button
           type="button"
           onClick={onOpenRail}
-          className="rounded-lg border border-slate-700 p-1.5 text-slate-300 transition-colors duration-150 hover:bg-slate-800 md:hidden"
+          className="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-slate-900 text-slate-300 transition-colors duration-150 hover:bg-sun-light hover:text-ink md:hidden"
           aria-label={t('shell.activity')}>
 
           <ActivityIcon className="h-4 w-4" />

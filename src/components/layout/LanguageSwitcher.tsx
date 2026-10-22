@@ -36,7 +36,7 @@ export function LanguageSwitcher() {
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
-          className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950/60 px-2 text-xs font-semibold text-slate-200 transition-colors hover:border-slate-600 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-soft"
+          className="inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-ink bg-slate-950/40 px-2 text-xs font-bold text-slate-200 transition-colors hover:bg-sun-light hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
           aria-label={`Language: ${selected.label}`}
           aria-haspopup="menu"
           aria-expanded={open}>
@@ -48,8 +48,8 @@ export function LanguageSwitcher() {
           <div
             role="menu"
             aria-label="Choose language"
-            className="absolute right-0 top-full z-[80] mt-2 w-48 overflow-hidden rounded-xl border border-slate-700 bg-slate-900 p-1.5 shadow-xl shadow-black/30">
-            <p className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Display language</p>
+            className="absolute right-0 top-full z-[80] mt-2 w-48 overflow-hidden rounded-xl border-2 border-ink bg-slate-900 p-1.5 shadow-pop">
+            <p className="px-2.5 pb-1 pt-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">Display language</p>
             {options.map((option) => {
               const active = option.value === lang;
               return (
@@ -63,17 +63,17 @@ export function LanguageSwitcher() {
                     setOpen(false);
                   }}
                   className={`flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left transition-colors ${
-                    active ? 'bg-primary/10 text-slate-50' : 'text-slate-300 hover:bg-slate-800'
+                    active ? 'bg-sun text-ink' : 'text-slate-300 hover:bg-sun-light hover:text-ink'
                   }`}>
-                  <span className={`grid h-7 w-8 place-items-center rounded-md text-[10px] font-bold ${
-                    active ? 'bg-primary/20 text-primary-soft' : 'bg-slate-800 text-slate-400'
+                  <span className={`grid h-7 w-8 place-items-center rounded-md border-2 border-ink text-[10px] font-bold ${
+                    active ? 'bg-sun-light text-ink' : 'bg-slate-800 text-slate-400'
                   }`}>
                     {option.shortLabel}
                   </span>
                   <span className="flex-1">
-                    <span className="block text-sm font-medium">{option.label}</span>
+                    <span className="block text-sm font-semibold">{option.label}</span>
                   </span>
-                  {active && <CheckIcon className="h-4 w-4 text-primary-soft" aria-hidden="true" />}
+                  {active && <CheckIcon className="h-4 w-4 text-ink" aria-hidden="true" />}
                 </button>
               );
             })}

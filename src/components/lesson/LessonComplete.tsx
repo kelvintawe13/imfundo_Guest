@@ -22,22 +22,22 @@ export function LessonComplete({ xp, correct, total, bestCombo, onRestart }: Les
       transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
       className="glass-card mx-auto max-w-lg p-4 text-center">
       
-      <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-success/15 text-success">
+      <span className="mx-auto grid h-14 w-14 place-items-center rounded-full border-2 border-ink bg-sun text-ink">
         <TrophyIcon className="h-7 w-7" />
       </span>
-      <h1 className="mt-3 text-xl font-semibold">{t('lesson.complete')}</h1>
+      <h1 className="mt-3 font-display text-2xl font-extrabold">{t('lesson.complete')}</h1>
       <p className="mt-1 text-sm text-slate-400">Results are saved on your phone and will sync when you’re next online.</p>
-      <dl className="mt-4 grid grid-cols-3 divide-x divide-slate-800 rounded-lg border border-slate-800 py-3">
+      <dl className="mt-4 grid grid-cols-3 divide-x-2 divide-ink/15 rounded-xl border-2 border-ink py-3">
         <div>
-          <dd className="text-xl font-semibold text-success-soft">+{xp}</dd>
+          <dd className="font-display text-xl font-extrabold text-teal">+{xp}</dd>
           <dt className="text-xs text-slate-500">XP earned</dt>
         </div>
         <div>
-          <dd className="text-xl font-semibold">{accuracy}%</dd>
+          <dd className="font-display text-xl font-extrabold">{accuracy}%</dd>
           <dt className="text-xs text-slate-500">Accuracy</dt>
         </div>
         <div>
-          <dd className="text-xl font-semibold">×{bestCombo}</dd>
+          <dd className="font-display text-xl font-extrabold">×{bestCombo}</dd>
           <dt className="text-xs text-slate-500">Best combo</dt>
         </div>
       </dl>

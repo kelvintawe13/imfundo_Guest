@@ -15,9 +15,9 @@ export const tutorModel = {
 };
 
 export const storage = [
-{ label: 'AI tutor model', mb: 380, color: 'bg-primary' },
-{ label: 'Lesson packs', mb: 640, color: 'bg-success' },
-{ label: 'Progress & cache', mb: 48, color: 'bg-slate-400' }];
+{ label: 'AI tutor model', mb: 380, color: 'bg-sky' },
+{ label: 'Lesson packs', mb: 640, color: 'bg-teal' },
+{ label: 'Progress & cache', mb: 48, color: 'bg-sun' }];
 
 
 export const storageTotalMb = 4096;

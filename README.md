@@ -151,12 +151,15 @@ flowchart TB
 
 Tokens are CSS custom properties re-mapped per theme; Tailwind reads them through `rgb(var(--token) / alpha)`. Both themes render real contrast rather than tinted duplicates.
 
-New visitors start in light mode. The topbar theme toggle switches to dark and persists the choice in `localStorage`; an inline script in `index.html` applies the saved theme before first paint to avoid a flash. Public marketing and auth surfaces are intentionally always light via a scoped `.theme-light` wrapper.
+New visitors start in light mode. The topbar theme toggle switches to dark and persists the choice in `localStorage`; an inline script in `index.html` applies the saved theme before first paint to avoid a flash. Public marketing and auth surfaces are intentionally always light via a scoped `.theme-light` wrapper. The learner and staff app keeps both themes, and its shell, dashboard, lesson player, profile, and teacher pages share the same ink borders, offset shadows, and accent chips as the marketing site.
 
 | Token | Dark value | Light handling |
 | --- | --- | --- |
 | `slate-50..950` | inverse-scaled ramp | mirrored so borders and text invert cleanly |
 | `canvas` | `15 23 42` | `248 250 252` |
+| `ink` / `ink-soft` | navy text and borders | same deep navy in both themes |
+| `sun` / `sun-light` | warm yellow accents | same vivid accent, soft tint for fills |
+| `coral` / `teal` / `sky` | accent trio | same hues, `teal-light` and `sky-light` for soft fills |
 | `primary` | `#6366F1` | same hue family, darker softs |
 | `success` / `warn` / `danger` | emerald, amber, rose | darkened for contrast on light canvas |
 

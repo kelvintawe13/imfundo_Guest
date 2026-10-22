@@ -34,7 +34,7 @@ export function AppShell() {
             </div>
           </main>
           <aside
-            className="hidden h-full w-72 shrink-0 overscroll-contain overflow-y-auto overflow-x-hidden border-l border-slate-800 bg-slate-900/30 md:block xl:w-80"
+            className="hidden h-full w-72 shrink-0 overscroll-contain overflow-y-auto overflow-x-hidden border-l-2 border-ink bg-slate-950/40 md:block xl:w-80"
             aria-label={t('shell.activity')}>
 
             <RightRail />
@@ -58,14 +58,14 @@ export function AppShell() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute inset-y-0 right-0 w-[min(340px,90vw)] overflow-y-auto border-l border-slate-800 bg-canvas">
+            className="absolute inset-y-0 right-0 w-[min(340px,90vw)] overflow-y-auto border-l-2 border-ink bg-canvas">
 
-              <div className="flex h-12 items-center justify-between border-b border-slate-800 px-4">
-                <p className="text-sm font-semibold">{t('shell.activity')}</p>
+              <div className="flex h-12 items-center justify-between border-b-2 border-ink px-4">
+                <p className="font-display text-sm font-bold">{t('shell.activity')}</p>
                 <button
                 type="button"
                 onClick={() => setRailOpen(false)}
-                className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                className="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-slate-900 text-slate-400 transition-colors hover:bg-sun-light hover:text-ink"
                 aria-label={t('common.close')}>
 
                   <XIcon className="h-4 w-4" />

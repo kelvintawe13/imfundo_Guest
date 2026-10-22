@@ -18,8 +18,8 @@ export function ProfileRail() {
                   {'unit' in b ? b.unit : ''}
                 </span>
               </div>
-              <div className="mt-1.5 h-1.5 rounded-full bg-slate-800">
-                <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, b.current / b.target * 100)}%` }} />
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full border border-ink/30 bg-slate-950/40">
+                <div className="h-full rounded-full bg-teal" style={{ width: `${Math.min(100, b.current / b.target * 100)}%` }} />
               </div>
             </li>
           )}

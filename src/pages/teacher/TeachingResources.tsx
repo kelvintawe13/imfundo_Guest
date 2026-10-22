@@ -42,7 +42,7 @@ export function TeachingResources() {
               placeholder="Search guides, worksheets, topics"
               className="field !mt-0 !py-2 !pl-9" />
           </label>
-          <label className="flex items-center gap-2 text-xs text-slate-400">
+          <label className="flex items-center gap-2 font-display text-xs font-bold text-slate-400">
             Topic
             <select value={topic} onChange={(event) => setTopic(event.target.value)} className="field !mt-0 !w-auto !py-2">
               {topics.map((item) => <option key={item}>{item}</option>)}
@@ -57,12 +57,12 @@ export function TeachingResources() {
           return (
             <article key={resource.id} className="glass-card flex min-h-52 flex-col p-4">
               <div className="flex items-start justify-between gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary/10 text-primary-soft">
+                <span className="grid h-10 w-10 place-items-center rounded-xl border-2 border-ink bg-sun text-ink">
                   <FileTextIcon className="h-5 w-5" />
                 </span>
-                <span className="rounded-full border border-slate-800 bg-slate-950/30 px-2 py-1 text-[10px] text-slate-400">{resource.type}</span>
+                <span className="rounded-full border-2 border-ink/20 px-2 py-1 text-[10px] font-bold text-slate-400">{resource.type}</span>
               </div>
-              <h2 className="mt-4 text-sm font-semibold leading-snug text-slate-100">{resource.title}</h2>
+              <h2 className="mt-4 font-display text-sm font-bold leading-snug text-slate-100">{resource.title}</h2>
               <p className="mt-1 text-xs text-slate-400">{resource.topic} · PDF · {resource.size}</p>
               <div className="mt-auto flex items-center justify-between gap-3 pt-4">
                 <span className="text-[11px] text-slate-500">Resource file is a demo placeholder</span>

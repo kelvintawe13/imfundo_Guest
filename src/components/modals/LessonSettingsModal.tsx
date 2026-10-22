@@ -63,7 +63,7 @@ export function LessonSettingsModal() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-medium text-slate-100">Difficulty</p>
+            <p className="font-display text-sm font-bold text-slate-100">Difficulty</p>
             <p className="mt-0.5 text-xs text-slate-400">Challenge doubles XP and removes hints</p>
           </div>
           <Segmented
@@ -76,7 +76,7 @@ export function LessonSettingsModal() {
             } />
           
         </div>
-        <div className="divide-y divide-slate-800 border-t border-slate-800">
+        <div className="divide-y-2 divide-ink/10 border-t-2 border-ink/10">
           <Toggle label="Sound effects" description="Play a tone on correct answers" checked={draft.sound} onChange={(v) => update('sound', v)} />
           <Toggle
             label="Show hints automatically"

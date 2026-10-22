@@ -9,7 +9,7 @@ export function SkeletonRows({ rows = 4 }: {rows?: number;}) {
   return (
     <div className="space-y-3" role="status" aria-label="Loading">
       {Array.from({ length: rows }).map((_, i) =>
-      <div key={i} className="flex items-center gap-3 rounded-lg border border-slate-800 p-3">
+      <div key={i} className="flex items-center gap-3 rounded-xl border-2 border-ink/15 p-3">
           <Skeleton className="h-9 w-9 shrink-0 rounded-lg" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-3.5 w-2/3" />

@@ -13,11 +13,11 @@ export function TeacherRail() {
       <RailSection title={t('shell.progress')}>
         <p className="text-sm text-slate-300">{teacherClass.name}</p>
         <div className="mt-2 flex items-baseline gap-2">
-          <p className="text-2xl font-semibold">{primaryKpi.value}</p>
-          <p className="text-xs text-success-soft">{primaryKpi.delta}</p>
+          <p className="font-display text-2xl font-extrabold">{primaryKpi.value}</p>
+          <p className="text-xs font-bold text-teal">{primaryKpi.delta}</p>
         </div>
-        <div className="mt-2 h-1.5 rounded-full bg-slate-800">
-          <div className="h-full rounded-full bg-success" style={{ width: `${primaryKpi.progress}%` }} />
+        <div className="mt-2 h-2.5 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
+          <div className="h-full rounded-full bg-teal" style={{ width: `${primaryKpi.progress}%` }} />
         </div>
         <p className="mt-2 text-xs text-slate-500">Pilot target: 75% by end of term</p>
       </RailSection>
@@ -27,8 +27,8 @@ export function TeacherRail() {
       <RailSection title="This week">
         <ul className="space-y-2">
           {classTasks.map((task) =>
-          <li key={task.title} className="flex items-center justify-between gap-3 rounded-lg border border-slate-800 px-3 py-2">
-              <span className="text-sm text-slate-200">{task.title}</span>
+          <li key={task.title} className="flex items-center justify-between gap-3 rounded-xl border-2 border-ink/15 px-3 py-2">
+              <span className="text-sm font-semibold text-slate-200">{task.title}</span>
               <span className="shrink-0 text-xs text-slate-500">{task.due}</span>
             </li>
           )}

@@ -28,25 +28,25 @@ export function LearnerSupport() {
       <section className="grid gap-3 sm:grid-cols-3" aria-label="Support queue summary">
         <div className="glass-card p-4">
           <p className="text-xs text-slate-500">Needs review</p>
-          <p className="mt-1 text-2xl font-semibold text-warn">{outstanding}</p>
+          <p className="mt-1 font-display text-2xl font-extrabold text-coral">{outstanding}</p>
           <p className="mt-1 text-xs text-slate-400">Open demo follow-ups</p>
         </div>
         <div className="glass-card p-4">
           <p className="text-xs text-slate-500">Reviewed</p>
-          <p className="mt-1 text-2xl font-semibold text-success-soft">{reviewed.length}</p>
+          <p className="mt-1 font-display text-2xl font-extrabold text-teal">{reviewed.length}</p>
           <p className="mt-1 text-xs text-slate-400">This page session</p>
         </div>
         <div className="glass-card p-4">
           <p className="text-xs text-slate-500">Support signals</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-100">{attentionLearners.length}</p>
+          <p className="mt-1 font-display text-2xl font-extrabold text-slate-100">{attentionLearners.length}</p>
           <p className="mt-1 text-xs text-slate-400">Sample learners below 50% mastery</p>
         </div>
       </section>
 
       <section className="glass-card overflow-hidden" aria-labelledby="support-list-title">
-        <div className="flex flex-col gap-3 border-b border-slate-800 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b-2 border-ink/15 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 id="support-list-title" className="text-base font-semibold text-slate-100">Learners to check in with</h2>
+            <h2 id="support-list-title" className="font-display text-base font-extrabold text-slate-100">Learners to check in with</h2>
             <p className="mt-1 text-xs text-slate-500">A follow-up marker is temporary and only stored for this page session.</p>
           </div>
           <label className="relative block w-full sm:max-w-xs">
@@ -60,21 +60,21 @@ export function LearnerSupport() {
               className="field !mt-0 !py-2 !pl-9" />
           </label>
         </div>
-        <ul className="divide-y divide-slate-800">
+        <ul className="divide-y-2 divide-ink/10">
           {learners.map((learner) => {
             const isReviewed = reviewed.includes(learner.name);
             return (
               <li key={learner.name} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${
-                  isReviewed ? 'bg-success/10 text-success-soft' : 'bg-warn/10 text-warn'
+                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-ink ${
+                  isReviewed ? 'bg-teal-light text-ink' : 'bg-coral/20 text-ink'
                 }`}>
                   {isReviewed ? <CheckCircle2Icon className="h-5 w-5" /> : <CircleAlertIcon className="h-5 w-5" />}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-semibold text-slate-100">{learner.name}</h3>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                      isReviewed ? 'bg-success/10 text-success-soft' : 'bg-warn/10 text-warn'
+                    <h3 className="font-display text-sm font-bold text-slate-100">{learner.name}</h3>
+                    <span className={`rounded-full border-2 border-ink px-2 py-0.5 text-[10px] font-bold ${
+                      isReviewed ? 'bg-teal-light text-ink' : 'bg-coral/20 text-ink'
                     }`}>
                       {isReviewed ? 'Reviewed' : 'Needs check-in'}
                     </span>

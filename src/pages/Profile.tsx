@@ -21,13 +21,13 @@ export function Profile() {
       <h1 className="sr-only">{t('profile.title')}</h1>
       <div className="grid gap-3 2xl:grid-cols-[340px_1fr]">
         <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-1 2xl:content-start">
-          <section className="glass-card p-3">
+          <section className="glass-card p-4">
             <div className="flex items-center gap-3">
-              <span className="grid h-14 w-14 place-items-center rounded-full bg-primary/20 text-lg font-semibold text-primary-soft">
+              <span className="grid h-14 w-14 place-items-center rounded-full border-2 border-ink bg-sun font-display text-lg font-extrabold text-ink">
                 {learner.initials}
               </span>
               <div>
-                <p className="text-lg font-semibold">{learner.name}</p>
+                <p className="font-display text-lg font-extrabold">{learner.name}</p>
                 <p className="text-sm text-slate-400">
                   {learner.grade} · {learner.school}
                 </p>
@@ -35,24 +35,24 @@ export function Profile() {
             </div>
             <div className="mt-4">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-400">Level {learnerStats.level}</span>
-                <span className="tabular-nums text-success-soft">{learnerStats.xp.toLocaleString()} XP</span>
+                <span className="font-semibold text-slate-400">Level {learnerStats.level}</span>
+                <span className="font-bold tabular-nums text-teal">{learnerStats.xp.toLocaleString()} XP</span>
               </div>
-              <div className="mt-1.5 h-2 rounded-full bg-slate-800">
-                <div className="h-full rounded-full bg-success" style={{ width: `${xpPct}%` }} />
+              <div className="mt-1.5 h-3 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
+                <div className="h-full rounded-full bg-teal" style={{ width: `${xpPct}%` }} />
               </div>
             </div>
             <p className="mt-3 text-xs text-slate-500">{learner.joined}</p>
           </section>
 
-          <section className="glass-card p-3" aria-labelledby="storage-title">
-            <h2 id="storage-title" className="flex items-center gap-2 text-sm font-semibold">
+          <section className="glass-card p-4" aria-labelledby="storage-title">
+            <h2 id="storage-title" className="flex items-center gap-2 font-display text-sm font-extrabold">
               <HardDriveIcon className="h-4 w-4 text-slate-400" /> On-device storage
             </h2>
             <p className="mt-1 text-xs text-slate-400">
               {(usedMb / 1024).toFixed(2)} GB of {storageTotalMb / 1024} GB available to the app
             </p>
-            <div className="mt-3 flex h-2 overflow-hidden rounded-full bg-slate-800">
+            <div className="mt-3 flex h-3 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
               {storage.map((s) =>
               <div key={s.label} className={s.color} style={{ width: `${s.mb / storageTotalMb * 100}%` }} />
               )}
@@ -71,9 +71,9 @@ export function Profile() {
         </div>
 
         <div className="space-y-3">
-          <section className="glass-card p-3" aria-labelledby="badges-title">
+          <section className="glass-card p-4" aria-labelledby="badges-title">
             <div className="flex items-center justify-between">
-              <h2 id="badges-title" className="text-sm font-semibold">
+              <h2 id="badges-title" className="font-display text-sm font-extrabold">
                 {t('profile.badges')}
               </h2>
               <span className="text-xs text-slate-500">
@@ -84,14 +84,14 @@ export function Profile() {
               {badges.map(({ name, icon: Icon, earned: got }) =>
               <li
                 key={name}
-                className={`flex flex-col items-center rounded-lg border p-3 text-center ${
-                got ? 'border-slate-700 bg-slate-800/40' : 'border-dashed border-slate-800 opacity-50'}`
+                className={`flex flex-col items-center rounded-xl border-2 p-3 text-center ${
+                got ? 'border-ink bg-sun-light' : 'border-dashed border-ink/25 opacity-60'}`
                 }>
                 
-                  <span className={`grid h-10 w-10 place-items-center rounded-full ${got ? 'bg-success/15 text-success-soft' : 'bg-slate-800 text-slate-500'}`}>
+                  <span className={`grid h-10 w-10 place-items-center rounded-full border-2 border-ink ${got ? 'bg-sun text-ink' : 'bg-slate-900 text-slate-500'}`}>
                     <Icon className="h-5 w-5" />
                   </span>
-                  <p className="mt-2 text-xs font-medium text-slate-200">{name}</p>
+                  <p className="mt-2 text-xs font-bold text-slate-200">{name}</p>
                   {!got && <p className="text-[11px] text-slate-500">Locked</p>}
                 </li>
               )}
@@ -99,18 +99,18 @@ export function Profile() {
           </section>
 
           <div className="grid gap-3 md:grid-cols-2">
-            <section className="glass-card p-3" aria-labelledby="prefs-title">
-              <h2 id="prefs-title" className="text-sm font-semibold">
+            <section className="glass-card p-4" aria-labelledby="prefs-title">
+              <h2 id="prefs-title" className="font-display text-sm font-extrabold">
                 {t('profile.preferences')}
               </h2>
               <div className="mt-2 flex items-center justify-between gap-3 py-2.5">
                 <div>
-                  <p className="text-sm font-medium text-slate-100">App language</p>
+                  <p className="font-display text-sm font-bold text-slate-100">App language</p>
                   <p className="mt-0.5 text-xs text-slate-400">English or isiXhosa</p>
                 </div>
                 <LanguageSwitcher />
               </div>
-              <div className="divide-y divide-slate-800 border-t border-slate-800">
+              <div className="divide-y-2 divide-ink/10 border-t-2 border-ink/10">
                 <Toggle label="Download on Wi-Fi only" description="Protects your mobile data" checked={prefs.wifiOnly} onChange={(v) => setPrefs((p) => ({ ...p, wifiOnly: v }))} />
                 <Toggle label="Data saver" description="Sync progress only, skip new lessons" checked={prefs.dataSaver} onChange={(v) => setPrefs((p) => ({ ...p, dataSaver: v }))} />
                 <Toggle label="Daily reminder" description="A nudge at 16:00 to keep your streak" checked={prefs.reminder} onChange={(v) => setPrefs((p) => ({ ...p, reminder: v }))} />
@@ -120,15 +120,15 @@ export function Profile() {
               </button>
             </section>
 
-            <section className="glass-card p-3" aria-labelledby="activity-title">
-              <h2 id="activity-title" className="text-sm font-semibold">
+            <section className="glass-card p-4" aria-labelledby="activity-title">
+              <h2 id="activity-title" className="font-display text-sm font-extrabold">
                 Recent activity
               </h2>
-              <ol className="mt-3 space-y-3 border-l border-slate-800 pl-4">
+              <ol className="mt-3 space-y-3 border-l-2 border-ink/15 pl-4">
                 {recentActivity.map((a) =>
                 <li key={a.title} className="relative">
-                    <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-primary" />
-                    <p className="text-sm font-medium text-slate-100">{a.title}</p>
+                    <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full border border-ink bg-coral" />
+                    <p className="font-display text-sm font-bold text-slate-100">{a.title}</p>
                     <p className="text-xs text-slate-500">
                       {a.meta} · {a.when}
                     </p>

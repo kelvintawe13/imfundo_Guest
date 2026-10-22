@@ -13,12 +13,12 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
   return (
     <section className={plain ? '' : 'glass-card p-3'} aria-labelledby="sync-title">
       <div className="flex items-center justify-between">
-        <h2 id="sync-title" className="text-sm font-semibold">
+        <h2 id="sync-title" className="font-display text-sm font-extrabold">
           {t('dash.syncQueue')}
         </h2>
         <span className="text-xs tabular-nums text-slate-500">{pending} pending</span>
       </div>
-      <p className={`mt-1 flex items-center gap-1.5 text-xs ${online ? 'text-success-soft' : 'text-slate-400'}`}>
+      <p className={`mt-1 flex items-center gap-1.5 text-xs ${online ? 'text-teal' : 'text-slate-400'}`}>
         {online ?
         pending ? 'Connection found, syncing…' : `All synced · ${lastSynced}` :
 
@@ -45,16 +45,16 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
           return (
             <li key={q.id}>
                 <div className="flex items-start gap-2.5">
-                  <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${done ? 'text-success' : 'text-slate-400'}`} />
+                  <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${done ? 'text-teal' : 'text-slate-400'}`} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm text-slate-200">{q.label}</p>
                     <p className="truncate text-xs text-slate-500">{q.detail}</p>
                   </div>
                   <span className="text-xs tabular-nums text-slate-500">{q.size}</span>
                 </div>
-                <div className="ml-6 mt-2 h-1 rounded-full bg-slate-800">
+                <div className="ml-6 mt-2 h-1.5 rounded-full border border-ink/30 bg-slate-950/40">
                   <div
-                  className={`h-full rounded-full transition-[width] duration-300 ease-out ${done ? 'bg-success' : 'bg-primary'}`}
+                  className={`h-full rounded-full transition-[width] duration-300 ease-out ${done ? 'bg-teal' : 'bg-sky'}`}
                   style={{ width: `${q.progress}%` }} />
                 
                 </div>

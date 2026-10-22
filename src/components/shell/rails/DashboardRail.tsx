@@ -18,7 +18,7 @@ export function DashboardRail() {
               cx="22"
               cy="22"
               r="18"
-              className="stroke-success"
+              className="stroke-teal"
               strokeWidth="5"
               fill="none"
               strokeLinecap="round"
@@ -26,7 +26,7 @@ export function DashboardRail() {
             
           </svg>
           <div>
-            <p className="text-lg font-semibold">
+            <p className="font-display text-lg font-extrabold">
               {dailyGoal.done}/{dailyGoal.target}
             </p>
             <p className="text-xs text-slate-400">Daily goal · {dailyGoal.unit}</p>
@@ -36,12 +36,12 @@ export function DashboardRail() {
           {weekStreak.map((d, i) =>
           <li key={i} className="flex flex-col items-center gap-1">
               <span
-              className={`grid h-7 w-7 place-items-center rounded-full border text-[10px] ${
+              className={`grid h-7 w-7 place-items-center rounded-full border-2 font-display text-[10px] font-bold ${
               d.done ?
-              'border-success bg-success text-white' :
+              'border-ink bg-teal text-ink' :
               'today' in d && d.today ?
-              'border-primary text-primary-soft' :
-              'border-slate-700 text-slate-500'}`
+              'border-ink bg-sun text-ink' :
+              'border-ink/20 text-slate-500'}`
               }>
               
                 {d.done ? <CheckIcon className="h-3.5 w-3.5" /> : d.day}
@@ -50,7 +50,7 @@ export function DashboardRail() {
           )}
         </ul>
       </RailSection>
-      <div className="border-b border-slate-800 px-4 py-3">
+      <div className="border-b-2 border-ink/15 px-4 py-3">
         <SyncQueuePanel plain />
       </div>
       <RailSection title={t('shell.updates')}>

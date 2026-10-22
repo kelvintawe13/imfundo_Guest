@@ -9,7 +9,7 @@ const options: {value: Theme;label: string;icon: typeof SunIcon;}[] = [
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
   return (
-    <div role="group" aria-label="Theme" className="inline-flex rounded-lg border border-slate-700 bg-slate-950/60 p-0.5">
+    <div role="group" aria-label="Theme" className="inline-flex rounded-full border-2 border-ink bg-slate-950/40 p-0.5">
       {options.map(({ value, label, icon: Icon }) => {
         const active = theme === value;
         return (
@@ -20,8 +20,8 @@ export function ThemeSwitcher() {
             aria-label={label}
             title={label}
             onClick={() => setTheme(value)}
-            className={`grid h-6 w-7 place-items-center rounded-md transition-colors duration-150 ${
-            active ? 'bg-slate-700 text-slate-50' : 'text-slate-400 hover:text-slate-200'}`
+            className={`grid h-6 w-7 place-items-center rounded-full transition-colors duration-150 ${
+            active ? 'bg-sun text-ink shadow-pop-sm' : 'text-slate-400 hover:text-ink'}`
             }>
             
             <Icon className="h-3.5 w-3.5" />

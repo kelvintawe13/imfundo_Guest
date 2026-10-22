@@ -15,19 +15,19 @@ export function ResourcesTab() {
   return (
     <div className="grid gap-3 lg:grid-cols-[1.6fr_1fr]">
       <section className="glass-card overflow-hidden" aria-labelledby="res-title">
-        <h3 id="res-title" className="px-4 pt-5 text-sm font-semibold">
+        <h3 id="res-title" className="px-4 pt-5 font-display text-sm font-extrabold">
           Lesson guides & worksheets
         </h3>
-        <ul className="mt-3 divide-y divide-slate-800 border-t border-slate-800">
+        <ul className="mt-3 divide-y-2 divide-ink/10 border-t-2 border-ink/10">
           {resources.map((r) => {
             const s = state[r.id] ?? 'idle';
             return (
               <li key={r.id} className="flex items-center gap-3 px-4 py-3.5">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-slate-800 text-slate-300">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border-2 border-ink bg-sky text-ink">
                   <FileTextIcon className="h-4 w-4" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-slate-100">{r.title}</p>
+                  <p className="truncate font-display text-sm font-bold text-slate-100">{r.title}</p>
                   <p className="text-xs text-slate-500">
                     {r.type} · {r.topic} · PDF {r.size}
                   </p>
@@ -36,7 +36,7 @@ export function ResourcesTab() {
                   type="button"
                   onClick={() => download(r.id)}
                   disabled={s !== 'idle'}
-                  className={`btn-secondary !px-3 !py-1.5 text-xs ${s === 'done' ? '!border-success/40 !text-success-soft' : ''}`}
+                  className={`btn-secondary !px-3 !py-1.5 text-xs ${s === 'done' ? '!bg-teal-light !text-ink' : ''}`}
                   aria-label={`Download ${r.title}`}>
                   
                   {s === 'loading' && <LoaderCircleIcon className="h-3.5 w-3.5 animate-spin" />}
@@ -50,11 +50,11 @@ export function ResourcesTab() {
         </ul>
       </section>
 
-      <aside className="glass-card p-3">
-        <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary/15 text-primary-soft">
+      <aside className="glass-card p-4">
+        <span className="grid h-10 w-10 place-items-center rounded-xl border-2 border-ink bg-sun text-ink">
           <PrinterIcon className="h-5 w-5" />
         </span>
-        <h3 className="mt-3 font-semibold">Built for classrooms without enough devices</h3>
+        <h3 className="mt-3 font-display text-base font-extrabold">Built for classrooms without enough devices</h3>
         <p className="mt-2 text-sm text-slate-400">
           Many teachers want to use digital tools but have had little ICT training. Every guide is step-by-step, every
           worksheet prints in black and white, and nothing requires a projector or Wi-Fi.
