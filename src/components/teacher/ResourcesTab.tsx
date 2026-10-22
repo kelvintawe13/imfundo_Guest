@@ -15,16 +15,16 @@ export function ResourcesTab() {
   return (
     <div className="grid gap-3 lg:grid-cols-[1.6fr_1fr]">
       <section className="glass-card overflow-hidden" aria-labelledby="res-title">
-        <h3 id="res-title" className="px-4 pt-5 font-display text-sm font-extrabold">
+        <h3 id="res-title" className="px-4 pt-3 font-display text-sm font-extrabold">
           Lesson guides & worksheets
         </h3>
-        <ul className="mt-3 divide-y-2 divide-ink/10 border-t-2 border-ink/10">
+        <ul className="mt-2 divide-y-2 divide-ink/10 border-t-2 border-ink/10">
           {resources.map((r) => {
             const s = state[r.id] ?? 'idle';
             return (
-              <li key={r.id} className="flex items-center gap-3 px-4 py-3.5">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border-2 border-ink bg-sky text-ink">
-                  <FileTextIcon className="h-4 w-4" />
+              <li key={r.id} className="flex items-center gap-2.5 px-4 py-2.5">
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border-2 border-ink bg-sky text-ink">
+                  <FileTextIcon className="h-3.5 w-3.5" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-display text-sm font-bold text-slate-100">{r.title}</p>
@@ -50,16 +50,16 @@ export function ResourcesTab() {
         </ul>
       </section>
 
-      <aside className="glass-card p-4">
-        <span className="grid h-10 w-10 place-items-center rounded-xl border-2 border-ink bg-sun text-ink">
-          <PrinterIcon className="h-5 w-5" />
+      <aside className="glass-card p-3">
+        <span className="grid h-9 w-9 place-items-center rounded-lg border-2 border-ink bg-sun text-ink">
+          <PrinterIcon className="h-4 w-4" />
         </span>
-        <h3 className="mt-3 font-display text-base font-extrabold">Built for classrooms without enough devices</h3>
-        <p className="mt-2 text-sm text-slate-400">
+        <h3 className="mt-2 font-display text-sm font-extrabold">Built for classrooms without enough devices</h3>
+        <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
           Many teachers want to use digital tools but have had little ICT training. Every guide is step-by-step, every
           worksheet prints in black and white, and nothing requires a projector or Wi-Fi.
         </p>
-        <ul className="mt-3 space-y-2 text-sm text-slate-300">
+        <ul className="mt-2 space-y-1.5 text-xs text-slate-300">
           <li>• One-lesson getting-started plan</li>
           <li>• Matches the CAPS topic order</li>
           <li>• Bilingual key-term glossaries</li>

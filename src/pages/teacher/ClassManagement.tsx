@@ -40,42 +40,42 @@ export function ClassManagement() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-5 px-4 py-5 sm:px-6">
+    <div className="mx-auto max-w-7xl space-y-3 px-4 py-3 sm:px-6">
       <TeacherPageHeader
         eyebrow="Staff · Class management"
         title="Your class"
         description="Review learner activity and progress in your demo class. The roster below is sample data."
         icon={UsersIcon} />
 
-      <section className="grid gap-3 sm:grid-cols-3" aria-label="Class summary">
-        <div className="glass-card p-4">
-          <p className="text-xs text-slate-500">Class</p>
-          <p className="mt-1 font-display text-lg font-extrabold text-slate-100">{teacherClass.name}</p>
-          <p className="mt-1 text-xs text-slate-400">{teacherClass.school}</p>
+      <section className="glass-card flex flex-col divide-y-2 divide-ink/10 p-3 sm:flex-row sm:items-center sm:divide-x-2 sm:divide-y-0" aria-label="Class summary">
+        <div className="min-w-0 pb-2.5 sm:flex-1 sm:pb-0 sm:pr-4">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Class</p>
+          <p className="mt-0.5 truncate font-display text-sm font-extrabold text-slate-100">{teacherClass.name}</p>
+          <p className="truncate text-[11px] text-slate-400">{teacherClass.school}</p>
         </div>
-        <div className="glass-card p-4">
-          <p className="text-xs text-slate-500">Enrolled learners</p>
-          <p className="mt-1 font-display text-2xl font-extrabold text-slate-100">{teacherClass.learners}</p>
-          <p className="mt-1 text-xs text-slate-400">Demo class total</p>
+        <div className="min-w-0 py-2.5 sm:flex-1 sm:px-4 sm:py-0">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Enrolled learners</p>
+          <p className="mt-0.5 font-display text-lg font-extrabold text-slate-100">{teacherClass.learners}</p>
+          <p className="text-[11px] text-slate-400">Demo class total</p>
         </div>
-        <div className="glass-card p-4">
-          <p className="text-xs text-slate-500">{kpis[0].label}</p>
-          <p className="mt-1 font-display text-2xl font-extrabold text-teal">{kpis[0].value}</p>
-          <p className="mt-1 text-xs text-slate-400">Based on sample class activity</p>
+        <div className="min-w-0 pt-2.5 sm:flex-1 sm:pl-4 sm:pt-0">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">{kpis[0].label}</p>
+          <p className="mt-0.5 font-display text-lg font-extrabold text-teal">{kpis[0].value}</p>
+          <p className="text-[11px] text-slate-400">Based on sample activity</p>
         </div>
       </section>
 
       <section className="glass-card overflow-hidden" aria-labelledby="roster-title">
-        <div className="flex flex-col gap-3 border-b-2 border-ink/15 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2.5 border-b-2 border-ink/15 p-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 id="roster-title" className="font-display text-base font-extrabold text-slate-100">Learner roster</h2>
-            <p className="mt-1 text-xs text-slate-500">Showing {visibleLearners.length} of {classRoster.length} demo profiles</p>
+            <p className="mt-0.5 text-[11px] text-slate-500">Showing {visibleLearners.length} of {classRoster.length} demo profiles</p>
           </div>
           <button type="button" onClick={exportRoster} className="btn-secondary self-start !py-1.5 text-xs sm:self-auto">
             <DownloadIcon className="h-3.5 w-3.5" /> Export sample CSV
           </button>
         </div>
-        <div className="flex flex-col gap-3 border-b-2 border-ink/15 p-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-2 border-b-2 border-ink/15 p-3 lg:flex-row lg:items-center lg:justify-between">
           <label className="relative block w-full lg:max-w-xs">
             <span className="sr-only">Search learners</span>
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -108,16 +108,16 @@ export function ClassManagement() {
             <table className="w-full min-w-[660px] text-sm">
               <thead>
                 <tr className="border-b-2 border-ink/15 text-left text-xs text-slate-500">
-                  <th className="px-4 py-3 font-bold">Learner</th>
-                  <th className="px-4 py-3 font-bold">Progress</th>
-                  <th className="px-4 py-3 font-bold">Status</th>
-                  <th className="px-4 py-3 font-bold">Last synced</th>
+                  <th className="px-4 py-2 font-bold">Learner</th>
+                  <th className="px-4 py-2 font-bold">Progress</th>
+                  <th className="px-4 py-2 font-bold">Status</th>
+                  <th className="px-4 py-2 font-bold">Last synced</th>
                 </tr>
               </thead>
               <tbody>
                 {visibleLearners.map((learner) => (
                   <tr key={learner.email} className="border-b border-ink/10 last:border-0">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2">
                       <div className="flex items-center gap-2.5">
                         <span className="grid h-8 w-8 place-items-center rounded-full border-2 border-ink bg-sun text-[10px] font-extrabold text-ink">{learner.initials}</span>
                         <span className="min-w-0">
@@ -126,7 +126,7 @@ export function ClassManagement() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2">
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-20 overflow-hidden rounded-full border border-ink/30 bg-slate-950/40">
                           <span className={`block h-full rounded-full ${learner.progress < 50 ? 'bg-coral' : 'bg-teal'}`} style={{ width: `${learner.progress}%` }} />
@@ -134,7 +134,7 @@ export function ClassManagement() {
                         <span className="font-semibold tabular-nums text-xs text-slate-400">{learner.progress}%</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2">
                       <span className={`rounded-full border-2 border-ink px-2 py-0.5 text-[11px] font-bold ${
                         learner.status === 'Needs support'
                           ? 'bg-coral/20 text-ink'
@@ -145,7 +145,7 @@ export function ClassManagement() {
                         {learner.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-400">{learner.lastSync}</td>
+                    <td className="px-4 py-2 text-xs text-slate-400">{learner.lastSync}</td>
                   </tr>
                 ))}
               </tbody>

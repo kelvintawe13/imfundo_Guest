@@ -18,36 +18,36 @@ export function LearnerSupport() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-5 px-4 py-5 sm:px-6">
+    <div className="mx-auto max-w-7xl space-y-3 px-4 py-3 sm:px-6">
       <TeacherPageHeader
         eyebrow="Staff · Learner support"
         title="Support follow-ups"
         description="Prioritize learners who may benefit from a check-in, based on sample class mastery signals."
         icon={UserRoundCheckIcon} />
 
-      <section className="grid gap-3 sm:grid-cols-3" aria-label="Support queue summary">
-        <div className="glass-card p-4">
-          <p className="text-xs text-slate-500">Needs review</p>
-          <p className="mt-1 font-display text-2xl font-extrabold text-coral">{outstanding}</p>
-          <p className="mt-1 text-xs text-slate-400">Open demo follow-ups</p>
+      <section className="glass-card flex flex-col divide-y-2 divide-ink/10 p-3 sm:flex-row sm:items-center sm:divide-x-2 sm:divide-y-0" aria-label="Support queue summary">
+        <div className="min-w-0 pb-2.5 sm:flex-1 sm:pb-0 sm:pr-4">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Needs review</p>
+          <p className="mt-0.5 font-display text-lg font-extrabold text-coral">{outstanding}</p>
+          <p className="text-[11px] text-slate-400">Open demo follow-ups</p>
         </div>
-        <div className="glass-card p-4">
-          <p className="text-xs text-slate-500">Reviewed</p>
-          <p className="mt-1 font-display text-2xl font-extrabold text-teal">{reviewed.length}</p>
-          <p className="mt-1 text-xs text-slate-400">This page session</p>
+        <div className="min-w-0 py-2.5 sm:flex-1 sm:px-4 sm:py-0">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Reviewed</p>
+          <p className="mt-0.5 font-display text-lg font-extrabold text-teal">{reviewed.length}</p>
+          <p className="text-[11px] text-slate-400">This page session</p>
         </div>
-        <div className="glass-card p-4">
-          <p className="text-xs text-slate-500">Support signals</p>
-          <p className="mt-1 font-display text-2xl font-extrabold text-slate-100">{attentionLearners.length}</p>
-          <p className="mt-1 text-xs text-slate-400">Sample learners below 50% mastery</p>
+        <div className="min-w-0 pt-2.5 sm:flex-1 sm:pl-4 sm:pt-0">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Support signals</p>
+          <p className="mt-0.5 font-display text-lg font-extrabold text-slate-100">{attentionLearners.length}</p>
+          <p className="text-[11px] text-slate-400">Sample learners below 50% mastery</p>
         </div>
       </section>
 
       <section className="glass-card overflow-hidden" aria-labelledby="support-list-title">
-        <div className="flex flex-col gap-3 border-b-2 border-ink/15 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-b-2 border-ink/15 p-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 id="support-list-title" className="font-display text-base font-extrabold text-slate-100">Learners to check in with</h2>
-            <p className="mt-1 text-xs text-slate-500">A follow-up marker is temporary and only stored for this page session.</p>
+            <p className="mt-0.5 text-[11px] text-slate-500">A follow-up marker is temporary and only stored for this page session.</p>
           </div>
           <label className="relative block w-full sm:max-w-xs">
             <span className="sr-only">Search support list</span>
@@ -64,8 +64,8 @@ export function LearnerSupport() {
           {learners.map((learner) => {
             const isReviewed = reviewed.includes(learner.name);
             return (
-              <li key={learner.name} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-ink ${
+              <li key={learner.name} className="flex flex-col gap-2.5 p-3 sm:flex-row sm:items-center">
+                <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border-2 border-ink ${
                   isReviewed ? 'bg-teal-light text-ink' : 'bg-coral/20 text-ink'
                 }`}>
                   {isReviewed ? <CheckCircle2Icon className="h-5 w-5" /> : <CircleAlertIcon className="h-5 w-5" />}
@@ -79,8 +79,8 @@ export function LearnerSupport() {
                       {isReviewed ? 'Reviewed' : 'Needs check-in'}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-slate-400">Focus area: {learner.topic} · {learner.mastery}% mastery</p>
-                  <p className="mt-1 text-[11px] text-slate-500">Last synced: {learner.lastSync}</p>
+                  <p className="mt-0.5 text-[11px] text-slate-400">Focus area: {learner.topic} · {learner.mastery}% mastery</p>
+                  <p className="text-[10px] text-slate-500">Last synced: {learner.lastSync}</p>
                 </div>
                 <button
                   type="button"

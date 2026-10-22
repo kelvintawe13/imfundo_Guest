@@ -23,15 +23,15 @@ export function TeachingResources() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-5 px-4 py-5 sm:px-6">
+    <div className="mx-auto max-w-7xl space-y-3 px-4 py-3 sm:px-6">
       <TeacherPageHeader
         eyebrow="Staff · Teaching resources"
         title="Resource library"
         description="Find lesson guides, worksheets, and references for offline-friendly teaching."
         icon={BookOpenIcon} />
 
-      <section className="glass-card p-4" aria-label="Resource library filters">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <section className="glass-card p-3" aria-label="Resource library filters">
+        <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
           <label className="relative block w-full lg:max-w-sm">
             <span className="sr-only">Search teaching resources</span>
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -55,17 +55,17 @@ export function TeachingResources() {
         {visibleResources.map((resource) => {
           const isSaved = saved.includes(resource.id);
           return (
-            <article key={resource.id} className="glass-card flex min-h-52 flex-col p-4">
+            <article key={resource.id} className="glass-card flex min-h-40 flex-col p-3">
               <div className="flex items-start justify-between gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl border-2 border-ink bg-sun text-ink">
-                  <FileTextIcon className="h-5 w-5" />
+                <span className="grid h-9 w-9 place-items-center rounded-lg border-2 border-ink bg-sun text-ink">
+                  <FileTextIcon className="h-4 w-4" />
                 </span>
-                <span className="rounded-full border-2 border-ink/20 px-2 py-1 text-[10px] font-bold text-slate-400">{resource.type}</span>
+                <span className="rounded-full border-2 border-ink/20 px-2 py-0.5 text-[10px] font-bold text-slate-400">{resource.type}</span>
               </div>
-              <h2 className="mt-4 font-display text-sm font-bold leading-snug text-slate-100">{resource.title}</h2>
-              <p className="mt-1 text-xs text-slate-400">{resource.topic} · PDF · {resource.size}</p>
-              <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                <span className="text-[11px] text-slate-500">Resource file is a demo placeholder</span>
+              <h2 className="mt-3 font-display text-sm font-bold leading-snug text-slate-100">{resource.title}</h2>
+              <p className="mt-0.5 text-[11px] text-slate-400">{resource.topic} · PDF · {resource.size}</p>
+              <div className="mt-auto flex items-center justify-between gap-3 pt-3">
+                <span className="text-[10px] text-slate-500">Demo placeholder</span>
                 <button
                   type="button"
                   onClick={() => toggleSaved(resource.id)}

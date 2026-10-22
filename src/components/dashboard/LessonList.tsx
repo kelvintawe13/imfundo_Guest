@@ -76,9 +76,9 @@ export function LessonList() {
               <li key={l.id}>
                   <Link
                   to="/lesson"
-                  className="flex items-center gap-3 rounded-xl border-2 border-ink/15 p-3 transition-colors duration-150 hover:border-ink hover:bg-sun/10">
+                  className="flex items-center gap-2.5 rounded-xl border-2 border-ink/15 p-2.5 transition-colors duration-150 hover:border-ink hover:bg-sun/10">
                   
-                    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-ink ${subjectColor[l.subject]}`}>
+                    <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border-2 border-ink ${subjectColor[l.subject]}`}>
                       <Icon className="h-4 w-4 text-ink" />
                     </span>
                     <div className="min-w-0 flex-1">

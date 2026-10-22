@@ -77,7 +77,7 @@ export function LessonSettingsModal() {
           
         </div>
         <div className="divide-y-2 divide-ink/10 border-t-2 border-ink/10">
-          <Toggle label="Sound effects" description="Play a tone on correct answers" checked={draft.sound} onChange={(v) => update('sound', v)} />
+          <Toggle label="Sound effects" description="Play tones for answers and the final countdown" checked={draft.sound} onChange={(v) => update('sound', v)} />
           <Toggle
             label="Show hints automatically"
             description="Reveal the hint before you answer"

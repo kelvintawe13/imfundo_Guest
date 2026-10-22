@@ -17,7 +17,7 @@ export function Profile() {
   const earned = badges.filter((b) => b.earned).length;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
       <h1 className="sr-only">{t('profile.title')}</h1>
       <div className="grid gap-3 2xl:grid-cols-[340px_1fr]">
         <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-1 2xl:content-start">

@@ -140,6 +140,35 @@ body {
 html.light .glass-card {
   box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
 }
+
+/* Prominent quiz countdown: always red, pulses once time is running short. */
+.timer-glow {
+  box-shadow: 0 0 0 2px rgb(var(--danger) / 0.18), 0 0 20px rgb(var(--danger) / 0.45);
+}
+@keyframes timer-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px rgb(var(--danger) / 0.18), 0 0 18px rgb(var(--danger) / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(var(--danger) / 0.1), 0 0 34px rgb(var(--danger) / 0.8);
+  }
+}
+.timer-urgent {
+  animation: timer-pulse 1.25s ease-in-out infinite;
+}
+.timer-critical {
+  animation-duration: 0.65s;
+}
+.timer-bar-urgent {
+  box-shadow: 0 0 14px rgb(var(--danger) / 0.75);
+}
+@media (prefers-reduced-motion: reduce) {
+  .timer-urgent,
+  .timer-critical {
+    animation: none;
+  }
+}
 @layer components {
   .glass-card {
     @apply rounded-2xl border-2 border-ink bg-slate-900;

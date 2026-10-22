@@ -67,11 +67,11 @@ export function LessonRail() {
       </RailSection>
 
       <RailSection title="Unit path · Quadratics">
-        <ol className="space-y-2.5">
+        <ol className="space-y-2">
           {lessonPath.map((step) =>
-          <li key={step.title} className="flex items-center gap-3">
+          <li key={step.title} className="flex items-center gap-2.5">
               <span
-              className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border-2 ${
+              className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${
               step.state === 'done' ?
               'border-ink bg-teal text-ink' :
               step.state === 'current' ?
@@ -80,14 +80,14 @@ export function LessonRail() {
               }>
               
                 {step.state === 'done' ?
-              <CheckIcon className="h-3.5 w-3.5" /> :
+              <CheckIcon className="h-3 w-3" /> :
               step.state === 'locked' ?
-              <LockIcon className="h-3 w-3" /> :
+              <LockIcon className="h-2.5 w-2.5" /> :
 
-              <span className="h-1.5 w-1.5 rounded-full bg-ink" />
+              <span className="h-1 w-1 rounded-full bg-ink" />
               }
               </span>
-              <span className={`text-sm ${step.state === 'locked' ? 'text-slate-500' : 'text-slate-200'}`}>{step.title}</span>
+              <span className={`text-xs ${step.state === 'locked' ? 'text-slate-500' : 'text-slate-200'}`}>{step.title}</span>
             </li>
           )}
         </ol>
@@ -101,16 +101,16 @@ export function LessonRail() {
           </button>
         }>
         
-        <dl className="space-y-1.5 text-sm">
+        <dl className="grid grid-cols-2 gap-1.5 text-xs">
           {[
           ['Explanations', langLabel[settings.explanationLanguage]],
           ['Difficulty', settings.difficulty === 'challenge' ? 'Challenge (2× XP)' : 'Standard'],
           ['Timer', settings.timer ? '30s per question' : 'Off'],
           ['Auto-advance', settings.autoAdvance ? 'On' : 'Off']].
           map(([k, v]) =>
-          <div key={k} className="flex justify-between gap-2">
-              <dt className="text-slate-400">{k}</dt>
-              <dd className="text-right text-slate-200">{v}</dd>
+          <div key={k} className="rounded-lg border border-ink/15 px-2 py-1.5">
+              <dt className="text-[10px] text-slate-500">{k}</dt>
+              <dd className="mt-0.5 font-semibold text-slate-200">{v}</dd>
             </div>
           )}
         </dl>

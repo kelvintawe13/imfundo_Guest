@@ -22,7 +22,7 @@ export function TeacherCorner() {
 
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="font-display text-sm font-bold text-sky-dark">
@@ -35,7 +35,7 @@ export function TeacherCorner() {
         </button>
       </div>
 
-      <div role="tablist" aria-label="Teacher views" className="mt-4 flex gap-1 border-b-2 border-ink/15">
+      <div role="tablist" aria-label="Teacher views" className="mt-3 flex gap-1 border-b-2 border-ink/15">
         {tabs.map(({ id, label, icon: Icon }) =>
         <button
           key={id}
@@ -43,7 +43,7 @@ export function TeacherCorner() {
           type="button"
           aria-selected={tab === id}
           onClick={() => setTab(id)}
-          className={`-mb-0.5 flex items-center gap-2 rounded-t-xl border-2 border-b-0 px-3 py-2.5 font-display text-sm font-bold transition-colors duration-150 ${
+          className={`-mb-0.5 flex items-center gap-2 rounded-t-xl border-2 border-b-0 px-3 py-2 font-display text-sm font-bold transition-colors duration-150 ${
           tab === id ? 'border-ink bg-sun text-ink' : 'border-transparent text-slate-400 hover:text-ink'}`
           }>
           
@@ -52,7 +52,7 @@ export function TeacherCorner() {
         )}
       </div>
 
-      <div className="mt-4" role="tabpanel">
+      <div className="mt-3" role="tabpanel">
         {loading ?
         <div className="-mx-4 -my-8 sm:-mx-6">
             <PageSkeleton />
