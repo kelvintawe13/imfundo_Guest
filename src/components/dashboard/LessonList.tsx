@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AtomIcon, CircleCheckIcon, DownloadIcon, LanguagesIcon, MonitorIcon, SigmaIcon } from 'lucide-react';
+import { ArrowRightIcon, AtomIcon, CircleCheckIcon, Clock3Icon, LanguagesIcon, MonitorIcon, SigmaIcon } from 'lucide-react';
 import { SkeletonRows } from '../ui/Skeleton';
+import { EmptyState } from '../ui/EmptyState';
 import { lessons, subjectFilters } from '../../data/lessons';
 import { useSimulatedLoad } from '../../hooks/useSimulatedLoad';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -61,51 +62,71 @@ export function LessonList() {
         {loading ?
         <SkeletonRows rows={Math.min(visible.length || 3, 4)} /> :
 
+        visible.length === 0 ?
+        <EmptyState
+          compact
+          icon={SigmaIcon}
+          title="No lessons in this subject yet"
+          description="Try another subject or check back after your next sync." /> :
+
         <ul className="space-y-2">
             {visible.map((l) => {
             const Icon = subjectIcon[l.subject];
-            const progress = l.id === quizMeta.lessonId && savedQuiz
-              ? savedQuiz.finished
+            const isAvailable = l.id === quizMeta.lessonId;
+            const saved = isAvailable ? savedQuiz : undefined;
+            const progress = saved
+              ? saved.finished
                 ? 100
-                : Math.round((savedQuiz.index + (savedQuiz.checked ? 1 : 0)) / quizQuestions.length * 100)
-              : l.progress;
-            const done = l.id === quizMeta.lessonId && savedQuiz
-              ? savedQuiz.finished
-              : progress >= 100;
+                : Math.round((saved.index + (saved.checked ? 1 : 0)) / quizQuestions.length * 100)
+              : 0;
+            const done = Boolean(saved?.finished);
+
+            const row = (
+              <>
+                <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border-2 border-ink ${subjectColor[l.subject]}`}>
+                  <Icon className="h-4 w-4 text-ink" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-display text-sm font-bold text-slate-100">{l.title}</p>
+                  <p className="text-xs text-slate-500">
+                    {l.subject} · {l.minutes} min · {l.xp} XP
+                  </p>
+                  {progress > 0 && !done &&
+                <div className="mt-1.5 h-1.5 w-32 overflow-hidden rounded-full border border-ink/30 bg-slate-950/40">
+                      <div className="h-full rounded-full bg-sky" style={{ width: `${progress}%` }} />
+                    </div>
+                }
+                </div>
+                {done ?
+              <span className="flex items-center gap-1 text-xs font-bold text-teal">
+                    <CircleCheckIcon className="h-4 w-4" /> Done
+                  </span> :
+              isAvailable ?
+              <span className="flex items-center gap-1 text-xs font-bold text-slate-400">
+                    {saved ? 'Continue' : 'Start'} <ArrowRightIcon className="h-3.5 w-3.5" />
+                  </span> :
+
+              <span className="flex shrink-0 items-center gap-1 text-[11px] font-semibold text-slate-500">
+                    <Clock3Icon className="h-3.5 w-3.5" /> {t('dash.comingSoon')}
+                  </span>
+              }
+              </>
+            );
+
             return (
               <li key={l.id}>
-                  <Link
+                  {isAvailable ?
+                <Link
                   to="/lesson"
                   className="flex items-center gap-2.5 rounded-xl border-2 border-ink/15 p-2.5 transition-colors duration-150 hover:border-ink hover:bg-sun/10">
                   
-                    <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border-2 border-ink ${subjectColor[l.subject]}`}>
-                      <Icon className="h-4 w-4 text-ink" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-display text-sm font-bold text-slate-100">{l.title}</p>
-                      <p className="text-xs text-slate-500">
-                        {l.subject} · {l.minutes} min · {l.xp} XP
-                      </p>
-                      {progress > 0 && !done &&
-                    <div className="mt-1.5 h-1.5 w-32 overflow-hidden rounded-full border border-ink/30 bg-slate-950/40">
-                          <div className="h-full rounded-full bg-sky" style={{ width: `${progress}%` }} />
-                        </div>
-                    }
-                    </div>
-                    {done ?
-                  <span className="flex items-center gap-1 text-xs font-bold text-teal">
-                        <CircleCheckIcon className="h-4 w-4" /> Done
-                      </span> :
-                  l.downloaded ?
-                  <span className="hidden rounded-full border-2 border-ink bg-teal-light px-2 py-0.5 text-[11px] font-bold text-ink sm:inline">
-                        Offline ready
-                      </span> :
+                      {row}
+                    </Link> :
 
-                  <span className="flex items-center gap-1 text-xs font-semibold text-slate-500">
-                        <DownloadIcon className="h-3.5 w-3.5" /> {l.size}
-                      </span>
-                  }
-                  </Link>
+                <div className="flex items-center gap-2.5 rounded-xl border-2 border-dashed border-ink/15 p-2.5 opacity-65">
+                      {row}
+                    </div>
+                }
                 </li>);
 
           })}

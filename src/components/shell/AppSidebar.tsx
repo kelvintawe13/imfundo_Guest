@@ -3,9 +3,10 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowUpRightIcon, ClipboardListIcon, FileTextIcon, LogOutIcon, SearchIcon, SchoolIcon, UserRoundCheckIcon, XIcon } from 'lucide-react';
 import { Logo } from '../layout/Logo';
 import { appNav } from '../../data/nav';
-import { learner } from '../../data/profile';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
+import { logoutAccount } from '../../utils/auth';
+import { profileInitials, useUserProfile } from '../../utils/userProfile';
 
 type AppSidebarProps = {
   isOpen?: boolean;
@@ -14,7 +15,8 @@ type AppSidebarProps = {
 
 export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
   const { t } = useLanguage();
-  const { role, openModal, setRole } = useApp();
+  const { role, openModal } = useApp();
+  const profile = useUserProfile();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [query, setQuery] = useState('');
@@ -66,7 +68,7 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
           <span className={`h-2.5 w-2.5 rounded-full border border-ink ${role === 'staff' ? 'bg-coral' : 'bg-teal'}`} />
           <div className="min-w-0">
             <p className="font-display text-xs font-bold text-slate-100">{roleLabel}</p>
-            <p className="text-[10px] text-slate-500">{role === 'staff' ? 'Teaching tools' : learner.grade}</p>
+            <p className="text-[10px] text-slate-500">{role === 'staff' ? 'Teaching tools' : profile.grade || 'Your learning space'}</p>
           </div>
         </div>
         <label htmlFor="sidebar-search" className="sr-only">Search navigation</label>
@@ -156,18 +158,22 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
 
       <div className="flex items-center gap-3 border-t-2 border-ink p-3">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-ink bg-sun font-display text-xs font-extrabold text-ink">
-          {role === 'staff' ? 'ST' : learner.initials}
+          {profileInitials(profile.name)}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-display text-sm font-bold text-slate-100">{role === 'staff' ? 'Staff demo' : learner.name}</p>
-          <p className="truncate text-xs text-slate-500">{role === 'staff' ? 'Staff account' : learner.grade}</p>
+          <p className="truncate font-display text-sm font-bold text-slate-100">
+            {profile.name || (role === 'staff' ? 'Staff account' : 'Learner')}
+          </p>
+          <p className="truncate text-xs text-slate-500">
+            {role === 'staff' ? profile.school || 'Teaching tools' : profile.grade || 'Learner account'}
+          </p>
         </div>
         <button
           type="button"
           onClick={() => {
-            setRole('learner');
-            navigate('/login');
+            logoutAccount();
             onClose?.();
+            window.location.assign('/login');
           }}
           className="grid h-8 w-8 place-items-center rounded-lg border-2 border-transparent text-slate-400 transition-colors duration-150 hover:border-ink hover:bg-sun-light hover:text-ink"
           aria-label={t('auth.logout')}

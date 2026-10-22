@@ -1,6 +1,23 @@
 import type { QuizProgress } from '../types/app';
+import { accountScopedKey } from './auth';
 
 const STORAGE_KEY = 'imfundo-learning-progress-v1';
+
+function storageKey() {
+  return accountScopedKey(STORAGE_KEY);
+}
+
+function readStoredValue(): string | null {
+  const key = storageKey();
+  const value = window.localStorage.getItem(key);
+  if (value || key === STORAGE_KEY) return value;
+
+  const legacy = window.localStorage.getItem(STORAGE_KEY);
+  if (!legacy) return null;
+  window.localStorage.setItem(key, legacy);
+  window.localStorage.removeItem(STORAGE_KEY);
+  return legacy;
+}
 
 function isQuizProgress(value: unknown): value is QuizProgress {
   if (!value || typeof value !== 'object') return false;
@@ -24,7 +41,7 @@ function isQuizProgress(value: unknown): value is QuizProgress {
 
 export function readLearningProgress(): Record<string, QuizProgress> {
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = readStoredValue();
     if (!stored) return {};
 
     const parsed: unknown = JSON.parse(stored);
@@ -47,7 +64,7 @@ export function readLearningProgress(): Record<string, QuizProgress> {
 
 export function writeLearningProgress(progress: Record<string, QuizProgress>) {
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    window.localStorage.setItem(storageKey(), JSON.stringify(progress));
   } catch (error) {
     console.warn('Unable to save learning progress.', error);
   }

@@ -1,14 +1,13 @@
 import { CircleCheckIcon, CloudDownloadIcon, CloudUploadIcon, WifiOffIcon } from 'lucide-react';
-import { Skeleton } from '../ui/Skeleton';
+import { EmptyState } from '../ui/EmptyState';
 import { useApp } from '../../contexts/AppContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useSimulatedLoad } from '../../hooks/useSimulatedLoad';
 
 export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
   const { queue, online, openModal, lastSynced } = useApp();
   const { t } = useLanguage();
-  const loading = useSimulatedLoad('sync', 550);
   const pending = queue.filter((q) => q.progress < 100).length;
+  const empty = queue.length === 0;
 
   return (
     <section className={plain ? '' : 'glass-card p-3'} aria-labelledby="sync-title">
@@ -19,7 +18,16 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
         <span className="text-[11px] tabular-nums text-slate-500">{pending} pending</span>
       </div>
       <p className={`mt-0.5 flex items-center gap-1.5 ${plain ? 'text-[11px]' : 'mt-1 text-xs'} ${online ? 'text-teal' : 'text-slate-400'}`}>
-        {online ?
+        {empty ?
+        online ?
+        <>
+              <CircleCheckIcon className="h-3.5 w-3.5" /> Everything is saved on this device
+            </> :
+
+        <>
+              <WifiOffIcon className="h-3.5 w-3.5" /> Offline · progress saved on this device
+            </> :
+        online ?
         pending ? 'Connection found, syncing…' : `All synced · ${lastSynced}` :
 
         <>
@@ -28,14 +36,9 @@ export function SyncQueuePanel({ plain = false }: {plain?: boolean;}) {
         }
       </p>
 
-      {loading ?
-      <div className="mt-3 space-y-3" role="status" aria-label="Loading sync queue">
-          {Array.from({ length: 4 }).map((_, i) =>
-        <div key={i} className="space-y-2">
-              <Skeleton className="h-3.5 w-3/4" />
-              <Skeleton className="h-1.5 w-full" />
-            </div>
-        )}
+      {empty ?
+      <div className="mt-2">
+          <EmptyState compact icon={CircleCheckIcon} title={t('dash.noSyncTitle')} description={t('dash.noSyncText')} />
         </div> :
 
       <ul className={`${plain ? 'mt-2 space-y-2' : 'mt-3 space-y-3.5'}`}>

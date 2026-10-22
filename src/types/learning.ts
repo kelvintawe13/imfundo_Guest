@@ -6,9 +6,6 @@ export type Lesson = {
   subject: Subject;
   minutes: number;
   xp: number;
-  progress: number;
-  downloaded: boolean;
-  size: string;
 };
 
 export type QuizQuestion = {

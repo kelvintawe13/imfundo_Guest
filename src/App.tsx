@@ -10,6 +10,7 @@ import { AppShell } from './components/shell/AppShell';
 import { AuthLayout } from './components/auth/AuthLayout';
 import { PageSkeleton } from './components/ui/Skeleton';
 import { useApp } from './contexts/AppContext';
+import { useAuth } from './utils/auth';
 import type { AppRole } from './types/app';
 
 const Home = lazy(() => import('./pages/Home').then(({ Home }) => ({ default: Home })));
@@ -34,6 +35,18 @@ function RoleGate({ role }: { role: AppRole }) {
   return <Navigate to={activeRole === 'staff' ? '/teachers' : '/dashboard'} replace />;
 }
 
+function RequireAuth() {
+  const account = useAuth();
+  if (!account) return <Navigate to="/login" replace />;
+  return <Outlet />;
+}
+
+function GuestOnly() {
+  const account = useAuth();
+  if (account) return <Navigate to={account.role === 'staff' ? '/teachers' : '/dashboard'} replace />;
+  return <Outlet />;
+}
+
 export function App() {
   return (
     <MotionConfig reducedMotion="user">
@@ -50,23 +63,27 @@ export function App() {
                     <Route path="/programmes" element={<Programmes />} />
                     <Route path="/contact" element={<Contact />} />
                   </Route>
-                  <Route element={<AuthLayout />}>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                  </Route>
-                  <Route element={<AppShell />}>
-                    <Route element={<RoleGate role="learner" />}>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/lesson" element={<LessonPlayer />} />
-                      <Route path="/profile" element={<Profile />} />
+                  <Route element={<GuestOnly />}>
+                    <Route element={<AuthLayout />}>
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/signup" element={<Signup />} />
+                      <Route path="/forgot-password" element={<ForgotPassword />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
                     </Route>
-                    <Route element={<RoleGate role="staff" />}>
-                      <Route path="/teachers" element={<TeacherCorner />} />
-                      <Route path="/teachers/classes" element={<ClassManagement />} />
-                      <Route path="/teachers/resources" element={<TeachingResources />} />
-                      <Route path="/teachers/support" element={<LearnerSupport />} />
+                  </Route>
+                  <Route element={<RequireAuth />}>
+                    <Route element={<AppShell />}>
+                      <Route element={<RoleGate role="learner" />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/lesson" element={<LessonPlayer />} />
+                        <Route path="/profile" element={<Profile />} />
+                      </Route>
+                      <Route element={<RoleGate role="staff" />}>
+                        <Route path="/teachers" element={<TeacherCorner />} />
+                        <Route path="/teachers/classes" element={<ClassManagement />} />
+                        <Route path="/teachers/resources" element={<TeachingResources />} />
+                        <Route path="/teachers/support" element={<LearnerSupport />} />
+                      </Route>
                     </Route>
                   </Route>
                   <Route element={<Layout />}>

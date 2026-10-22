@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -26,6 +26,7 @@ import { useQuiz } from '../hooks/useQuiz';
 import { useQuizSounds } from '../hooks/useQuizSounds';
 import { useApp } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { recordLearnerEvent } from '../utils/learnerData';
 import { playQuizStart, playSoundCheck } from '../utils/sound';
 
 const letters = ['A', 'B', 'C', 'D'];
@@ -55,6 +56,39 @@ export function LessonPlayer() {
     soundEnabled: settings.sound
   });
 
+  const lastChecked = useRef(quiz.checked);
+  const lastFinished = useRef(quiz.finished);
+  const completionEventId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (quiz.checked && !lastChecked.current) {
+      recordLearnerEvent({
+        type: 'answer-checked',
+        lessonId: quizMeta.lessonId,
+        lessonTitle: quizMeta.title,
+        correct: quiz.isCorrect
+      });
+    }
+    lastChecked.current = quiz.checked;
+  }, [quiz.checked, quiz.isCorrect]);
+
+  useEffect(() => {
+    if (quiz.finished && !lastFinished.current) {
+      completionEventId.current ??= `${quizMeta.lessonId}-${Date.now()}`;
+      recordLearnerEvent({
+        type: 'lesson-completed',
+        eventId: completionEventId.current,
+        lessonId: quizMeta.lessonId,
+        lessonTitle: quizMeta.title,
+        xp: quiz.xp,
+        correct: quiz.correctCount,
+        total: quiz.total
+      });
+    }
+    if (!quiz.finished) completionEventId.current = null;
+    lastFinished.current = quiz.finished;
+  }, [quiz.finished, quiz.xp, quiz.correctCount, quiz.total]);
+
   useEffect(() => {
     setLessonStats({
       index: quiz.index,
@@ -72,6 +106,11 @@ export function LessonPlayer() {
   const resuming = quiz.index > 0 || quiz.selected !== null || quiz.checked || quiz.xp > 0 || quiz.timeLeft < QUIZ_TIME_LIMIT;
   const startQuiz = () => {
     setQuizStarted(true);
+    recordLearnerEvent({
+      type: 'lesson-started',
+      lessonId: quizMeta.lessonId,
+      lessonTitle: quizMeta.title
+    });
     if (settings.sound) void playQuizStart();
   };
 

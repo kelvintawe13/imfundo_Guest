@@ -1,21 +1,3 @@
-export const dailyGoal = { done: 3, target: 5, unit: 'micro-lessons' };
-
-export const weekStreak = [
-{ day: 'M', done: true },
-{ day: 'T', done: true },
-{ day: 'W', done: true },
-{ day: 'T', done: true },
-{ day: 'F', done: false, today: true },
-{ day: 'S', done: false },
-{ day: 'S', done: false }];
-
-
-export const learnerUpdates = [
-{ title: 'New lesson pack ready', text: 'Balancing chemical equations downloads on your next sync.', when: '2h ago' },
-{ title: 'Teacher note', text: 'Ms Dlamini: “Finish Quadratics before Friday’s test.”', when: 'Yesterday' },
-{ title: 'Badge unlocked', text: 'Load-shedding learner: 5 lessons after 18:00.', when: '2 days ago' }];
-
-
 export const lessonPath = [
 { title: 'Intro to quadratics', state: 'done' },
 { title: 'Factoring trinomials', state: 'done' },
@@ -41,12 +23,3 @@ export const classTasks = [
 { title: 'Unit test: Quadratics', due: 'Fri' }];
 
 
-export const badgeProgress = [
-{ name: '30-day streak', current: 12, target: 30 },
-{ name: 'Science explorer', current: 2, target: 5 },
-{ name: 'Top of class', current: 68, target: 85, unit: '%' }];
-
-
-export const accountUpdates = [
-{ title: 'Signed in on a new device', text: 'Samsung Galaxy A04 · Idutywa', when: '3 days ago' },
-{ title: 'Language set to English', text: 'You can switch to isiXhosa anytime.', when: '1 week ago' }];

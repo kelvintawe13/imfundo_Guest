@@ -1,5 +1,6 @@
 import { CircleCheckIcon, CloudDownloadIcon, CloudUploadIcon, CpuIcon, RefreshCwIcon, ShieldCheckIcon } from 'lucide-react';
 import { Modal } from '../ui/Modal';
+import { EmptyState } from '../ui/EmptyState';
 import { useApp } from '../../contexts/AppContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { tutorModel } from '../../data/syncQueue';
@@ -14,7 +15,13 @@ export function SyncDetailsModal() {
       open={modal === 'sync'}
       onClose={closeModal}
       title="AI Tutor Offline Sync Details"
-      description={online ? 'Connection found. Syncing in the background.' : 'Working fully offline on this device.'}
+      description={
+        online
+          ? pending > 0
+            ? 'Connection found. Syncing in the background.'
+            : 'Connected. Everything is saved on this device.'
+          : 'Working fully offline on this device.'
+      }
       icon={<RefreshCwIcon className="h-4 w-4" />}
       footer={
       <>
@@ -42,6 +49,15 @@ export function SyncDetailsModal() {
       </dl>
 
       <h3 className="mt-4 font-display text-sm font-extrabold text-slate-100">Queue</h3>
+      {queue.length === 0 ?
+      <div className="mt-2">
+          <EmptyState
+            compact
+            icon={CircleCheckIcon}
+            title={t('dash.noSyncTitle')}
+            description={t('dash.noSyncText')} />
+        </div> :
+
       <ul className="mt-2 space-y-2">
         {queue.map((q) => {
           const done = q.progress >= 100;
@@ -55,6 +71,7 @@ export function SyncDetailsModal() {
 
         })}
       </ul>
+      }
 
       <div className="mt-4 space-y-3 text-sm text-slate-400">
         <p className="flex gap-2">

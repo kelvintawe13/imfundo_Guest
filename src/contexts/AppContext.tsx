@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { initialSyncQueue, tutorModel } from '../data/syncQueue';
 import type { AppRole, LessonSettings, LessonStats, ModalName, QuizProgress, SyncItem } from '../types/app';
+import { getSessionAccount, useAuth } from '../utils/auth';
 import { readLearningProgress, writeLearningProgress } from '../utils/learningProgress';
 
 type AppContextValue = {
@@ -34,7 +35,11 @@ const defaultSettings: LessonSettings = {
   autoAdvance: false
 };
 
+const SETTINGS_STORAGE_KEY = 'imfundo-lesson-settings-v1';
+
 function readSavedRole(): AppRole {
+  const account = getSessionAccount();
+  if (account) return account.role;
   try {
     return window.localStorage.getItem('imfundo-account-role') === 'staff' ? 'staff' : 'learner';
   } catch (error) {
@@ -43,12 +48,34 @@ function readSavedRole(): AppRole {
   }
 }
 
+function readSavedSettings(): LessonSettings {
+  try {
+    const stored = window.localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (!stored) return defaultSettings;
+    const parsed = JSON.parse(stored) as Partial<LessonSettings>;
+    return {
+      explanationLanguage: parsed.explanationLanguage === 'xh' ? 'xh' : 'en',
+      difficulty: parsed.difficulty === 'challenge' ? 'challenge' : 'standard',
+      sound: typeof parsed.sound === 'boolean' ? parsed.sound : defaultSettings.sound,
+      autoHints: typeof parsed.autoHints === 'boolean' ? parsed.autoHints : defaultSettings.autoHints,
+      timer: typeof parsed.timer === 'boolean' ? parsed.timer : defaultSettings.timer,
+      autoAdvance: typeof parsed.autoAdvance === 'boolean' ? parsed.autoAdvance : defaultSettings.autoAdvance
+    };
+  } catch (error) {
+    console.warn('Unable to read lesson settings.', error);
+    return defaultSettings;
+  }
+}
+
 export function AppProvider({ children }: {children: React.ReactNode;}) {
+  const account = useAuth();
+  const accountId = account?.id ?? null;
+  const accountRole = account?.role;
   const [role, setRole] = useState<AppRole>(readSavedRole);
   const [online, setOnline] = useState(false);
   const [modal, setModal] = useState<ModalName>(null);
   const [chatOpen, setChatOpen] = useState(false);
-  const [settings, setSettings] = useState<LessonSettings>(defaultSettings);
+  const [settings, setSettings] = useState<LessonSettings>(readSavedSettings);
   const [queue, setQueue] = useState<SyncItem[]>(initialSyncQueue);
   const [lastSynced, setLastSynced] = useState(tutorModel.lastSynced);
   const [lessonStats, setLessonStats] = useState<LessonStats>({
@@ -62,12 +89,26 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
   const [quizProgress, setQuizProgress] = useState<Record<string, QuizProgress>>(readLearningProgress);
 
   useEffect(() => {
+    if (!accountId || !accountRole) return;
+    setRole(accountRole);
+    setQuizProgress(readLearningProgress());
+  }, [accountId, accountRole]);
+
+  useEffect(() => {
     try {
       window.localStorage.setItem('imfundo-account-role', role);
     } catch (error) {
       console.warn('Unable to save account role.', error);
     }
   }, [role]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    } catch (error) {
+      console.warn('Unable to save lesson settings.', error);
+    }
+  }, [settings]);
 
   const saveQuizProgress = useCallback((lessonId: string, progress: QuizProgress) => {
     setQuizProgress((current) => ({ ...current, [lessonId]: progress }));
@@ -90,7 +131,7 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
   }, [online]);
 
   useEffect(() => {
-    if (online && queue.every((q) => q.progress >= 100)) setLastSynced('Just now');
+    if (online && queue.length > 0 && queue.every((q) => q.progress >= 100)) setLastSynced('Just now');
   }, [online, queue]);
 
   const value = useMemo(

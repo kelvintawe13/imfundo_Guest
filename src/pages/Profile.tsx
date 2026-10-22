@@ -1,140 +1,179 @@
 import { useState } from 'react';
-import { HardDriveIcon, Settings2Icon } from 'lucide-react';
+import { ActivityIcon, HardDriveIcon, Settings2Icon } from 'lucide-react';
 import { Toggle } from '../components/ui/Toggle';
+import { EmptyState } from '../components/ui/EmptyState';
 import { LanguageSwitcher } from '../components/layout/LanguageSwitcher';
-import { badges, learner, recentActivity } from '../data/profile';
-import { learnerStats } from '../data/lessons';
-import { storage, storageTotalMb } from '../data/syncQueue';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useApp } from '../contexts/AppContext';
+import { buildAchievements } from '../utils/achievements';
+import { useAuth } from '../utils/auth';
+import { levelFromXp, relativeTime, totalXpFromProgress, useLearnerData } from '../utils/learnerData';
+import { formatBytes, readStorageStats } from '../utils/localStorageStats';
+import { readPreferences, writePreferences, type LearnerPreferences } from '../utils/preferences';
+import { profileInitials, useUserProfile } from '../utils/userProfile';
 
 export function Profile() {
   const { t } = useLanguage();
-  const { openModal } = useApp();
-  const [prefs, setPrefs] = useState({ wifiOnly: true, dataSaver: true, reminder: false });
-  const usedMb = storage.reduce((s, i) => s + i.mb, 0);
-  const xpPct = Math.round(learnerStats.xp / learnerStats.xpForNext * 100);
-  const earned = badges.filter((b) => b.earned).length;
+  const { openModal, quizProgress } = useApp();
+  const profile = useUserProfile();
+  const account = useAuth();
+  const learnerData = useLearnerData();
+  const [prefs, setPrefs] = useState<LearnerPreferences>(readPreferences);
+  const totalXp = totalXpFromProgress(quizProgress);
+  const { level, xpIntoLevel, xpForNext } = levelFromXp(totalXp);
+  const xpPct = xpForNext > 0 ? Math.min(100, Math.round(xpIntoLevel / xpForNext * 100)) : 0;
+  const achievements = buildAchievements(learnerData, quizProgress);
+  const earned = achievements.filter((achievement) => achievement.earned).length;
+  const storageStats = readStorageStats();
+  const updates = learnerData.updates;
+
+  const updatePreference = (key: keyof LearnerPreferences, value: boolean) => {
+    const next = { ...prefs, [key]: value };
+    setPrefs(next);
+    writePreferences(next);
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
       <h1 className="sr-only">{t('profile.title')}</h1>
-      <div className="grid gap-3 2xl:grid-cols-[340px_1fr]">
-        <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-1 2xl:content-start">
-          <section className="glass-card p-4">
-            <div className="flex items-center gap-3">
-              <span className="grid h-14 w-14 place-items-center rounded-full border-2 border-ink bg-sun font-display text-lg font-extrabold text-ink">
-                {learner.initials}
+      <div className="grid gap-3 xl:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1 xl:content-start">
+          <section className="glass-card p-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border-2 border-ink bg-sun font-display text-base font-extrabold text-ink">
+                {profileInitials(profile.name)}
               </span>
-              <div>
-                <p className="font-display text-lg font-extrabold">{learner.name}</p>
-                <p className="text-sm text-slate-400">
-                  {learner.grade} · {learner.school}
+              <div className="min-w-0">
+                <p className="truncate font-display text-base font-extrabold">{profile.name || 'Learner'}</p>
+                <p className="truncate text-xs text-slate-400">
+                  {[profile.grade, profile.school].filter(Boolean).join(' · ') || 'Your learning space'}
                 </p>
+                {account?.email && <p className="mt-0.5 truncate text-[10px] text-slate-500">{account.email}</p>}
               </div>
             </div>
-            <div className="mt-4">
-              <div className="flex justify-between text-sm">
-                <span className="font-semibold text-slate-400">Level {learnerStats.level}</span>
-                <span className="font-bold tabular-nums text-teal">{learnerStats.xp.toLocaleString()} XP</span>
+            <div className="mt-3">
+              <div className="flex justify-between text-xs">
+                <span className="font-semibold text-slate-400">Level {level}</span>
+                <span className="font-bold tabular-nums text-teal">{totalXp.toLocaleString()} XP</span>
               </div>
-              <div className="mt-1.5 h-3 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
+              <div className="mt-1.5 h-2.5 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
                 <div className="h-full rounded-full bg-teal" style={{ width: `${xpPct}%` }} />
               </div>
             </div>
-            <p className="mt-3 text-xs text-slate-500">{learner.joined}</p>
+            <p className="mt-2 text-[11px] text-slate-400">
+              {profile.joined ? `Joined ${profile.joined}` : 'Your progress is stored on this device'}
+            </p>
           </section>
 
-          <section className="glass-card p-4" aria-labelledby="storage-title">
+          <section className="glass-card p-3" aria-labelledby="storage-title">
             <h2 id="storage-title" className="flex items-center gap-2 font-display text-sm font-extrabold">
-              <HardDriveIcon className="h-4 w-4 text-slate-400" /> On-device storage
+              <HardDriveIcon className="h-3.5 w-3.5 text-slate-400" /> On-device storage
             </h2>
-            <p className="mt-1 text-xs text-slate-400">
-              {(usedMb / 1024).toFixed(2)} GB of {storageTotalMb / 1024} GB available to the app
+            <p className="mt-0.5 text-[11px] text-slate-400">
+              {formatBytes(storageStats.totalBytes)} across {storageStats.itemCount} saved {storageStats.itemCount === 1 ? 'item' : 'items'}
             </p>
-            <div className="mt-3 flex h-3 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
-              {storage.map((s) =>
-              <div key={s.label} className={s.color} style={{ width: `${s.mb / storageTotalMb * 100}%` }} />
+            <div className="mt-2 flex h-2.5 overflow-hidden rounded-full border-2 border-ink bg-slate-950/40">
+              {storageStats.entries.map((entry) =>
+              <div
+                key={entry.label}
+                className={entry.color}
+                style={{ width: `${storageStats.totalBytes > 0 ? entry.bytes / storageStats.totalBytes * 100 : 0}%` }} />
               )}
             </div>
-            <ul className="mt-3 space-y-1.5 text-xs">
-              {storage.map((s) =>
-              <li key={s.label} className="flex items-center justify-between text-slate-400">
-                  <span className="flex items-center gap-2">
-                    <span className={`h-2 w-2 rounded-sm ${s.color}`} /> {s.label}
-                  </span>
-                  <span className="tabular-nums">{s.mb} MB</span>
-                </li>
-              )}
-            </ul>
+            {storageStats.entries.length > 0 ?
+            <ul className="mt-2 space-y-1 text-[11px]">
+                {storageStats.entries.map((entry) =>
+              <li key={entry.label} className="flex items-center justify-between text-slate-400">
+                    <span className="flex items-center gap-2">
+                      <span className={`h-2 w-2 rounded-sm ${entry.color}`} /> {entry.label}
+                    </span>
+                    <span className="tabular-nums">{formatBytes(entry.bytes)}</span>
+                  </li>
+                )}
+              </ul> :
+
+            <p className="mt-2 text-[11px] text-slate-500">No local app data saved yet.</p>
+            }
           </section>
         </div>
 
-        <div className="space-y-3">
-          <section className="glass-card p-4" aria-labelledby="badges-title">
-            <div className="flex items-center justify-between">
+        <div className="min-w-0 space-y-3">
+          <section className="glass-card p-3" aria-labelledby="badges-title">
+            <div className="flex items-center justify-between gap-2">
               <h2 id="badges-title" className="font-display text-sm font-extrabold">
                 {t('profile.badges')}
               </h2>
-              <span className="text-xs text-slate-500">
-                {earned} of {badges.length} earned
+              <span className="text-[11px] text-slate-400">
+                {earned} of {achievements.length} earned
               </span>
             </div>
-            <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {badges.map(({ name, icon: Icon, earned: got }) =>
+            <ul className="mt-2.5 grid grid-cols-2 gap-2">
+              {achievements.map(({ id, name, icon: Icon, earned: got, current, target }) =>
               <li
-                key={name}
-                className={`flex flex-col items-center rounded-xl border-2 p-3 text-center ${
+                key={id}
+                className={`flex min-h-12 items-center gap-2 rounded-lg border-2 p-2 ${
                 got ? 'border-ink bg-sun-light' : 'border-dashed border-ink/25 opacity-60'}`
                 }>
                 
-                  <span className={`grid h-10 w-10 place-items-center rounded-full border-2 border-ink ${got ? 'bg-sun text-ink' : 'bg-slate-900 text-slate-500'}`}>
-                    <Icon className="h-5 w-5" />
+                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-ink ${got ? 'bg-sun text-ink' : 'bg-slate-900 text-slate-500'}`}>
+                    <Icon className="h-4 w-4" />
                   </span>
-                  <p className="mt-2 text-xs font-bold text-slate-200">{name}</p>
-                  {!got && <p className="text-[11px] text-slate-500">Locked</p>}
+                  <div className="min-w-0">
+                    <p className="break-words text-[11px] font-bold leading-tight text-slate-200">{name}</p>
+                    <p className="text-[10px] text-slate-500">{got ? 'Earned' : `${current}/${target}`}</p>
+                  </div>
                 </li>
               )}
             </ul>
           </section>
 
-          <div className="grid gap-3 md:grid-cols-2">
-            <section className="glass-card p-4" aria-labelledby="prefs-title">
+          <div className="grid items-start gap-3">
+            <section className="glass-card p-3" aria-labelledby="prefs-title">
               <h2 id="prefs-title" className="font-display text-sm font-extrabold">
                 {t('profile.preferences')}
               </h2>
-              <div className="mt-2 flex items-center justify-between gap-3 py-2.5">
-                <div>
+              <div className="mt-1 flex items-center justify-between gap-2 border-b-2 border-ink/10 py-2">
+                <div className="min-w-0">
                   <p className="font-display text-sm font-bold text-slate-100">App language</p>
-                  <p className="mt-0.5 text-xs text-slate-400">English or isiXhosa</p>
+                  <p className="text-[11px] text-slate-400">English or isiXhosa</p>
                 </div>
                 <LanguageSwitcher />
               </div>
-              <div className="divide-y-2 divide-ink/10 border-t-2 border-ink/10">
-                <Toggle label="Download on Wi-Fi only" description="Protects your mobile data" checked={prefs.wifiOnly} onChange={(v) => setPrefs((p) => ({ ...p, wifiOnly: v }))} />
-                <Toggle label="Data saver" description="Sync progress only, skip new lessons" checked={prefs.dataSaver} onChange={(v) => setPrefs((p) => ({ ...p, dataSaver: v }))} />
-                <Toggle label="Daily reminder" description="A nudge at 16:00 to keep your streak" checked={prefs.reminder} onChange={(v) => setPrefs((p) => ({ ...p, reminder: v }))} />
+              <div className="divide-y-2 divide-ink/10">
+                <Toggle compact label="Download on Wi-Fi only" description="Protects your mobile data" checked={prefs.wifiOnly} onChange={(value) => updatePreference('wifiOnly', value)} />
+                <Toggle compact label="Data saver" description="Sync progress only, skip new lessons" checked={prefs.dataSaver} onChange={(value) => updatePreference('dataSaver', value)} />
+                <Toggle compact label="Daily reminder" description="A nudge at 16:00 to keep your streak" checked={prefs.reminder} onChange={(value) => updatePreference('reminder', value)} />
               </div>
-              <button type="button" onClick={() => openModal('settings')} className="btn-secondary mt-3 w-full">
-                <Settings2Icon className="h-4 w-4" /> {t('lesson.settings')}
+              <button type="button" onClick={() => openModal('settings')} className="btn-secondary mt-2 w-full !py-1.5 text-xs">
+                <Settings2Icon className="h-3.5 w-3.5" /> {t('lesson.settings')}
               </button>
             </section>
 
-            <section className="glass-card p-4" aria-labelledby="activity-title">
+            <section className="glass-card p-3" aria-labelledby="activity-title">
               <h2 id="activity-title" className="font-display text-sm font-extrabold">
                 Recent activity
               </h2>
-              <ol className="mt-3 space-y-3 border-l-2 border-ink/15 pl-4">
-                {recentActivity.map((a) =>
-                <li key={a.title} className="relative">
-                    <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full border border-ink bg-coral" />
-                    <p className="font-display text-sm font-bold text-slate-100">{a.title}</p>
-                    <p className="text-xs text-slate-500">
-                      {a.meta} · {a.when}
-                    </p>
-                  </li>
-                )}
-              </ol>
+              {updates.length > 0 ?
+              <ol className="mt-2 space-y-2 border-l-2 border-ink/15 pl-3.5">
+                  {updates.map((update) =>
+                <li key={update.id} className="relative">
+                      <span className="absolute -left-[19px] top-1.5 h-1.5 w-1.5 rounded-full border border-ink bg-coral" />
+                      <p className="font-display text-[13px] font-bold leading-tight text-slate-100">{update.title}</p>
+                      <p className="text-[11px] text-slate-400">
+                        {update.text} · {relativeTime(update.at)}
+                      </p>
+                    </li>
+                  )}
+                </ol> :
+
+              <div className="mt-2">
+                  <EmptyState
+                    compact
+                    icon={ActivityIcon}
+                    title={t('dash.noUpdatesTitle')}
+                    description={t('dash.noUpdatesText')} />
+                </div>
+              }
             </section>
           </div>
         </div>

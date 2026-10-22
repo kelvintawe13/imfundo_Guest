@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeftIcon, LoaderCircleIcon, MailCheckIcon } from 'lucide-react';
 import { isValidEmail } from '../../utils/password';
+import { requestPasswordReset } from '../../utils/auth';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 export function ForgotPassword() {
@@ -18,7 +19,8 @@ export function ForgotPassword() {
     }
     setError('');
     setStatus('sending');
-    window.setTimeout(() => setStatus('sent'), 800);
+    requestPasswordReset(email);
+    window.setTimeout(() => setStatus('sent'), 500);
   }
 
   if (status === 'sent') {
@@ -27,12 +29,12 @@ export function ForgotPassword() {
         <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-ink bg-teal-light">
           <MailCheckIcon className="h-5 w-5 text-ink" aria-hidden="true" />
         </span>
-        <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight">Check your email</h1>
+        <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight">Reset link ready</h1>
         <p className="mt-2 text-sm text-ink-soft">
-          We sent a reset link to <span className="font-semibold text-ink">{email}</span>. It expires in 30 minutes.
+          If an account exists for <span className="font-semibold text-ink">{email}</span>, you can reset its password on this device. The link expires in 30 minutes.
         </p>
         <Link to="/reset-password" className="btn-pop mt-7 w-full">
-          Open reset link (demo)
+          Open reset link
         </Link>
         <button type="button" onClick={() => setStatus('idle')} className="btn-pop-ghost mt-2 w-full">
           Use a different email
@@ -76,7 +78,7 @@ export function ForgotPassword() {
       </form>
 
       <p className="mt-5 rounded-xl border-2 border-ink/15 bg-white/60 p-3 text-xs text-ink-soft">
-        No email access? Ask your teacher to reset your password from Teacher Corner.
+        This prototype stores accounts locally, so the reset happens on this device instead of by email.
       </p>
 
       <Link

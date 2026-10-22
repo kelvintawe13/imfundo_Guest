@@ -17,13 +17,13 @@ export function RailSection({ title, action, children }: RailSectionProps) {
 
 }
 
-type UpdateItem = {title: string;text: string;when: string;};
+type UpdateItem = {id?: string;title: string;text: string;when: string;};
 
 export function UpdateList({ items }: {items: UpdateItem[];}) {
   return (
     <ol className="space-y-2.5">
       {items.map((u) =>
-      <li key={u.title} className="relative pl-3.5">
+      <li key={u.id ?? u.title} className="relative pl-3.5">
           <span className="absolute left-0 top-1.5 h-1.5 w-1.5 rounded-full border border-ink bg-coral" />
           <div className="flex items-baseline justify-between gap-2">
             <p className="truncate font-display text-[13px] font-bold text-slate-100">{u.title}</p>
