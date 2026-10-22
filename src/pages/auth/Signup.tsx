@@ -6,6 +6,7 @@ import { PasswordInput } from '../../components/auth/PasswordInput';
 import { PasswordStrengthMeter } from '../../components/auth/PasswordStrengthMeter';
 import { isValidEmail, scorePassword } from '../../utils/password';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useApp } from '../../contexts/AppContext';
 
 type Role = 'learner' | 'teacher';
 type Errors = Partial<Record<'name' | 'email' | 'password' | 'terms', string>>;
@@ -35,6 +36,7 @@ const fieldVariants = {
 
 export function Signup() {
   const { t } = useLanguage();
+  const { setRole: setAccountRole } = useApp();
   const navigate = useNavigate();
   const [role, setRole] = useState<Role>('learner');
   const [name, setName] = useState('');
@@ -54,6 +56,7 @@ export function Signup() {
     setErrors(next);
     if (Object.keys(next).length) return;
     setSubmitting(true);
+    setAccountRole(role === 'teacher' ? 'staff' : 'learner');
     window.setTimeout(() => navigate(role === 'teacher' ? '/teachers' : '/dashboard'), 900);
   }
 

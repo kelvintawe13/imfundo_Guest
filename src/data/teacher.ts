@@ -35,6 +35,16 @@ export const attentionLearners = [
 { name: 'Ayanda K.', topic: 'Quadratic equations', mastery: 44, lastSync: 'Today' },
 { name: 'Lindiwe T.', topic: 'Trigonometry', mastery: 46, lastSync: '1 week ago' }];
 
+export const classRoster = [
+{ name: 'Anele M.', initials: 'AM', email: 'anele.m@learner.demo', progress: 34, status: 'Needs support', lastSync: '5 days ago' },
+{ name: 'Sipho N.', initials: 'SN', email: 'sipho.n@learner.demo', progress: 39, status: 'Needs support', lastSync: '2 days ago' },
+{ name: 'Ayanda K.', initials: 'AK', email: 'ayanda.k@learner.demo', progress: 44, status: 'Needs support', lastSync: 'Today' },
+{ name: 'Lindiwe T.', initials: 'LT', email: 'lindiwe.t@learner.demo', progress: 46, status: 'Needs support', lastSync: '1 week ago' },
+{ name: 'Zanele P.', initials: 'ZP', email: 'zanele.p@learner.demo', progress: 58, status: 'On track', lastSync: 'Yesterday' },
+{ name: 'Bongani D.', initials: 'BD', email: 'bongani.d@learner.demo', progress: 68, status: 'On track', lastSync: 'Today' },
+{ name: 'Nolwazi S.', initials: 'NS', email: 'nolwazi.s@learner.demo', progress: 78, status: 'On track', lastSync: 'Today' },
+{ name: 'Thando M.', initials: 'TM', email: 'thando.m@learner.demo', progress: 91, status: 'Excelling', lastSync: 'Today' }];
+
 
 export const resources = [
 { id: 'r1', title: 'Quadratics: full lesson guide', type: 'Lesson guide', topic: 'Mathematics', size: '1.2 MB' },

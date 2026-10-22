@@ -1,9 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { initialSyncQueue, tutorModel } from '../data/syncQueue';
-import type { LessonSettings, LessonStats, ModalName, QuizProgress, SyncItem } from '../types/app';
+import type { AppRole, LessonSettings, LessonStats, ModalName, QuizProgress, SyncItem } from '../types/app';
 import { readLearningProgress, writeLearningProgress } from '../utils/learningProgress';
 
 type AppContextValue = {
+  role: AppRole;
+  setRole: (role: AppRole) => void;
   online: boolean;
   setOnline: (v: boolean) => void;
   modal: ModalName;
@@ -32,7 +34,17 @@ const defaultSettings: LessonSettings = {
   autoAdvance: false
 };
 
+function readSavedRole(): AppRole {
+  try {
+    return window.localStorage.getItem('imfundo-account-role') === 'staff' ? 'staff' : 'learner';
+  } catch (error) {
+    console.warn('Unable to read saved account role.', error);
+    return 'learner';
+  }
+}
+
 export function AppProvider({ children }: {children: React.ReactNode;}) {
+  const [role, setRole] = useState<AppRole>(readSavedRole);
   const [online, setOnline] = useState(false);
   const [modal, setModal] = useState<ModalName>(null);
   const [chatOpen, setChatOpen] = useState(false);
@@ -48,6 +60,14 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
     finished: false
   });
   const [quizProgress, setQuizProgress] = useState<Record<string, QuizProgress>>(readLearningProgress);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('imfundo-account-role', role);
+    } catch (error) {
+      console.warn('Unable to save account role.', error);
+    }
+  }, [role]);
 
   const saveQuizProgress = useCallback((lessonId: string, progress: QuizProgress) => {
     setQuizProgress((current) => ({ ...current, [lessonId]: progress }));
@@ -75,6 +95,8 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
 
   const value = useMemo(
     () => ({
+      role,
+      setRole,
       online,
       setOnline,
       modal,
@@ -91,7 +113,7 @@ export function AppProvider({ children }: {children: React.ReactNode;}) {
       quizProgress,
       saveQuizProgress
     }),
-    [online, modal, chatOpen, settings, queue, lastSynced, lessonStats, quizProgress, saveQuizProgress]
+    [role, online, modal, chatOpen, settings, queue, lastSynced, lessonStats, quizProgress, saveQuizProgress]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
