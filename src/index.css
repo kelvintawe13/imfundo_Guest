@@ -39,10 +39,24 @@
   --success-soft: 52 211 153;
   --warn: 252 211 77;
   --danger: 251 113 133;
+  /* Custom colors for new home page */
+  --ink: 27 31 75;
+  --ink-soft: 86 91 137;
+  --sun: 255 201 60;
+  --sun-light: 255 233 156;
+  --coral: 255 118 117;
+  --teal: 78 205 196;
+  --sky: 126 200 242;
+  --sky-light: 218 236 255;
+  --sky-dark: 30 82 123;
+  --teal-light: 218 244 240;
+  --cream: 255 250 240;
   color-scheme: dark;
 }
-/* Light theme: the slate scale is mirrored so every surface, border and text tone inverts cleanly */
-html.light {
+/* Light theme: the slate scale is mirrored so every surface, border and text tone inverts cleanly.
+   `.theme-light` applies the same palette to a subtree, used by the public marketing pages. */
+html.light,
+.theme-light {
   --slate-50: 15 23 42;
   --slate-100: 30 41 59;
   --slate-200: 51 65 85;
@@ -59,6 +73,18 @@ html.light {
   --success-soft: 5 150 105;
   --warn: 180 83 9;
   --danger: 225 29 72;
+  /* Custom colors for new home page */
+  --ink: 27 31 75;
+  --ink-soft: 86 91 137;
+  --sun: 255 201 60;
+  --sun-light: 255 233 156;
+  --coral: 255 118 117;
+  --teal: 78 205 196;
+  --sky: 126 200 242;
+  --sky-light: 218 236 255;
+  --sky-dark: 30 82 123;
+  --teal-light: 218 244 240;
+  --cream: 255 250 240;
   color-scheme: light;
 }
 /* Device mockups always render their own dark UI */
@@ -129,5 +155,35 @@ html.light .glass-card {
   }
   .field-label {
     @apply text-sm font-medium text-slate-300;
+  }
+  .shadow-pop {
+    box-shadow: 4px 4px 0px 0px rgb(var(--ink));
+  }
+  .shadow-pop-sm {
+    box-shadow: 2px 2px 0px 0px rgb(var(--ink));
+  }
+  .marker {
+    background: linear-gradient(90deg, rgb(var(--coral)), rgb(var(--sun)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  /* Playful public-site primitives */
+  .btn-pop {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border-2 border-ink bg-sun px-5 py-2.5 font-display text-sm font-bold text-ink transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2;
+    box-shadow: 2px 2px 0px 0px rgb(var(--ink));
+  }
+  .btn-pop-ghost {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border-2 border-ink bg-white px-5 py-2.5 font-display text-sm font-bold text-ink transition-colors duration-150 hover:bg-sun-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2;
+  }
+  .card-pop {
+    @apply rounded-2xl border-2 border-ink bg-white;
+    box-shadow: 4px 4px 0px 0px rgb(var(--ink));
+  }
+  .field-pop {
+    @apply mt-1 w-full rounded-xl border-2 border-ink bg-white px-3 py-2 text-sm text-ink outline-none transition-shadow duration-150 placeholder:text-ink/40 focus:ring-2 focus:ring-sky;
+  }
+  .field-label-pop {
+    @apply font-display text-sm font-bold text-ink;
   }
 }

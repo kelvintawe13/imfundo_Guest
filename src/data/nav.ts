@@ -10,8 +10,10 @@ const;
 
 export const publicNav = [
 { key: 'nav.home', to: '/' },
-{ key: 'nav.dashboard', to: '/dashboard' },
-{ key: 'nav.teachers', to: '/teachers' }] as
+{ key: 'nav.about', to: '/about' },
+{ key: 'nav.programmes', to: '/programmes' },
+{ key: 'nav.teachers', to: '/teachers' },
+{ key: 'nav.contact', to: '/contact' }] as
 const;
 
 export const appNav = navItems.filter((n) => n.to !== '/');

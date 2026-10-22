@@ -43,7 +43,10 @@ One React SPA exposing three routed surfaces sharing one state core. Marketing a
 
 | Surface | Route | Entry file | Highlights |
 | --- | --- | --- | --- |
-| Marketing | `/` | [src/pages/Landing.tsx](src/pages/Landing.tsx) | Hero, problem framing, offline explainer illustrated diagrams, partner-school modal |
+| Marketing | `/` | [src/pages/Home.tsx](src/pages/Home.tsx) | Hero, key statistics, problem framing, why-us cards, how-it-works, founder story, partner CTA |
+| Marketing | `/about` | [src/pages/About.tsx](src/pages/About.tsx) | Mission, beliefs, stakeholder tiers, founder story |
+| Marketing | `/programmes` | [src/pages/Programmes.tsx](src/pages/Programmes.tsx) | How it works, learning features, subject packs |
+| Marketing | `/contact` | [src/pages/Contact.tsx](src/pages/Contact.tsx) | Contact details and enquiry form |
 | Application | `/dashboard` | [src/pages/Dashboard.tsx](src/pages/Dashboard.tsx) | XP bar, streak, offline-ready counter, lesson list, sync-queue panel |
 | Application | `/lesson` | [src/pages/LessonPlayer.tsx](src/pages/LessonPlayer.tsx) | Question flow, settings modal, completion summary with XP and accuracy |
 | Application | `/teachers` | [src/pages/TeacherCorner.tsx](src/pages/TeacherCorner.tsx) | Cohort analytics, synced progress, resources tab |
@@ -84,7 +87,10 @@ flowchart LR
   APP --> AUTH["Auth layout"]
   APP --> SHELL["App shell<br/>sidebar + topbar + rail"]
 
-  PUB --> LANDING["Landing<br/>hero, diagrams, CTA"]:::surf
+  PUB --> HOME["Home<br/>hero, stats, story"]:::surf
+  PUB --> ABOUT["/about"]:::surf
+  PUB --> PROGRAMMES["/programmes"]:::surf
+  PUB --> CONTACT["/contact"]:::surf
   AUTH --> LOGIN["/login"]:::auth
   AUTH --> SIGNUP["/signup"]:::auth
   AUTH --> FORGOT["/forgot-password"]:::auth
@@ -99,7 +105,10 @@ flowchart LR
   classDef app fill:#A16207,color:#fff;
 
   click APP href "src/App.tsx"
-  click LANDING href "src/pages/Landing.tsx"
+  click HOME href "src/pages/Home.tsx"
+  click ABOUT href "src/pages/About.tsx"
+  click PROGRAMMES href "src/pages/Programmes.tsx"
+  click CONTACT href "src/pages/Contact.tsx"
   click LOGIN href "src/pages/auth/Login.tsx"
   click SIGNUP href "src/pages/auth/Signup.tsx"
   click FORGOT href "src/pages/auth/ForgotPassword.tsx"
@@ -178,7 +187,7 @@ src/
   contexts/                   # Theme, Language, App
   data/                       # lessons, quiz, i18n, nav, profile, teacher, sync queue
   hooks/                      # useQuiz, useRouteLoading, useSimulatedLoad
-  pages/                      # Landing, Dashboard, LessonPlayer, TeacherCorner, Profile, auth/*
+  pages/                      # Home, About, Programmes, Contact, Dashboard, LessonPlayer, TeacherCorner, Profile, auth/*
   types/                      # app and learning type modules
   utils/                      # password heuristics, tutor dummy logic
 ```

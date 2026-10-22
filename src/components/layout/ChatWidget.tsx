@@ -132,7 +132,7 @@ export function ChatWidget() {
         onClick={() => setChatOpen(!chatOpen)}
         aria-expanded={chatOpen}
         aria-label={chatOpen ? t('common.close') : t('chat.title')}
-        className="fixed bottom-[4.9rem] right-4 z-50 grid h-12 w-12 place-items-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 transition-[transform,background-color] duration-150 hover:bg-primary-hover active:scale-95 lg:bottom-5 sm:right-5">
+        className="fixed bottom-[4.9rem] right-4 z-50 grid h-12 w-12 place-items-center rounded-full border-2 border-ink bg-sun text-ink shadow-pop-sm transition-transform duration-150 hover:-translate-y-0.5 active:scale-95 lg:bottom-5 sm:right-5">
         
         {chatOpen ? <XIcon className="h-5 w-5" /> : <MessageCircleIcon className="h-5 w-5" />}
       </button>

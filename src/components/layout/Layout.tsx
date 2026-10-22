@@ -9,7 +9,7 @@ export function Layout() {
   const loading = useRouteLoading();
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-canvas text-slate-50">
+    <div className="theme-light flex min-h-screen w-full flex-col bg-cream text-ink">
       <Header />
       <main className="flex-1">{loading ? <PageSkeleton /> : <Outlet />}</main>
       <Footer />

@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         // Slate is driven by CSS variables so the whole UI flips between dark and light themes.
@@ -31,6 +32,18 @@ export default {
         success: { DEFAULT: '#10B981', soft: v('success-soft') },
         warn: v('warn'),
         danger: v('danger'),
+        // Custom colors for new home page
+        ink: v('ink'),
+        'ink-soft': v('ink-soft'),
+        sun: v('sun'),
+        'sun-light': v('sun-light'),
+        coral: v('coral'),
+        teal: v('teal'),
+        sky: v('sky'),
+        'sky-light': v('sky-light'),
+        'sky-dark': v('sky-dark'),
+        'teal-light': v('teal-light'),
+        cream: v('cream'),
       },
     },
   },

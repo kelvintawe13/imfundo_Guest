@@ -1,0 +1,17 @@
+export const images = {
+  hero: 'https://cdn.magicpatterns.com/patterns/generated-images/a3289a9d-af5b-42b6-9d77-d3e494a700ca.jpg',
+  offline: 'https://cdn.magicpatterns.com/patterns/generated-images/3ab88415-5d78-4e35-80d8-43e92e0006a8.jpg',
+  play: 'https://cdn.magicpatterns.com/patterns/generated-images/3a0245be-7cf3-447d-add3-a1a55aa75ae2.jpg',
+  language: 'https://cdn.magicpatterns.com/patterns/generated-images/f333119c-a910-45c6-ac71-9a2d0f0bdd94.jpg',
+  founder: 'https://cdn.magicpatterns.com/patterns/generated-images/f17bf82b-c9ce-472a-89d1-0986686763fa.jpg',
+  maths: 'https://cdn.magicpatterns.com/patterns/generated-images/868d1482-4a55-473d-8c6d-7166499409b7.jpg',
+  science: 'https://cdn.magicpatterns.com/patterns/generated-images/d7cbeda6-0857-49d0-9aad-4ed6fee83cf6.jpg',
+  computer: 'https://cdn.magicpatterns.com/patterns/generated-images/785584b0-16c1-4a3b-bf79-e981accb377d.jpg',
+  teacher: 'https://cdn.magicpatterns.com/patterns/generated-images/2b45ed20-6ef0-4e0c-8d9f-40edee255b7a.jpg',
+  landscape: 'https://cdn.magicpatterns.com/patterns/generated-images/6e4d15ec-3ddf-4848-b09c-2780373311a7.jpg',
+  worksheets: 'https://cdn.magicpatterns.com/patterns/generated-images/953f38f7-8266-4554-8b40-60676adcc956.jpg',
+  group: 'https://cdn.magicpatterns.com/patterns/generated-images/2c34ca5a-2172-40f8-aa9f-53b63b028e4e.jpg',
+  teachersTogether: 'https://cdn.magicpatterns.com/patterns/generated-images/9ccc237a-b97d-453b-87e1-5b3cd93cb5c6.jpg',
+  story: 'https://cdn.magicpatterns.com/patterns/generated-images/cfd408b3-99f8-4a88-8c73-688f7327fe8d.jpg',
+  mascot: 'https://cdn.magicpatterns.com/patterns/generated-images/eb0b3563-3568-43e4-93d7-9ae6438a5764.jpg',
+};

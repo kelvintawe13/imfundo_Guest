@@ -12,7 +12,10 @@ import { PageSkeleton } from './components/ui/Skeleton';
 import { useApp } from './contexts/AppContext';
 import type { AppRole } from './types/app';
 
-const Landing = lazy(() => import('./pages/Landing').then(({ Landing }) => ({ default: Landing })));
+const Home = lazy(() => import('./pages/Home').then(({ Home }) => ({ default: Home })));
+const About = lazy(() => import('./pages/About').then(({ About }) => ({ default: About })));
+const Programmes = lazy(() => import('./pages/Programmes').then(({ Programmes }) => ({ default: Programmes })));
+const Contact = lazy(() => import('./pages/Contact').then(({ Contact }) => ({ default: Contact })));
 const Dashboard = lazy(() => import('./pages/Dashboard').then(({ Dashboard }) => ({ default: Dashboard })));
 const LessonPlayer = lazy(() => import('./pages/LessonPlayer').then(({ LessonPlayer }) => ({ default: LessonPlayer })));
 const TeacherCorner = lazy(() => import('./pages/TeacherCorner').then(({ TeacherCorner }) => ({ default: TeacherCorner })));
@@ -41,7 +44,11 @@ export function App() {
               <Suspense fallback={<PageSkeleton />}>
                 <Routes>
                   <Route element={<Layout />}>
-                    <Route path="/" element={<Landing />} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/programmes" element={<Programmes />} />
+                    <Route path="/contact" element={<Contact />} />
                   </Route>
                   <Route element={<AuthLayout />}>
                     <Route path="/login" element={<Login />} />
@@ -63,7 +70,7 @@ export function App() {
                     </Route>
                   </Route>
                   <Route element={<Layout />}>
-                    <Route path="*" element={<Landing />} />
+                    <Route path="*" element={<Home />} />
                   </Route>
                 </Routes>
               </Suspense>
