@@ -11,7 +11,8 @@ export function useQuiz(
   comboBonus: number,
   lessonId: string,
   savedProgress: QuizProgress | undefined,
-  saveProgress: (lessonId: string, progress: QuizProgress) => void
+  saveProgress: (lessonId: string, progress: QuizProgress) => void,
+  started = true
 ) {
   const hintsAllowed = settings.difficulty !== 'challenge';
   const multiplier = settings.difficulty === 'challenge' ? 2 : 1;
@@ -39,6 +40,7 @@ export function useQuiz(
   const isCorrect = checked && selected === question.answer;
 
   useEffect(() => {
+    if (!started) return;
     saveProgress(lessonId, {
       index,
       selected,
@@ -55,6 +57,7 @@ export function useQuiz(
       advanceIn
     });
   }, [
+    started,
     lessonId,
     index,
     selected,
@@ -119,7 +122,7 @@ export function useQuiz(
   }, [settings.autoHints, hintsAllowed]);
 
   useEffect(() => {
-    if (!settings.timer || checked || finished) return;
+    if (!started || !settings.timer || checked || finished) return;
     if (timeLeft <= 0) {
       setSelected(null);
       setChecked(true);
@@ -130,10 +133,10 @@ export function useQuiz(
     }
     const t = window.setTimeout(() => setTimeLeft((s) => s - 1), 1000);
     return () => window.clearTimeout(t);
-  }, [settings.timer, checked, finished, timeLeft]);
+  }, [started, settings.timer, checked, finished, timeLeft]);
 
   useEffect(() => {
-    if (advanceIn === null || finished) return;
+    if (!started || advanceIn === null || finished) return;
     if (advanceIn <= 0) {
       next();
       return;
@@ -142,7 +145,7 @@ export function useQuiz(
       setAdvanceIn((remaining) => remaining === null ? null : remaining - 1);
     }, 1000);
     return () => window.clearTimeout(timeout);
-  }, [advanceIn, finished, next]);
+  }, [started, advanceIn, finished, next]);
 
   return {
     index,

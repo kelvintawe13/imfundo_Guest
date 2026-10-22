@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowLeftIcon,
@@ -10,6 +10,7 @@ import {
   CpuIcon,
   FlameIcon,
   LightbulbIcon,
+  PlayIcon,
   Settings2Icon,
   WifiOffIcon,
   XIcon,
@@ -17,17 +18,21 @@ import {
 'lucide-react';
 import { LessonComplete } from '../components/lesson/LessonComplete';
 import { QuizTimer, QUIZ_TIME_LIMIT } from '../components/lesson/QuizTimer';
+import { Modal } from '../components/ui/Modal';
 import { quizMeta, quizQuestions } from '../data/quiz';
 import { useQuiz } from '../hooks/useQuiz';
 import { useQuizSounds } from '../hooks/useQuizSounds';
 import { useApp } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { playQuizStart } from '../utils/sound';
 
 const letters = ['A', 'B', 'C', 'D'];
 
 export function LessonPlayer() {
   const { settings, setSettings, openModal, setChatOpen, setLessonStats, quizProgress, saveQuizProgress } = useApp();
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [quizStarted, setQuizStarted] = useState(() => Boolean(quizProgress[quizMeta.lessonId]?.finished));
   const quiz = useQuiz(
     quizQuestions,
     settings,
@@ -35,7 +40,8 @@ export function LessonPlayer() {
     quizMeta.comboBonus,
     quizMeta.lessonId,
     quizProgress[quizMeta.lessonId],
-    saveQuizProgress
+    saveQuizProgress,
+    quizStarted
   );
 
   useQuizSounds({
@@ -43,7 +49,7 @@ export function LessonPlayer() {
     checked: quiz.checked,
     finished: quiz.finished,
     isCorrect: quiz.isCorrect,
-    timerEnabled: settings.timer,
+    timerEnabled: settings.timer && quizStarted,
     soundEnabled: settings.sound
   });
 
@@ -61,6 +67,11 @@ export function LessonPlayer() {
   const progress = (quiz.index + (quiz.checked ? 1 : 0)) / quiz.total * 100;
   const xpMultiplier = settings.difficulty === 'challenge' ? 2 : 1;
   const maximumXp = (quiz.total * quizMeta.xpPerQuestion + Math.max(0, quiz.total - 2) * quizMeta.comboBonus) * xpMultiplier;
+  const resuming = quiz.index > 0 || quiz.selected !== null || quiz.checked || quiz.xp > 0 || quiz.timeLeft < QUIZ_TIME_LIMIT;
+  const startQuiz = () => {
+    setQuizStarted(true);
+    if (settings.sound) playQuizStart();
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-3 sm:px-6">
@@ -157,7 +168,15 @@ export function LessonPlayer() {
 
       {quiz.finished ? (
         <div className="py-4">
-          <LessonComplete xp={quiz.xp} correct={quiz.correctCount} total={quiz.total} bestCombo={quiz.bestCombo} onRestart={quiz.restart} />
+          <LessonComplete
+            xp={quiz.xp}
+            correct={quiz.correctCount}
+            total={quiz.total}
+            bestCombo={quiz.bestCombo}
+            onRestart={() => {
+              quiz.restart();
+              setQuizStarted(false);
+            }} />
         </div>
       ) : (
         <div className="mt-3 grid gap-3">
@@ -340,6 +359,66 @@ export function LessonPlayer() {
           </aside>
         </div>
       )}
+
+      <Modal
+        open={!quizStarted && !quiz.finished}
+        onClose={() => navigate('/dashboard')}
+        title={resuming ? 'Resume your quiz' : 'Ready to start?'}
+        description={resuming ? 'Pick up where you left off. The countdown resumes when you start.' : 'Check the lesson details, then start when you are ready.'}
+        icon={<PlayIcon className="h-4 w-4" />}
+        footer={
+          <>
+            <button type="button" onClick={() => navigate('/dashboard')} className="btn-secondary">
+              Back to dashboard
+            </button>
+            <button type="button" onClick={startQuiz} className="btn-primary">
+              <PlayIcon className="h-4 w-4" /> {resuming ? 'Resume quiz' : 'Start quiz'}
+            </button>
+          </>
+        }>
+        <div className="space-y-3">
+          <div className="rounded-xl border-2 border-ink bg-sun-light px-3.5 py-3 text-ink">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-ink-soft">{quizMeta.unit}</p>
+            <h3 className="mt-0.5 font-display text-base font-extrabold leading-snug">{quizMeta.title}</h3>
+            <p className="mt-1 text-xs leading-relaxed text-ink-soft">{quizMeta.objective}</p>
+            {resuming && (
+              <p className="mt-2 inline-flex rounded-full border border-ink/30 bg-white/60 px-2 py-0.5 text-[10px] font-bold text-ink-soft">
+                Question {quiz.index + 1} of {quiz.total} · {quiz.xp} XP earned
+              </p>
+            )}
+          </div>
+
+          <dl className="grid grid-cols-2 gap-2">
+            <div className="rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2">
+              <dt className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Questions</dt>
+              <dd className="mt-0.5 font-display text-sm font-extrabold text-slate-100">{quiz.total}</dd>
+            </div>
+            <div className="rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2">
+              <dt className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Time per question</dt>
+              <dd className="mt-0.5 font-display text-sm font-extrabold text-slate-100">
+                {settings.timer ? `${QUIZ_TIME_LIMIT} sec` : 'Off'}
+              </dd>
+            </div>
+            <div className="rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2">
+              <dt className="text-[10px] font-bold uppercase tracking-wide text-slate-500">XP available</dt>
+              <dd className="mt-0.5 font-display text-sm font-extrabold text-teal">Up to {maximumXp} XP</dd>
+            </div>
+            <div className="rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2">
+              <dt className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Difficulty</dt>
+              <dd className="mt-0.5 font-display text-sm font-extrabold text-slate-100">
+                {settings.difficulty === 'challenge' ? 'Challenge · 2× XP' : 'Standard'}
+              </dd>
+            </div>
+          </dl>
+
+          {settings.timer && (
+            <p className="flex items-start gap-2 rounded-xl border-2 border-ink/15 bg-slate-950/20 px-3 py-2 text-xs leading-relaxed text-slate-400">
+              <Clock3Icon className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
+              The timer starts only when you begin. You will hear a warning at 10 seconds and a tick for the final 5 seconds.
+            </p>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 

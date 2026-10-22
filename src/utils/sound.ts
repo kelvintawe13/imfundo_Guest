@@ -75,3 +75,9 @@ export function playAnswerSound(correct: boolean) {
   playTone(300, { duration: 0.1, volume: 0.045, type: 'sine' });
   playTone(210, { duration: 0.16, delay: 0.1, volume: 0.045, type: 'sine' });
 }
+
+export function playQuizStart() {
+  playTone(520, { duration: 0.09, volume: 0.05, type: 'triangle' });
+  playTone(780, { duration: 0.13, delay: 0.11, volume: 0.055, type: 'triangle' });
+  playTone(1040, { duration: 0.18, delay: 0.25, volume: 0.045, type: 'sine' });
+}

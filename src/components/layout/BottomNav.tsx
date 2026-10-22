@@ -36,14 +36,14 @@ export function BottomNav() {
             to={to}
             end={to === '/teachers'}
             className={({ isActive }) =>
-            `group flex flex-col items-center gap-1 px-1 py-2 text-[11px] font-semibold transition-all duration-200 ${
+            `group flex flex-col items-center gap-1 px-1 py-1.5 text-[11px] font-semibold transition-all duration-200 ${
             isActive ? 'text-ink' : 'text-slate-400 hover:text-ink'}`
           }
           >
               {({ isActive }) =>
           <>
                 <span
-              className={`grid h-10 w-14 place-items-center rounded-xl border-2 transition-all duration-200 ${
+              className={`grid h-9 w-14 place-items-center rounded-xl border-2 transition-all duration-200 ${
               isActive ? 'border-ink bg-sun shadow-pop-sm' : 'border-transparent bg-transparent group-hover:border-ink group-hover:bg-sun-light'}`}>
                   <Icon className={`h-5 w-5 ${isActive ? 'text-ink' : ''}`} aria-hidden="true" />
                 </span>
