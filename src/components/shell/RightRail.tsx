@@ -3,11 +3,15 @@ import { DashboardRail } from './rails/DashboardRail';
 import { LessonRail } from './rails/LessonRail';
 import { TeacherRail } from './rails/TeacherRail';
 import { ProfileRail } from './rails/ProfileRail';
+import { ParentRail } from './rails/ParentRail';
+import { CommunityRail } from './rails/CommunityRail';
 
 export function RightRail() {
   const { pathname } = useLocation();
   if (pathname.startsWith('/lesson')) return <LessonRail />;
   if (pathname.startsWith('/teachers')) return <TeacherRail />;
+  if (pathname.startsWith('/parents')) return <ParentRail />;
+  if (pathname.startsWith('/community')) return <CommunityRail />;
   if (pathname.startsWith('/profile')) return <ProfileRail />;
   return <DashboardRail />;
 }

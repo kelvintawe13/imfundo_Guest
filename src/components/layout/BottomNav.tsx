@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { ClipboardListIcon, FileTextIcon, PresentationIcon, UserRoundCheckIcon } from 'lucide-react';
+import { BookOpenIcon, ClipboardListIcon, FileTextIcon, HeartHandshakeIcon, PresentationIcon, UserRoundCheckIcon } from 'lucide-react';
 import { appNav } from '../../data/nav';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
@@ -20,8 +20,13 @@ export function BottomNav() {
         { to: '/teachers/resources', label: 'Resources', icon: FileTextIcon },
         { to: '/teachers/support', label: 'Support', icon: UserRoundCheckIcon }
       ]
-    : appNav.filter(({ to }) => to !== '/teachers').map((item) => ({ ...item, label: t(item.key) }));
-  const inApp = roleNav.some(({ to }) => pathname.startsWith(to));
+    : role === 'parent'
+      ? [
+          { to: '/parents', label: t('nav.parents'), icon: HeartHandshakeIcon },
+          { to: '/parents/stories', label: t('nav.stories'), icon: BookOpenIcon }
+        ]
+      : appNav.filter(({ to }) => to !== '/teachers' && to !== '/parents').map((item) => ({ ...item, label: t(item.key) }));
+  const inApp = roleNav.some(({ to }) => pathname === to || pathname.startsWith(`${to}/`));
   if (!inApp) return null;
 
   return (
@@ -34,7 +39,7 @@ export function BottomNav() {
         <li key={to} className="min-w-0 flex-1">
             <NavLink
             to={to}
-            end={to === '/teachers'}
+            end={to === '/teachers' || to === '/parents'}
             className={({ isActive }) =>
             `group flex flex-col items-center gap-1 px-1 py-1.5 text-[11px] font-semibold transition-all duration-200 ${
             isActive ? 'text-ink' : 'text-slate-400 hover:text-ink'}`

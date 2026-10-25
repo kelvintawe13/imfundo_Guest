@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { initialSyncQueue, tutorModel } from '../data/syncQueue';
 import type { AppRole, LessonSettings, LessonStats, ModalName, QuizProgress, SyncItem } from '../types/app';
-import { getSessionAccount, useAuth } from '../utils/auth';
+import { getSessionAccount, isAppRole, useAuth } from '../utils/auth';
 import { readLearningProgress, writeLearningProgress } from '../utils/learningProgress';
 
 type AppContextValue = {
@@ -41,7 +41,8 @@ function readSavedRole(): AppRole {
   const account = getSessionAccount();
   if (account) return account.role;
   try {
-    return window.localStorage.getItem('imfundo-account-role') === 'staff' ? 'staff' : 'learner';
+    const saved = window.localStorage.getItem('imfundo-account-role');
+    return isAppRole(saved) ? saved : 'learner';
   } catch (error) {
     console.warn('Unable to read saved account role.', error);
     return 'learner';

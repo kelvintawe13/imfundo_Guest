@@ -88,6 +88,7 @@ export function Footer() {
                   to={n.to}
                   onClick={() => {
                     if (n.to === '/teachers') setRole('staff');
+                    else if (n.to === '/parents') setRole('parent');
                     else setRole('learner');
                   }}
                   className="text-white/75 transition-colors duration-150 hover:text-sun"

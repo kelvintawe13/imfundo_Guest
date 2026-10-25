@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowUpRightIcon, ClipboardListIcon, FileTextIcon, LogOutIcon, SearchIcon, SchoolIcon, UserRoundCheckIcon, XIcon } from 'lucide-react';
+import { ArrowUpRightIcon, BookOpenIcon, ClipboardListIcon, FileTextIcon, HeartHandshakeIcon, LogOutIcon, SearchIcon, SchoolIcon, UserRoundCheckIcon, XIcon } from 'lucide-react';
 import { Logo } from '../layout/Logo';
 import { appNav } from '../../data/nav';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -21,9 +21,13 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
   const { pathname } = useLocation();
   const [query, setQuery] = useState('');
   const normalizedQuery = query.trim().toLocaleLowerCase();
-  const learnerRoutes = useMemo(() => appNav.filter((item) => item.to !== '/teachers'), []);
+  const learnerRoutes = useMemo(() => appNav.filter((item) => item.to !== '/teachers' && item.to !== '/parents'), []);
   const staffRoutes = useMemo(() => appNav.filter((item) => item.to === '/teachers'), []);
-  const routes = role === 'staff' ? staffRoutes : learnerRoutes;
+  const parentRoutes = [
+    { key: 'nav.parents' as const, to: '/parents', icon: HeartHandshakeIcon },
+    { key: 'nav.stories' as const, to: '/parents/stories', icon: BookOpenIcon }
+  ];
+  const routes = role === 'staff' ? staffRoutes : role === 'parent' ? parentRoutes : learnerRoutes;
   const visibleRoutes = routes.filter((item) => t(item.key).toLocaleLowerCase().includes(normalizedQuery));
   const staffTools = [
     { label: 'Class management', to: '/teachers/classes', icon: ClipboardListIcon },
@@ -31,7 +35,11 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
     { label: 'Learner support', to: '/teachers/support', icon: UserRoundCheckIcon },
   ].filter((item) => item.label.toLocaleLowerCase().includes(normalizedQuery));
   const hasSearchResults = visibleRoutes.length > 0 || (role === 'staff' && staffTools.length > 0);
-  const roleLabel = role === 'staff' ? 'Staff workspace' : 'Learner space';
+  const roleLabel = role === 'staff' ? 'Staff workspace' : role === 'parent' ? 'Parent space' : 'Learner space';
+  const roleName = role === 'staff' ? 'staff' : role === 'parent' ? 'parent' : 'learner';
+  const exactRoutes = ['/dashboard', '/parents', '/teachers'];
+  const isRouteActive = (to: string) =>
+    pathname === to || (!exactRoutes.includes(to) && pathname.startsWith(to));
 
   const handleNavClick = (to: string) => {
     navigate(to);
@@ -68,7 +76,7 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
           <span className={`h-2.5 w-2.5 rounded-full border border-ink ${role === 'staff' ? 'bg-coral' : 'bg-teal'}`} />
           <div className="min-w-0">
             <p className="font-display text-xs font-bold text-slate-100">{roleLabel}</p>
-            <p className="text-[10px] text-slate-500">{role === 'staff' ? 'Teaching tools' : profile.grade || 'Your learning space'}</p>
+            <p className="text-[10px] text-slate-500">{role === 'staff' ? 'Teaching tools' : role === 'parent' ? 'Progress & stories' : profile.grade || 'Your learning space'}</p>
           </div>
         </div>
         <label htmlFor="sidebar-search" className="sr-only">Search navigation</label>
@@ -79,7 +87,7 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={`Search ${role === 'staff' ? 'staff' : 'learner'} routes`}
+            placeholder={`Search ${roleName} routes`}
             className="w-full rounded-xl border-2 border-ink bg-slate-900 py-2 pl-8 pr-8 text-xs font-semibold text-slate-100 outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-sky"
           />
           {query && (
@@ -97,11 +105,11 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
 
       <nav className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-3 py-4" aria-label={`${roleLabel} navigation`}>
         <p className="px-3 pb-2 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-          {role === 'staff' ? 'Staff' : 'For learners'}
+          {role === 'staff' ? 'Staff' : role === 'parent' ? 'For families' : 'For learners'}
         </p>
         <ul className="space-y-1.5">
           {visibleRoutes.map(({ key, to, icon: Icon }) => {
-            const active = pathname === to || (to !== '/dashboard' && pathname.startsWith(to));
+            const active = isRouteActive(to);
             return (
               <li key={to}>
                 <NavLink to={to} onClick={() => handleNavClick(to)} className={({ isActive }) => navItemClass(isActive || active)}>
@@ -141,7 +149,7 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
         )}
 
         {!hasSearchResults && (
-          <p className="px-3 py-4 text-xs leading-relaxed text-slate-500">No matching {role === 'staff' ? 'staff' : 'learner'} pages.</p>
+          <p className="px-3 py-4 text-xs leading-relaxed text-slate-500">No matching {roleName} pages.</p>
         )}
 
         <div className="mt-6 border-t-2 border-ink/15 pt-3">
@@ -165,7 +173,7 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
             {profile.name || (role === 'staff' ? 'Staff account' : 'Learner')}
           </p>
           <p className="truncate text-xs text-slate-500">
-            {role === 'staff' ? profile.school || 'Teaching tools' : profile.grade || 'Learner account'}
+            {role === 'staff' ? profile.school || 'Teaching tools' : role === 'parent' ? profile.school || 'Parent account' : profile.grade || 'Learner account'}
           </p>
         </div>
         <button

@@ -37,7 +37,7 @@ The device barrier in rural South Africa has effectively been solved: mobile pho
 
 ## Product surfaces
 
-One React SPA exposing three routed surfaces sharing one state core. Marketing and auth surfaces live under a public layout; the learner application lives under an app shell with persistent sidebar, topbar, and activity rail.
+One React SPA exposing public marketing, local auth and a role-aware app shell for learners, staff and parents. Marketing and auth surfaces live under a public layout; the learner, staff and parent applications share an app shell with persistent sidebar, topbar and activity rail.
 
 ![System architecture](docs/assets/architecture.svg)
 
@@ -49,9 +49,12 @@ One React SPA exposing three routed surfaces sharing one state core. Marketing a
 | Marketing | `/contact` | [src/pages/Contact.tsx](src/pages/Contact.tsx) | Contact details and enquiry form |
 | Application | `/dashboard` | [src/pages/Dashboard.tsx](src/pages/Dashboard.tsx) | XP bar, streak, offline-ready counter, lesson list, sync-queue panel |
 | Application | `/lesson` | [src/pages/LessonPlayer.tsx](src/pages/LessonPlayer.tsx) | Question flow, settings modal, completion summary with XP and accuracy |
+| Application | `/community` | [src/pages/Community.tsx](src/pages/Community.tsx) | Learner study room: rooms, peer chat, message support and replies, meet-up RSVPs, shared past papers |
 | Application | `/teachers` | [src/pages/TeacherCorner.tsx](src/pages/TeacherCorner.tsx) | Cohort analytics, synced progress, resources tab |
+| Application | `/parents` | [src/pages/ParentCorner.tsx](src/pages/ParentCorner.tsx) | Linked learner progress, weekly rhythm, recent updates, home-support tips, teacher note |
+| Application | `/parents/stories` | [src/pages/ParentStories.tsx](src/pages/ParentStories.tsx) | Searchable learning-method story library, with article pages at `/parents/stories/:storyId` |
 | Application | `/profile` | [src/pages/Profile.tsx](src/pages/Profile.tsx) | Learner identity, storage budget, badges, preferences, activity log |
-| Auth | `/login`, `/signup`, `/forgot-password`, `/reset-password` | [src/pages/auth](src/pages/auth) | Password strength meter, validation, reset flow mock |
+| Auth | `/login`, `/signup`, `/forgot-password`, `/reset-password` | [src/pages/auth](src/pages/auth) | Learner/staff/parent roles, child linking, password strength meter, validation and reset flow mock |
 
 ## The learner loop
 
@@ -97,7 +100,10 @@ flowchart LR
   AUTH --> RESET["/reset-password"]:::auth
   SHELL --> DASH["/dashboard"]:::app
   SHELL --> LESSON["/lesson"]:::app
+  SHELL --> COMMUNITY["/community"]:::app
   SHELL --> TEACHERS["/teachers"]:::app
+  SHELL --> PARENTS["/parents"]:::app
+  SHELL --> STORIES["/parents/stories"]:::app
   SHELL --> PROFILE["/profile"]:::app
 
   classDef surf fill:#4F46E5,color:#fff;
@@ -115,7 +121,10 @@ flowchart LR
   click RESET href "src/pages/auth/ResetPassword.tsx"
   click DASH href "src/pages/Dashboard.tsx"
   click LESSON href "src/pages/LessonPlayer.tsx"
+  click COMMUNITY href "src/pages/Community.tsx"
   click TEACHERS href "src/pages/TeacherCorner.tsx"
+  click PARENTS href "src/pages/ParentCorner.tsx"
+  click STORIES href "src/pages/ParentStories.tsx"
   click PROFILE href "src/pages/Profile.tsx"
 ```
 
@@ -144,7 +153,9 @@ flowchart TB
 ```
 
 - Theme: [src/contexts/ThemeContext.tsx](src/contexts/ThemeContext.tsx) flips the full slate scale plus semantic tokens defined in [src/index.css](src/index.css), so dark and light mode recolor 100 percent of the UI without per-component conditionals.
-- Language: [src/contexts/LanguageContext.tsx](src/contexts/LanguageContext.tsx) with tables in [src/data/i18n.ts](src/data/i18n.ts) covering navigation, landing copy, dashboard, lessons, auth, and teacher surfaces.
+- Language: [src/contexts/LanguageContext.tsx](src/contexts/LanguageContext.tsx) with tables in [src/data/i18n.ts](src/data/i18n.ts) covering navigation, landing copy, dashboard, lessons, auth, community and parent surfaces.
+- Accounts: [src/utils/auth.ts](src/utils/auth.ts) stores learner, staff and parent accounts in `localStorage`. Parent accounts may hold a `childEmail`, which Parent Corner uses to read that learner’s on-device progress.
+- Study room: [src/utils/community.ts](src/utils/community.ts) is a `useSyncExternalStore` store over `localStorage` key `imfundo-community-v1`, so learner accounts on the same browser share one chat and paper library.
 - Settings flow from the lesson settings modal into both the lesson player and the dashboard rail.
 
 ## Design system
@@ -179,6 +190,7 @@ src/
   index.css                   # tokens, themes, component contracts
   components/
     auth/                     # auth layout, inputs, strength meter
+    community/                # message bubbles, past-paper cards, upload and preview modals
     dashboard/                # lesson list, sync queue panel
     illustrations/            # OfflineSync, ConnectivityGrid, SecureDevice, LearningPath
     landing/                  # Hero, InsightBand, ProblemOpportunity, PlatformSection, FounderCta
@@ -186,27 +198,47 @@ src/
     lesson/                   # completion summary
     mockups/                  # device mockups for landing
     modals/                   # partner, settings, sync details
+    parent/                   # learning-story cards
     shell/                    # app shell, sidebar, topbar, rails
     teacher/                  # analytics and resources tabs
     ui/                       # buttons primitives: phone frame, modal, toggle, skeleton, grid
   contexts/                   # Theme, Language, App
-  data/                       # lessons, quiz, i18n, nav, profile, teacher, sync queue
+  data/                       # lessons, quiz, i18n, nav, profile, teacher, community, parent stories
   hooks/                      # useQuiz, useRouteLoading, useSimulatedLoad
-  pages/                      # Home, About, Programmes, Contact, Dashboard, LessonPlayer, TeacherCorner, Profile, auth/*
-  types/                      # app and learning type modules
-  utils/                      # password heuristics, tutor dummy logic
+  pages/                      # Home, About, Programmes, Contact, Dashboard, LessonPlayer, Community,
+                              # TeacherCorner, ParentCorner, ParentStories, ParentStory, Profile, auth/*
+  types/                      # app, community and learning type modules
+  utils/                      # auth, community store, parent snapshot, file attachments, tutor logic
 ```
 
 ## Getting started
 
-Prerequisites: Node.js 18 or newer.
+Prerequisites: Node.js 20.19 or newer.
 
 ```bash
 npm install
 npm run dev       # local dev server
 ```
 
-Then open the printed localhost URL. The dashboard is reachable without auth: use the login form with any email/password combination (validation is mocked), or navigate directly to `/dashboard`.
+Then open the printed localhost URL. Application routes require a local account, so create one from `/signup` or use a demo account below.
+
+### Demo accounts
+
+Open `/login` to prepare three local demo accounts automatically. You can either select one of the **Demo testing access** buttons or type the credentials manually. All demo accounts use the password `Imfundo#2026`.
+
+| Role | Email | Opens |
+| --- | --- | --- |
+| Learner | `learner@demo.imfundoquest.co.za` | `/dashboard` with seeded XP, streak and recent activity |
+| Parent | `parent@demo.imfundoquest.co.za` | `/parents`, already linked to the demo learner |
+| Teacher | `teacher@demo.imfundoquest.co.za` | `/teachers` staff workspace |
+
+The learner demo includes a completed quiz, a four-day streak and activity history so Parent Corner and the profile views have something real to display. Demo accounts and their data live in this browser only. To start over, clear the site's local storage.
+
+To explore the parent and study-room features with your own accounts:
+
+1. Create a learner account, open a lesson and answer a question so there is progress to show.
+2. Sign out, then create a parent account using that learner’s email in **Child’s learner email**. Parent Corner will show live progress from the same browser. A parent account without a child email shows sample data instead.
+3. Sign back in as the learner to open `/community`, chat with the sample peers, RSVP to a meet-up and share a past paper. Parent Corner is available at `/parents` and the story library at `/parents/stories`.
 
 ## Scripts
 
@@ -216,6 +248,7 @@ Then open the printed localhost URL. The dashboard is reachable without auth: us
 | `npm run build` | Production bundle into `dist/` |
 | `npm run preview` | Serve the production bundle locally |
 | `npm run lint` | ESLint across ts/tsx |
+| `npm run typecheck` | TypeScript check without emitting files |
 
 ## Deployment
 
@@ -233,9 +266,12 @@ On Vercel the zero-config flow works: import the repository, framework preset Vi
 
 Being explicit about the prototype boundary:
 
-- There is no backend, database, or real authentication; all accounts accept any credentials and all content is static demo data from [src/data](src/data).
+- There is no backend, database or server-side auth. Accounts and sessions live in `localStorage`, with a client-side SHA-256 password hash. This is suitable for a prototype, not production security.
+- Parent Corner can only read a linked learner’s progress when both accounts exist in the same browser. There is no cross-device or cloud sync.
+- Study-room peers, online counts and meet-up hosts are sample data. Learner messages, RSVPs and papers are stored locally in `localStorage` and are shared only by accounts in that browser.
+- Uploaded chat files and past papers are stored as data URLs capped at 1.2 MB. They are not uploaded to a server.
 - The AI tutor chat is a scripted local responder ([src/utils/tutor.ts](src/utils/tutor.ts)); it does not run a model.
-- Offline behavior is a faithful simulation (queue, progress, timers), not device-local storage.
+- Learner progress persists in `localStorage`; the offline sync queue and its timers are a simulation.
 - Analytics in Teacher Corner derive from the same in-memory demo tables.
 - Password strength is a heuristic meter, not a policy enforcement point.
 
@@ -243,8 +279,8 @@ Being explicit about the prototype boundary:
 
 Candidate next steps, ordered by user value:
 
-1. Persist offline state with IndexedDB so queue and lesson progress survive reloads.
-2. Introduce a service worker for true asset-level offline caching.
-3. Wire a real tutor endpoint behind the existing chat widget contract.
-4. Add progress persistence and on-device account linking.
+1. Introduce a service worker for true asset-level offline caching.
+2. Wire real accounts, parent–learner linking and cross-device progress sync behind the existing auth and parent-snapshot contracts.
+3. Add moderation, reporting and a teacher view for the study room.
+4. Replace the in-memory sync queue with IndexedDB or a queued request layer.
 5. Localize remaining untranslated strings and expand the isiXhosa tables.

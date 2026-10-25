@@ -14,6 +14,7 @@ export type StoredAccount = {
   role: AppRole;
   grade: string;
   school: string;
+  childEmail: string;
   salt: string;
   passwordHash: string;
   createdAt: string;
@@ -36,7 +37,19 @@ type RegisterInput = {
   role: AppRole;
   grade: string;
   school: string;
+  childEmail?: string;
 };
+
+export function isAppRole(value: unknown): value is AppRole {
+  return value === 'learner' || value === 'staff' || value === 'parent';
+}
+
+/** Where each account role lands after login. */
+export function homePathForRole(role: AppRole): string {
+  if (role === 'staff') return '/teachers';
+  if (role === 'parent') return '/parents';
+  return '/dashboard';
+}
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback;
@@ -67,7 +80,7 @@ function normalizeAccount(value: unknown): StoredAccount | null {
     typeof account.id !== 'string' ||
     typeof account.name !== 'string' ||
     typeof account.email !== 'string' ||
-    (account.role !== 'learner' && account.role !== 'staff') ||
+    !isAppRole(account.role) ||
     typeof account.salt !== 'string' ||
     typeof account.passwordHash !== 'string'
   ) {
@@ -80,6 +93,7 @@ function normalizeAccount(value: unknown): StoredAccount | null {
     role: account.role,
     grade: typeof account.grade === 'string' ? account.grade : '',
     school: typeof account.school === 'string' ? account.school : '',
+    childEmail: typeof account.childEmail === 'string' ? account.childEmail : '',
     salt: account.salt,
     passwordHash: account.passwordHash,
     createdAt: typeof account.createdAt === 'string' ? account.createdAt : new Date().toISOString(),
@@ -147,6 +161,37 @@ export function getActiveAccountId(): string | null {
   return readSession()?.accountId ?? null;
 }
 
+export function findAccountByEmail(emailInput: string): StoredAccount | null {
+  const email = emailInput.trim().toLowerCase();
+  if (!email) return null;
+  return readAccounts().find((account) => account.email.toLowerCase() === email) ?? null;
+}
+
+export type ChildLinkResult = { ok: true } | { ok: false; error: string };
+
+/** Link a parent account to a learner account on this device. */
+export function updateChildEmail(emailInput: string): ChildLinkResult {
+  const account = readSessionAccount();
+  if (!account) return { ok: false, error: 'Sign in again to update your linked learner.' };
+  if (account.role !== 'parent') return { ok: false, error: 'Only a parent account can link a learner.' };
+
+  const childEmail = emailInput.trim().toLowerCase();
+  if (!childEmail || !/^\S+@\S+\.\S+$/.test(childEmail)) {
+    return { ok: false, error: 'Enter the email your child uses for their learner account.' };
+  }
+  if (childEmail === account.email.toLowerCase()) {
+    return { ok: false, error: 'Use your child’s learner email, not your own parent email.' };
+  }
+
+  const accounts = readAccounts();
+  const updated: StoredAccount = { ...account, childEmail };
+  if (!writeJson(ACCOUNTS_KEY, accounts.map((candidate) => (candidate.id === account.id ? updated : candidate)))) {
+    return { ok: false, error: 'Could not save the link on this device. Check your browser storage.' };
+  }
+  notify(updated);
+  return { ok: true };
+}
+
 export function accountScopedKey(base: string): string {
   const accountId = getActiveAccountId();
   return accountId ? `${base}:${accountId}` : base;
@@ -200,6 +245,61 @@ function startSession(account: StoredAccount) {
   notify(account);
 }
 
+export type SeededAccountInput = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: AppRole;
+  grade: string;
+  school: string;
+  childEmail?: string;
+};
+
+export type SeededAccountResult =
+  | { ok: true; account: StoredAccount; created: boolean }
+  | { ok: false; error: string };
+
+/** Create a known local account for demos without starting a session. */
+export async function ensureSeededAccount(input: SeededAccountInput): Promise<SeededAccountResult> {
+  const email = input.email.trim().toLowerCase();
+  const accounts = readAccounts();
+  const existing = accounts.find((account) => account.id === input.id);
+  if (existing) return { ok: true, account: existing, created: false };
+  if (accounts.some((account) => account.email.toLowerCase() === email)) {
+    return { ok: false, error: `A local account already uses ${email}.` };
+  }
+
+  const salt = randomSalt();
+  let passwordHash: string;
+  try {
+    passwordHash = await hashPassword(input.password, salt);
+  } catch (error) {
+    console.warn('Unable to secure the demo password.', error);
+    return { ok: false, error: 'Could not prepare the demo account. Please try again.' };
+  }
+
+  const now = new Date().toISOString();
+  const account: StoredAccount = {
+    id: input.id,
+    name: input.name,
+    email,
+    role: input.role,
+    grade: input.grade,
+    school: input.school,
+    childEmail: input.childEmail?.trim().toLowerCase() ?? '',
+    salt,
+    passwordHash,
+    createdAt: now,
+    lastLoginAt: now
+  };
+
+  if (!writeJson(ACCOUNTS_KEY, [...accounts, account])) {
+    return { ok: false, error: 'Could not save the demo account on this device.' };
+  }
+  return { ok: true, account, created: true };
+}
+
 export async function registerAccount(input: RegisterInput): Promise<AuthResult> {
   const email = input.email.trim().toLowerCase();
   const accounts = readAccounts();
@@ -224,6 +324,7 @@ export async function registerAccount(input: RegisterInput): Promise<AuthResult>
     role: input.role,
     grade: input.grade,
     school: input.school,
+    childEmail: input.childEmail?.trim().toLowerCase() ?? '',
     salt,
     passwordHash,
     createdAt: now,

@@ -14,6 +14,7 @@ export function Header() {
 
   function prepareRoute(to: string) {
     if (to === '/teachers') setRole('staff');
+    else if (to === '/parents') setRole('parent');
     else setRole('learner');
   }
 

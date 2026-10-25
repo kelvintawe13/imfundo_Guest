@@ -130,6 +130,10 @@ export function localDateKey(date = new Date()): string {
   return `${year}-${month}-${day}`;
 }
 
+function parseStoredData(raw: string | null): LearnerData {
+  return raw ? normalize(JSON.parse(raw)) : emptyData();
+}
+
 function readStoredData(): LearnerData {
   if (typeof window === 'undefined') return emptyData();
   try {
@@ -143,10 +147,33 @@ function readStoredData(): LearnerData {
         raw = legacy;
       }
     }
-    return raw ? normalize(JSON.parse(raw)) : emptyData();
+    return parseStoredData(raw);
   } catch (error) {
     console.warn('Unable to read learner data.', error);
     return emptyData();
+  }
+}
+
+/** Read learner activity for another local account, used by the parent view. */
+export function readLearnerDataForAccount(accountId: string): LearnerData {
+  if (typeof window === 'undefined' || !accountId) return emptyData();
+  try {
+    return parseStoredData(window.localStorage.getItem(`${STORAGE_KEY}:${accountId}`));
+  } catch (error) {
+    console.warn('Unable to read the linked learner’s activity.', error);
+    return emptyData();
+  }
+}
+
+/** Write activity for a specific local account without changing the active session. */
+export function writeLearnerDataForAccount(accountId: string, data: LearnerData): boolean {
+  if (typeof window === 'undefined' || !accountId) return false;
+  try {
+    window.localStorage.setItem(`${STORAGE_KEY}:${accountId}`, JSON.stringify(normalize(data)));
+    return true;
+  } catch (error) {
+    console.warn('Unable to save learner activity for this account.', error);
+    return false;
   }
 }
 

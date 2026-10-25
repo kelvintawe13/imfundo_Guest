@@ -10,7 +10,7 @@ import { AppShell } from './components/shell/AppShell';
 import { AuthLayout } from './components/auth/AuthLayout';
 import { PageSkeleton } from './components/ui/Skeleton';
 import { useApp } from './contexts/AppContext';
-import { useAuth } from './utils/auth';
+import { homePathForRole, useAuth } from './utils/auth';
 import type { AppRole } from './types/app';
 
 const Home = lazy(() => import('./pages/Home').then(({ Home }) => ({ default: Home })));
@@ -19,10 +19,14 @@ const Programmes = lazy(() => import('./pages/Programmes').then(({ Programmes })
 const Contact = lazy(() => import('./pages/Contact').then(({ Contact }) => ({ default: Contact })));
 const Dashboard = lazy(() => import('./pages/Dashboard').then(({ Dashboard }) => ({ default: Dashboard })));
 const LessonPlayer = lazy(() => import('./pages/LessonPlayer').then(({ LessonPlayer }) => ({ default: LessonPlayer })));
+const Community = lazy(() => import('./pages/Community').then(({ Community }) => ({ default: Community })));
 const TeacherCorner = lazy(() => import('./pages/TeacherCorner').then(({ TeacherCorner }) => ({ default: TeacherCorner })));
 const ClassManagement = lazy(() => import('./pages/teacher/ClassManagement').then(({ ClassManagement }) => ({ default: ClassManagement })));
 const TeachingResources = lazy(() => import('./pages/teacher/TeachingResources').then(({ TeachingResources }) => ({ default: TeachingResources })));
 const LearnerSupport = lazy(() => import('./pages/teacher/LearnerSupport').then(({ LearnerSupport }) => ({ default: LearnerSupport })));
+const ParentCorner = lazy(() => import('./pages/ParentCorner').then(({ ParentCorner }) => ({ default: ParentCorner })));
+const ParentStories = lazy(() => import('./pages/ParentStories').then(({ ParentStories }) => ({ default: ParentStories })));
+const ParentStory = lazy(() => import('./pages/ParentStory').then(({ ParentStory }) => ({ default: ParentStory })));
 const Profile = lazy(() => import('./pages/Profile').then(({ Profile }) => ({ default: Profile })));
 const Login = lazy(() => import('./pages/auth/Login').then(({ Login }) => ({ default: Login })));
 const Signup = lazy(() => import('./pages/auth/Signup').then(({ Signup }) => ({ default: Signup })));
@@ -32,7 +36,7 @@ const ResetPassword = lazy(() => import('./pages/auth/ResetPassword').then(({ Re
 function RoleGate({ role }: { role: AppRole }) {
   const { role: activeRole } = useApp();
   if (activeRole === role) return <Outlet />;
-  return <Navigate to={activeRole === 'staff' ? '/teachers' : '/dashboard'} replace />;
+  return <Navigate to={homePathForRole(activeRole)} replace />;
 }
 
 function RequireAuth() {
@@ -43,7 +47,7 @@ function RequireAuth() {
 
 function GuestOnly() {
   const account = useAuth();
-  if (account) return <Navigate to={account.role === 'staff' ? '/teachers' : '/dashboard'} replace />;
+  if (account) return <Navigate to={homePathForRole(account.role)} replace />;
   return <Outlet />;
 }
 
@@ -76,6 +80,7 @@ export function App() {
                       <Route element={<RoleGate role="learner" />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/lesson" element={<LessonPlayer />} />
+                        <Route path="/community" element={<Community />} />
                         <Route path="/profile" element={<Profile />} />
                       </Route>
                       <Route element={<RoleGate role="staff" />}>
@@ -83,6 +88,11 @@ export function App() {
                         <Route path="/teachers/classes" element={<ClassManagement />} />
                         <Route path="/teachers/resources" element={<TeachingResources />} />
                         <Route path="/teachers/support" element={<LearnerSupport />} />
+                      </Route>
+                      <Route element={<RoleGate role="parent" />}>
+                        <Route path="/parents" element={<ParentCorner />} />
+                        <Route path="/parents/stories" element={<ParentStories />} />
+                        <Route path="/parents/stories/:storyId" element={<ParentStory />} />
                       </Route>
                     </Route>
                   </Route>

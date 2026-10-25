@@ -1,4 +1,3 @@
-import React from 'react';
 import { SectionHeading } from '../SectionHeading';
 import { ImageCard } from '../ImageCard';
 import { features } from '../../data/site';

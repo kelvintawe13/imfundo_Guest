@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LoaderCircleIcon } from 'lucide-react';
+import { LoaderCircleIcon, SparklesIcon } from 'lucide-react';
 import { PasswordInput } from '../../components/auth/PasswordInput';
 import { isValidEmail } from '../../utils/password';
-import { loginAccount } from '../../utils/auth';
+import { homePathForRole, loginAccount } from '../../utils/auth';
+import {
+  DEMO_ACCOUNTS,
+  DEMO_PASSWORD,
+  DEMO_ROLES,
+  prepareDemoAccounts,
+  type DemoRole
+} from '../../utils/demoAccounts';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 
@@ -16,6 +23,53 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [demoState, setDemoState] = useState<'preparing' | 'ready' | 'error'>('preparing');
+  const [demoError, setDemoError] = useState('');
+  const [demoBusy, setDemoBusy] = useState<DemoRole | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void prepareDemoAccounts().then((result) => {
+      if (!active) return;
+      if (result.ok) {
+        setDemoState('ready');
+      } else {
+        setDemoState('error');
+        setDemoError(result.error);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function signInWithDemo(role: DemoRole) {
+    if (demoBusy) return;
+    setDemoBusy(role);
+    setErrors({});
+    setDemoError('');
+
+    const prepared = await prepareDemoAccounts();
+    if (!prepared.ok) {
+      setDemoState('error');
+      setDemoError(prepared.error);
+      setDemoBusy(null);
+      return;
+    }
+
+    const result = await loginAccount(DEMO_ACCOUNTS[role].email, DEMO_PASSWORD);
+    if (!result.ok) {
+      setErrors({ form: result.error });
+      setDemoBusy(null);
+      return;
+    }
+
+    setDemoState('ready');
+    setRole(result.account.role);
+    window.setTimeout(() => {
+      window.location.assign(homePathForRole(result.account.role));
+    }, 400);
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +89,7 @@ export function Login() {
 
     setRole(result.account.role);
     window.setTimeout(() => {
-      window.location.assign(result.account.role === 'staff' ? '/teachers' : '/dashboard');
+      window.location.assign(homePathForRole(result.account.role));
     }, 500);
   }
 
@@ -88,7 +142,74 @@ export function Login() {
         </button>
       </form>
 
-      <p className="mt-5 rounded-xl border-2 border-ink/15 bg-white/60 p-3 text-xs leading-relaxed text-ink-soft">
+      <section className="mt-4 rounded-2xl border-2 border-ink bg-sun-light/80 p-3.5" aria-labelledby="demo-heading">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 id="demo-heading" className="flex items-center gap-1.5 font-display text-sm font-extrabold">
+              <SparklesIcon className="h-4 w-4" aria-hidden="true" />
+              Demo testing access
+            </h2>
+            <p className="mt-1 text-[11px] leading-relaxed text-ink-soft">
+              Pre-loaded local accounts for quick testing. Select a role to sign in, or type the details below.
+            </p>
+          </div>
+          <span
+            aria-live="polite"
+            className={`shrink-0 rounded-full border-2 border-ink px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide ${
+              demoState === 'ready' ? 'bg-teal' : demoState === 'error' ? 'bg-coral' : 'bg-white'
+            }`}
+          >
+            {demoState === 'ready' ? 'Ready' : demoState === 'error' ? 'Error' : 'Preparing'}
+          </span>
+        </div>
+
+        {demoState === 'error' && (
+          <p role="alert" className="mt-2 rounded-lg border border-danger/30 bg-white/70 px-2.5 py-1.5 text-[10px] font-semibold text-danger">
+            {demoError}
+          </p>
+        )}
+
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          {DEMO_ROLES.map((role) => {
+            const account = DEMO_ACCOUNTS[role];
+            return (
+              <button
+                key={role}
+                type="button"
+                disabled={demoState === 'preparing' || demoBusy !== null}
+                onClick={() => void signInWithDemo(role)}
+                className="rounded-xl border-2 border-ink bg-white px-2 py-2 text-left transition-colors hover:bg-sky-light disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
+              >
+                <span className="flex items-center gap-1.5 text-xs font-extrabold">
+                  {demoBusy === role && <LoaderCircleIcon className="h-3 w-3 animate-spin" aria-hidden="true" />}
+                  {account.label}
+                </span>
+                <span className="mt-0.5 block text-[9px] font-semibold leading-tight text-ink-soft">
+                  {demoBusy === role ? 'Opening…' : account.description}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-2.5 rounded-xl border-2 border-ink/15 bg-white/70 p-2.5">
+          <p className="text-[9px] font-extrabold uppercase tracking-wide text-ink-soft">Sign-in details</p>
+          <ul className="mt-1 space-y-1">
+            {DEMO_ROLES.map((role) => (
+              <li key={role} className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
+                <span className="text-[10px] font-bold">{DEMO_ACCOUNTS[role].label}</span>
+                <code className="break-all font-mono text-[9px] text-ink-soft">{DEMO_ACCOUNTS[role].email}</code>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1.5 border-t-2 border-ink/10 pt-1.5 text-[10px]">
+            <span className="font-bold">Password for all:</span>{' '}
+            <code className="font-mono font-extrabold">{DEMO_PASSWORD}</code>
+          </p>
+        </div>
+      </section>
+
+      <p className="mt-4 rounded-xl border-2 border-ink/15 bg-white/60 p-3 text-xs leading-relaxed text-ink-soft">
         Your account and learning progress are saved locally on this device. Use the same browser to keep your data.
       </p>
 

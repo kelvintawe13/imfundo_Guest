@@ -1,5 +1,5 @@
 export type Lang = 'en' | 'xh';
-export type AppRole = 'learner' | 'staff';
+export type AppRole = 'learner' | 'staff' | 'parent';
 
 export type ModalName = 'partner' | 'settings' | 'sync' | null;
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { featuredStat, stats } from '../../data/site';
 
 export function StatsBand() {

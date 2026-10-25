@@ -1,4 +1,3 @@
-import React from 'react';
 import { DownloadIcon, Gamepad2Icon, TrophyIcon } from 'lucide-react';
 import { SectionHeading } from '../SectionHeading';
 import { homeSteps } from '../../data/site';

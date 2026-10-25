@@ -1,4 +1,3 @@
-import React from 'react';
 import { HomeHero } from '../components/home/HomeHero';
 import { StatsBand } from '../components/home/StatsBand';
 import { CoreProblem } from '../components/home/CoreProblem';

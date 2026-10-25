@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { GraduationCapIcon, LoaderCircleIcon, PresentationIcon } from 'lucide-react';
+import { GraduationCapIcon, HeartHandshakeIcon, LoaderCircleIcon, PresentationIcon } from 'lucide-react';
 import { PasswordInput } from '../../components/auth/PasswordInput';
 import { PasswordStrengthMeter } from '../../components/auth/PasswordStrengthMeter';
 import { isValidEmail, scorePassword } from '../../utils/password';
-import { registerAccount } from '../../utils/auth';
+import { homePathForRole, registerAccount } from '../../utils/auth';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 
-type Role = 'learner' | 'teacher';
-type Errors = Partial<Record<'name' | 'email' | 'password' | 'terms' | 'form', string>>;
+type Role = 'learner' | 'teacher' | 'parent';
+type Errors = Partial<Record<'name' | 'email' | 'childEmail' | 'password' | 'terms' | 'form', string>>;
 
 const roles: { value: Role; label: string; text: string; icon: typeof GraduationCapIcon }[] = [
   { value: 'learner', label: 'Learner', text: 'Grades 10–12', icon: GraduationCapIcon },
   { value: 'teacher', label: 'Teacher', text: 'Class analytics', icon: PresentationIcon },
+  { value: 'parent', label: 'Parent', text: 'Family updates', icon: HeartHandshakeIcon },
 ];
 
 const formVariants = {
@@ -45,6 +46,7 @@ export function Signup() {
   const [school, setSchool] = useState('');
   const [grade, setGrade] = useState('11');
   const [subject, setSubject] = useState('maths');
+  const [childEmail, setChildEmail] = useState('');
   const [password, setPassword] = useState('');
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -55,20 +57,24 @@ export function Signup() {
     const next: Errors = {};
     if (!name.trim()) next.name = 'Enter your full name.';
     if (!isValidEmail(email)) next.email = 'Enter a valid email address.';
+    if (role === 'parent' && childEmail.trim() && !isValidEmail(childEmail)) {
+      next.childEmail = 'Enter a valid learner email, or leave this blank to explore the demo.';
+    }
     if (scorePassword(password).score < 2) next.password = 'Choose a stronger password.';
     if (!terms) next.terms = 'Please accept the terms to continue.';
     setErrors(next);
     if (Object.keys(next).length) return;
 
     setSubmitting(true);
-    const accountRole = role === 'teacher' ? 'staff' : 'learner';
+    const accountRole = role === 'teacher' ? 'staff' : role;
     const result = await registerAccount({
       name: name.trim(),
       email,
       password,
       role: accountRole,
-      grade: role === 'learner' ? `Grade ${grade}` : '',
-      school: school.trim()
+      grade: role === 'learner' || role === 'parent' ? `Grade ${grade}` : '',
+      school: school.trim(),
+      childEmail: role === 'parent' ? childEmail : ''
     });
 
     if (!result.ok) {
@@ -81,7 +87,7 @@ export function Signup() {
 
     setAccountRole(result.account.role);
     window.setTimeout(() => {
-      window.location.assign(result.account.role === 'staff' ? '/teachers' : '/dashboard');
+      window.location.assign(homePathForRole(result.account.role));
     }, 700);
   }
 
@@ -100,7 +106,7 @@ export function Signup() {
       >
         <motion.fieldset variants={fieldVariants} className="min-w-0 sm:col-span-2">
           <legend className="field-label-pop">I am a</legend>
-          <div className="mt-1 grid grid-cols-2 gap-2">
+          <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-3">
             {roles.map(({ value, label, text, icon: Icon }) => {
               const active = role === value;
               return (
@@ -109,20 +115,20 @@ export function Signup() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setRole(value)}
-                  className={`flex items-center gap-2 rounded-xl border-2 border-ink p-3 text-left transition-colors duration-150 ${
+                  className={`flex flex-col items-start gap-1 rounded-xl border-2 border-ink p-2.5 text-left transition-colors duration-150 ${
                     active ? 'bg-sun shadow-pop-sm' : 'bg-white hover:bg-sun-light'
                   }`}
                 >
                   <span
-                    className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg border-2 border-ink ${
+                    className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-ink ${
                       active ? 'bg-white' : 'bg-cream'
                     }`}
                   >
-                    <Icon className="h-4 w-4 text-ink" aria-hidden="true" />
+                    <Icon className="h-3.5 w-3.5 text-ink" aria-hidden="true" />
                   </span>
                   <span>
-                    <span className="block font-display text-sm font-bold text-ink">{label}</span>
-                    <span className="block text-xs text-ink-soft">{text}</span>
+                    <span className="block font-display text-xs font-bold text-ink">{label}</span>
+                    <span className="block text-[10px] leading-tight text-ink-soft">{text}</span>
                   </span>
                 </button>
               );
@@ -179,23 +185,46 @@ export function Signup() {
 
         <motion.div variants={fieldVariants} className="min-w-0">
           <label htmlFor="grade" className="field-label-pop">
-            {role === 'learner' ? 'Grade' : 'Subject you teach'}
+            {role === 'teacher' ? 'Subject you teach' : role === 'parent' ? "Child's grade" : 'Grade'}
           </label>
-          {role === 'learner' ? (
-            <select id="grade" className="field-pop" value={grade} onChange={(event) => setGrade(event.target.value)}>
-              <option value="10">Grade 10</option>
-              <option value="11">Grade 11</option>
-              <option value="12">Grade 12</option>
-            </select>
-          ) : (
+          {role === 'teacher' ? (
             <select id="grade" className="field-pop" value={subject} onChange={(event) => setSubject(event.target.value)}>
               <option value="maths">Mathematics</option>
               <option value="science">Physical Sciences</option>
               <option value="cl">Computer Literacy</option>
               <option value="english">English</option>
             </select>
+          ) : (
+            <select id="grade" className="field-pop" value={grade} onChange={(event) => setGrade(event.target.value)}>
+              <option value="10">Grade 10</option>
+              <option value="11">Grade 11</option>
+              <option value="12">Grade 12</option>
+            </select>
           )}
         </motion.div>
+
+        {role === 'parent' && (
+          <motion.div variants={fieldVariants} className="min-w-0 sm:col-span-2">
+            <label htmlFor="child-email" className="field-label-pop">
+              Child's learner email <span className="font-normal text-ink-soft">(optional)</span>
+            </label>
+            <input
+              id="child-email"
+              type="email"
+              autoComplete="off"
+              value={childEmail}
+              onChange={(event) => setChildEmail(event.target.value)}
+              aria-invalid={!!errors.childEmail}
+              className="field-pop"
+              placeholder="learner@example.com"
+            />
+            {errors.childEmail && <p className="mt-1 text-xs font-semibold text-danger">{errors.childEmail}</p>}
+            <p className="mt-1 text-[11px] leading-snug text-ink-soft">
+              Use the email your child signed up with on this device to see live progress. Without it, Parent Corner
+              shows a demo learner. You can change this later in Parent Corner.
+            </p>
+          </motion.div>
+        )}
 
         <motion.div variants={fieldVariants} className="min-w-0 sm:col-span-2">
           <PasswordInput
@@ -217,7 +246,7 @@ export function Signup() {
               onChange={(e) => setTerms(e.target.checked)}
               className="mt-0.5 h-4 w-4 rounded border-2 border-ink accent-ink"
             />
-            I agree to the Terms and understand my progress is stored on my device.
+            I agree to the Terms and understand my account and learning data are stored on this device.
           </label>
           {errors.terms && <p className="mt-1 text-xs font-semibold text-danger">{errors.terms}</p>}
         </motion.div>

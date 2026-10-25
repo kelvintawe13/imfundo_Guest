@@ -1,4 +1,3 @@
-import React from 'react';
 import { GraduationCapIcon, HomeIcon, PresentationIcon, SparklesIcon, TargetIcon, TrendingUpIcon } from 'lucide-react';
 import { opportunities, stakeholders } from '../../data/site';
 import { images } from '../../data/images';

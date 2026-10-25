@@ -41,24 +41,53 @@ function isQuizProgress(value: unknown): value is QuizProgress {
 
 export function readLearningProgress(): Record<string, QuizProgress> {
   try {
-    const stored = readStoredValue();
-    if (!stored) return {};
-
-    const parsed: unknown = JSON.parse(stored);
-    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-      console.warn('Saved learning progress has an invalid format; starting with empty progress.');
-      return {};
-    }
-
-    const entries = Object.entries(parsed);
-    const validEntries = entries.filter((entry): entry is [string, QuizProgress] => isQuizProgress(entry[1]));
-    if (validEntries.length !== entries.length) {
-      console.warn('Some saved learning progress entries are invalid and were ignored.');
-    }
-    return Object.fromEntries(validEntries);
+    return parseLearningProgress(readStoredValue());
   } catch (error) {
     console.warn('Unable to read saved learning progress.', error);
     return {};
+  }
+}
+
+function parseLearningProgress(stored: string | null): Record<string, QuizProgress> {
+  if (!stored) return {};
+
+  const parsed: unknown = JSON.parse(stored);
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    console.warn('Saved learning progress has an invalid format; starting with empty progress.');
+    return {};
+  }
+
+  const entries = Object.entries(parsed);
+  const validEntries = entries.filter((entry): entry is [string, QuizProgress] => isQuizProgress(entry[1]));
+  if (validEntries.length !== entries.length) {
+    console.warn('Some saved learning progress entries are invalid and were ignored.');
+  }
+  return Object.fromEntries(validEntries);
+}
+
+/** Read progress for another local account, used by the parent view. */
+export function readLearningProgressForAccount(accountId: string): Record<string, QuizProgress> {
+  if (typeof window === 'undefined' || !accountId) return {};
+  try {
+    return parseLearningProgress(window.localStorage.getItem(`${STORAGE_KEY}:${accountId}`));
+  } catch (error) {
+    console.warn('Unable to read the linked learner’s progress.', error);
+    return {};
+  }
+}
+
+/** Write quiz progress for a specific local account without changing the active session. */
+export function writeLearningProgressForAccount(
+  accountId: string,
+  progress: Record<string, QuizProgress>
+): boolean {
+  if (typeof window === 'undefined' || !accountId) return false;
+  try {
+    window.localStorage.setItem(`${STORAGE_KEY}:${accountId}`, JSON.stringify(progress));
+    return true;
+  } catch (error) {
+    console.warn('Unable to save learning progress for this account.', error);
+    return false;
   }
 }
 
