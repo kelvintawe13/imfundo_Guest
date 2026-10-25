@@ -11,28 +11,132 @@ export const communityRooms: CommunityRoom[] = [
     name: 'General hangout',
     description: 'Say hello, share a win or plan a study meet-up.',
     emoji: '☀️',
-    accent: 'sun'
+    accent: 'sun',
+    interests: [],
+    kind: 'curated',
+    memberCount: 34,
+    memberIds: [],
+    reportedBy: []
   },
   {
     id: 'maths',
     name: 'Maths help',
     description: 'Quadratics, trigonometry and homework support.',
     emoji: '➗',
-    accent: 'teal'
+    accent: 'teal',
+    interests: ['mathematics', 'exam-prep'],
+    kind: 'curated',
+    memberCount: 28,
+    memberIds: [],
+    reportedBy: []
   },
   {
     id: 'science',
     name: 'Physical Sciences',
     description: "Newton's laws, equations and lab-free practicals.",
     emoji: '⚗️',
-    accent: 'sky'
+    accent: 'sky',
+    interests: ['physical-sciences'],
+    kind: 'curated',
+    memberCount: 24,
+    memberIds: [],
+    reportedBy: []
   },
   {
     id: 'exam-prep',
     name: 'Exam prep',
     description: 'Past papers, memos and revision plans that work.',
     emoji: '📄',
-    accent: 'coral'
+    accent: 'coral',
+    interests: ['exam-prep', 'mathematics', 'physical-sciences'],
+    kind: 'curated',
+    memberCount: 31,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'coding',
+    name: 'Coding club',
+    description: 'First programs, phone-friendly tools and problem solving.',
+    emoji: '⌨️',
+    accent: 'sky',
+    interests: ['coding', 'computer-literacy'],
+    kind: 'curated',
+    memberCount: 19,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'robotics',
+    name: 'Robotics lab',
+    description: 'Sensors, simple machines and competition ideas.',
+    emoji: '🤖',
+    accent: 'teal',
+    interests: ['robotics', 'physical-sciences'],
+    kind: 'curated',
+    memberCount: 12,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'debate',
+    name: 'Debate society',
+    description: 'Build an argument, practise a speech, compare notes.',
+    emoji: '🎤',
+    accent: 'sun',
+    interests: ['debate', 'english'],
+    kind: 'curated',
+    memberCount: 15,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'entrepreneurs',
+    name: 'Young entrepreneurs',
+    description: 'Turn a small idea into a plan, a price and a pitch.',
+    emoji: '💡',
+    accent: 'coral',
+    interests: ['entrepreneurship'],
+    kind: 'curated',
+    memberCount: 11,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'university',
+    name: 'University & bursaries',
+    description: 'Applications, funding and choosing what comes next.',
+    emoji: '🎓',
+    accent: 'sky',
+    interests: ['university-applications', 'english'],
+    kind: 'curated',
+    memberCount: 23,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'arts',
+    name: 'Arts & music',
+    description: 'Share what you make and find people to make it with.',
+    emoji: '🎨',
+    accent: 'coral',
+    interests: ['arts'],
+    kind: 'curated',
+    memberCount: 14,
+    memberIds: [],
+    reportedBy: []
+  },
+  {
+    id: 'sport',
+    name: 'Sport & fitness',
+    description: 'Training, teamwork and staying active after school.',
+    emoji: '⚽',
+    accent: 'teal',
+    interests: ['sport'],
+    kind: 'curated',
+    memberCount: 21,
+    memberIds: [],
+    reportedBy: []
   }
 ];
 
@@ -190,6 +294,80 @@ export const seedMessages: CommunityMessage[] = [
     text: 'My revision loop: 20 minutes on a past paper, 10 minutes checking the memo, 5 minutes rewriting only the mistakes. Three rounds a week is enough.',
     at: minutesAgo(150),
     supportedBy: ['peer-nolwazi', 'peer-lindiwe', 'peer-bongani', 'peer-zanele']
+  },
+  {
+    id: 'seed-coding-1',
+    roomId: 'coding',
+    authorId: 'peer-bongani',
+    authorName: 'Bongani D.',
+    authorInitials: 'BD',
+    authorRole: 'learner',
+    text: 'I followed the spreadsheet lesson and built a small budget tracker for my aunt’s shop. It works offline on my phone.',
+    at: minutesAgo(120),
+    supportedBy: ['peer-ayanda', 'peer-thando']
+  },
+  {
+    id: 'seed-coding-2',
+    roomId: 'coding',
+    authorId: 'peer-ayanda',
+    authorName: 'Ayanda K.',
+    authorInitials: 'AK',
+    authorRole: 'learner',
+    text: 'Nice! Next step is naming your columns clearly and checking one formula at a time. Small steps beat one big formula.',
+    at: minutesAgo(102),
+    replyTo: {
+      authorName: 'Bongani D.',
+      text: 'I built a small budget tracker for my aunt’s shop.'
+    },
+    supportedBy: ['peer-bongani']
+  },
+  {
+    id: 'seed-university-1',
+    roomId: 'university',
+    authorId: 'peer-lindiwe',
+    authorName: 'Lindiwe T.',
+    authorInitials: 'LT',
+    authorRole: 'learner',
+    text: 'Does anyone know where to check bursary closing dates? I do not want to miss the next one.',
+    at: minutesAgo(180),
+    supportedBy: ['peer-nolwazi']
+  },
+  {
+    id: 'seed-university-2',
+    roomId: 'university',
+    authorId: 'peer-nolwazi',
+    authorName: 'Nolwazi S.',
+    authorInitials: 'NS',
+    authorRole: 'learner',
+    text: 'Write every deadline in one place and add a reminder two weeks before. Also keep a copy of your ID and results ready.',
+    at: minutesAgo(166),
+    replyTo: {
+      authorName: 'Lindiwe T.',
+      text: 'Where can I check bursary closing dates?'
+    },
+    supportedBy: ['peer-lindiwe', 'peer-thando']
+  },
+  {
+    id: 'seed-debate-1',
+    roomId: 'debate',
+    authorId: 'peer-zanele',
+    authorName: 'Zanele P.',
+    authorInitials: 'ZP',
+    authorRole: 'learner',
+    text: 'Our topic this week is “school uniforms should be optional”. I am on the opposing side and need one strong opening point.',
+    at: minutesAgo(140),
+    supportedBy: ['peer-thando']
+  },
+  {
+    id: 'seed-debate-2',
+    roomId: 'debate',
+    authorId: 'peer-thando',
+    authorName: 'Thando M.',
+    authorInitials: 'TM',
+    authorRole: 'learner',
+    text: 'Start with cost and practicality, then give one example from your own school. A clear example lands better than three big claims.',
+    at: minutesAgo(128),
+    supportedBy: ['peer-zanele', 'peer-ayanda']
   }
 ];
 

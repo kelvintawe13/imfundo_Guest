@@ -49,7 +49,7 @@ One React SPA exposing public marketing, local auth and a role-aware app shell f
 | Marketing | `/contact` | [src/pages/Contact.tsx](src/pages/Contact.tsx) | Contact details and enquiry form |
 | Application | `/dashboard` | [src/pages/Dashboard.tsx](src/pages/Dashboard.tsx) | XP bar, streak, offline-ready counter, lesson list, sync-queue panel |
 | Application | `/lesson` | [src/pages/LessonPlayer.tsx](src/pages/LessonPlayer.tsx) | Question flow, settings modal, completion summary with XP and accuracy |
-| Application | `/community` | [src/pages/Community.tsx](src/pages/Community.tsx) | Learner study room: rooms, peer chat, message support and replies, meet-up RSVPs, shared past papers |
+| Application | `/community` | [src/pages/Community.tsx](src/pages/Community.tsx) | Learner study room: interest-matched rooms, learner-created rooms, join/leave, unread counts, peer chat, message support and replies, meet-up RSVPs, shared past papers |
 | Application | `/teachers` | [src/pages/TeacherCorner.tsx](src/pages/TeacherCorner.tsx) | Cohort analytics, synced progress, resources tab |
 | Application | `/parents` | [src/pages/ParentCorner.tsx](src/pages/ParentCorner.tsx) | Linked learner progress, weekly rhythm, recent updates, home-support tips, teacher note |
 | Application | `/parents/stories` | [src/pages/ParentStories.tsx](src/pages/ParentStories.tsx) | Searchable learning-method story library, with article pages at `/parents/stories/:storyId` |
@@ -155,7 +155,8 @@ flowchart TB
 - Theme: [src/contexts/ThemeContext.tsx](src/contexts/ThemeContext.tsx) flips the full slate scale plus semantic tokens defined in [src/index.css](src/index.css), so dark and light mode recolor 100 percent of the UI without per-component conditionals.
 - Language: [src/contexts/LanguageContext.tsx](src/contexts/LanguageContext.tsx) with tables in [src/data/i18n.ts](src/data/i18n.ts) covering navigation, landing copy, dashboard, lessons, auth, community and parent surfaces.
 - Accounts: [src/utils/auth.ts](src/utils/auth.ts) stores learner, staff and parent accounts in `localStorage`. Parent accounts may hold a `childEmail`, which Parent Corner uses to read that learner’s on-device progress.
-- Study room: [src/utils/community.ts](src/utils/community.ts) is a `useSyncExternalStore` store over `localStorage` key `imfundo-community-v1`, so learner accounts on the same browser share one chat and paper library.
+- Study room: [src/utils/community.ts](src/utils/community.ts) is a `useSyncExternalStore` store over `localStorage` key `imfundo-community-v1`, so learner accounts on the same browser share one chat, room list and paper library.
+- Interests: learners pick up to six interests at signup or in Profile. The catalog lives in [src/data/interests.ts](src/data/interests.ts), accounts store the ids, and every room is tagged with the same ids. `roomMatchScore()` sorts rooms by shared interests; `markRoomRead()` and `unreadRoomCount()` power unread badges. Rooms are either curated (seeded) or learner-created, and learner-created rooms can be reported for teacher review or deleted by their creator.
 - Settings flow from the lesson settings modal into both the lesson player and the dashboard rail.
 
 ## Design system
@@ -268,7 +269,8 @@ Being explicit about the prototype boundary:
 
 - There is no backend, database or server-side auth. Accounts and sessions live in `localStorage`, with a client-side SHA-256 password hash. This is suitable for a prototype, not production security.
 - Parent Corner can only read a linked learner’s progress when both accounts exist in the same browser. There is no cross-device or cloud sync.
-- Study-room peers, online counts and meet-up hosts are sample data. Learner messages, RSVPs and papers are stored locally in `localStorage` and are shared only by accounts in that browser.
+- Study-room peers, online counts, member baselines and meet-up hosts are sample data. Learner messages, RSVPs, rooms, memberships, read state and papers are stored locally in `localStorage` and are shared only by accounts in that browser.
+- Interest matching runs entirely on-device against the learner’s chosen interests. Learner-created rooms are visible only in the same browser, and “report” adds a local review flag rather than sending anything to a teacher.
 - Uploaded chat files and past papers are stored as data URLs capped at 1.2 MB. They are not uploaded to a server.
 - The AI tutor chat is a scripted local responder ([src/utils/tutor.ts](src/utils/tutor.ts)); it does not run a model.
 - Learner progress persists in `localStorage`; the offline sync queue and its timers are a simulation.
@@ -281,6 +283,6 @@ Candidate next steps, ordered by user value:
 
 1. Introduce a service worker for true asset-level offline caching.
 2. Wire real accounts, parent–learner linking and cross-device progress sync behind the existing auth and parent-snapshot contracts.
-3. Add moderation, reporting and a teacher view for the study room.
+3. Add a teacher review queue for reported rooms and messages (room reporting currently sets a local flag).
 4. Replace the in-memory sync queue with IndexedDB or a queued request layer.
 5. Localize remaining untranslated strings and expand the isiXhosa tables.

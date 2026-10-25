@@ -23,6 +23,7 @@ export type DemoAccountDefinition = {
   grade: string;
   school: string;
   childEmail: string;
+  interests: string[];
 };
 
 export const DEMO_PASSWORD = 'Imfundo#2026';
@@ -37,7 +38,8 @@ export const DEMO_ACCOUNTS: Record<DemoRole, DemoAccountDefinition> = {
     role: 'learner',
     grade: 'Grade 11',
     school: 'Idutywa Secondary School',
-    childEmail: ''
+    childEmail: '',
+    interests: ['mathematics', 'physical-sciences', 'exam-prep', 'coding']
   },
   parent: {
     id: 'demo-parent',
@@ -48,7 +50,8 @@ export const DEMO_ACCOUNTS: Record<DemoRole, DemoAccountDefinition> = {
     role: 'parent',
     grade: 'Grade 11',
     school: 'Idutywa Secondary School',
-    childEmail: 'learner@demo.imfundoquest.co.za'
+    childEmail: 'learner@demo.imfundoquest.co.za',
+    interests: []
   },
   staff: {
     id: 'demo-teacher',
@@ -59,7 +62,8 @@ export const DEMO_ACCOUNTS: Record<DemoRole, DemoAccountDefinition> = {
     role: 'staff',
     grade: '',
     school: 'Idutywa Secondary School',
-    childEmail: ''
+    childEmail: '',
+    interests: []
   }
 };
 
@@ -171,7 +175,8 @@ async function seedAccounts(): Promise<DemoPreparation> {
       role: definition.role,
       grade: definition.grade,
       school: definition.school,
-      childEmail: definition.childEmail
+      childEmail: definition.childEmail,
+      interests: definition.interests
     });
     if (!result.ok) return { ok: false, error: result.error };
     if (role === 'learner') learnerAccountId = result.account.id;

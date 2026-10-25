@@ -2,12 +2,25 @@ import type { AppRole } from './app';
 
 export type CommunityAccent = 'sun' | 'teal' | 'sky' | 'coral';
 
+export type CommunityRoomKind = 'curated' | 'learner';
+
 export type CommunityRoom = {
   id: string;
   name: string;
   description: string;
   emoji: string;
   accent: CommunityAccent;
+  /** Interest ids from the shared catalog, used to match learners to rooms. */
+  interests: string[];
+  kind: CommunityRoomKind;
+  createdBy?: string;
+  createdAt?: number;
+  /** Sample members that keep curated rooms feeling lived-in. */
+  memberCount: number;
+  /** Local accounts that joined from this browser. */
+  memberIds: string[];
+  /** Local accounts that flagged a learner-created room for teacher review. */
+  reportedBy: string[];
 };
 
 export type CommunityAttachment = {
@@ -66,8 +79,11 @@ export type StudySession = {
 };
 
 export type CommunityState = {
-  version: 1;
+  version: 2;
   messages: CommunityMessage[];
   papers: PastPaper[];
   sessions: StudySession[];
+  rooms: CommunityRoom[];
+  /** accountId -> roomId -> timestamp of the last message the learner saw. */
+  reads: Record<string, Record<string, number>>;
 };

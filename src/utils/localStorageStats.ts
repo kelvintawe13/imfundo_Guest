@@ -14,6 +14,7 @@ const groups = [
   { match: ['learning-progress'], label: 'Learning progress', color: 'bg-teal' },
   { match: ['learner-data'], label: 'Activity & streaks', color: 'bg-sun' },
   { match: ['accounts', 'session', 'user-profile', 'account-role', 'password-reset'], label: 'Account', color: 'bg-sky' },
+  { match: ['community'], label: 'Study room', color: 'bg-teal' },
   { match: ['preferences', 'language', 'theme', 'settings'], label: 'Preferences', color: 'bg-coral' }
 ];
 

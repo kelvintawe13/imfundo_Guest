@@ -1,16 +1,34 @@
 import { Link } from 'react-router-dom';
 import { CalendarDaysIcon, FileTextIcon, ShieldCheckIcon, UsersRoundIcon } from 'lucide-react';
 import { RailSection } from '../RailSection';
-import { communityGuidelines, communityPeers, communityRooms } from '../../../data/community';
-import { sessionAttendeeCount, toggleStudySession, useCommunity } from '../../../utils/community';
+import { communityGuidelines, communityPeers } from '../../../data/community';
+import { interestById } from '../../../data/interests';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import {
+  isRoomMember,
+  roomMatchScore,
+  roomMemberCount,
+  sessionAttendeeCount,
+  toggleStudySession,
+  useCommunity
+} from '../../../utils/community';
 import { useAuth } from '../../../utils/auth';
 
 export function CommunityRail() {
+  const { t } = useLanguage();
   const state = useCommunity();
   const account = useAuth();
   const online = communityPeers.filter((peer) => peer.online);
   const nextSession = state.sessions[0];
   const joined = nextSession && account ? nextSession.joinedBy.includes(account.id) : false;
+  const interests = account?.interests ?? [];
+  const rankedRooms = [...state.rooms]
+    .sort((left, right) => {
+      const scoreDiff = roomMatchScore(right, interests) - roomMatchScore(left, interests);
+      if (scoreDiff !== 0) return scoreDiff;
+      return Number(isRoomMember(right, account?.id ?? null)) - Number(isRoomMember(left, account?.id ?? null));
+    })
+    .slice(0, 5);
 
   return (
     <>
@@ -39,21 +57,59 @@ export function CommunityRail() {
         </ul>
       </RailSection>
 
-      <RailSection title="Rooms">
-        <ul className="space-y-1.5">
-          {communityRooms.map((room) => (
-            <li key={room.id}>
-              <Link
-                to={`/community?room=${room.id}`}
-                className="flex items-center gap-2 rounded-lg border border-ink/15 px-2.5 py-1.5 transition-colors hover:border-ink hover:bg-sun/10">
-                <span aria-hidden="true">{room.emoji}</span>
-                <span className="min-w-0 flex-1 truncate text-xs font-semibold text-slate-200">{room.name}</span>
-                <span className="text-[10px] text-slate-500">
-                  {state.messages.filter((message) => message.roomId === room.id).length}
+      <RailSection
+        title={t('community.roomsForYou')}
+        action={
+          <Link to="/community?create=1" className="text-[10px] font-bold text-coral hover:underline">
+            {t('community.newRoom')}
+          </Link>
+        }>
+        {interests.length > 0 ? (
+          <p className="mb-1.5 flex flex-wrap items-center gap-1">
+            {interests.slice(0, 3).map((id) => {
+              const interest = interestById(id);
+              return interest ? (
+                <span
+                  key={id}
+                  className="rounded-full border border-ink/20 px-1.5 py-0.5 text-[9px] font-semibold text-slate-400">
+                  {interest.emoji} {interest.label}
                 </span>
-              </Link>
-            </li>
-          ))}
+              ) : null;
+            })}
+            <Link to="/profile" className="text-[9px] font-bold text-coral hover:underline">
+              Edit
+            </Link>
+          </p>
+        ) : (
+          <p className="mb-1.5 text-[10px] leading-snug text-slate-500">
+            <Link to="/profile" className="font-bold text-coral hover:underline">
+              Add your interests
+            </Link>{' '}
+            to see better room matches.
+          </p>
+        )}
+        <ul className="space-y-1.5">
+          {rankedRooms.map((room) => {
+            const score = roomMatchScore(room, interests);
+            const member = isRoomMember(room, account?.id ?? null);
+            return (
+              <li key={room.id}>
+                <Link
+                  to={`/community?room=${room.id}`}
+                  className="flex items-center gap-2 rounded-lg border border-ink/15 px-2.5 py-1.5 transition-colors hover:border-ink hover:bg-sun/10">
+                  <span aria-hidden="true">{room.emoji}</span>
+                  <span className="min-w-0 flex-1 truncate text-xs font-semibold text-slate-200">{room.name}</span>
+                  {score > 0 && (
+                    <span className="shrink-0 rounded-full border border-teal/40 px-1 py-0.5 text-[8px] font-bold uppercase text-teal">
+                      {t('community.match')}
+                    </span>
+                  )}
+                  {member && <span className="shrink-0 text-[9px] text-slate-500">{t('community.joined')}</span>}
+                  <span className="shrink-0 text-[10px] text-slate-500">{roomMemberCount(room)}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </RailSection>
 

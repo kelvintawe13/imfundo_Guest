@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { normalizeInterests } from '../data/interests';
 import type { AppRole } from '../types/app';
 import { saveUserProfile } from './userProfile';
 
@@ -15,6 +16,8 @@ export type StoredAccount = {
   grade: string;
   school: string;
   childEmail: string;
+  /** Interest ids from the shared catalog, used to match learners to rooms. */
+  interests: string[];
   salt: string;
   passwordHash: string;
   createdAt: string;
@@ -38,6 +41,7 @@ type RegisterInput = {
   grade: string;
   school: string;
   childEmail?: string;
+  interests?: string[];
 };
 
 export function isAppRole(value: unknown): value is AppRole {
@@ -94,6 +98,7 @@ function normalizeAccount(value: unknown): StoredAccount | null {
     grade: typeof account.grade === 'string' ? account.grade : '',
     school: typeof account.school === 'string' ? account.school : '',
     childEmail: typeof account.childEmail === 'string' ? account.childEmail : '',
+    interests: normalizeInterests(account.interests),
     salt: account.salt,
     passwordHash: account.passwordHash,
     createdAt: typeof account.createdAt === 'string' ? account.createdAt : new Date().toISOString(),
@@ -192,6 +197,24 @@ export function updateChildEmail(emailInput: string): ChildLinkResult {
   return { ok: true };
 }
 
+export type InterestsResult = { ok: true; interests: string[] } | { ok: false; error: string };
+
+/** Update the interests used to match a learner to community rooms. */
+export function updateInterests(interestsInput: string[]): InterestsResult {
+  const account = readSessionAccount();
+  if (!account) return { ok: false, error: 'Sign in again to update your interests.' };
+  if (account.role !== 'learner') return { ok: false, error: 'Only learner accounts choose study interests.' };
+
+  const interests = normalizeInterests(interestsInput);
+  const accounts = readAccounts();
+  const updated: StoredAccount = { ...account, interests };
+  if (!writeJson(ACCOUNTS_KEY, accounts.map((candidate) => (candidate.id === account.id ? updated : candidate)))) {
+    return { ok: false, error: 'Could not save your interests on this device. Check your browser storage.' };
+  }
+  notify(updated);
+  return { ok: true, interests };
+}
+
 export function accountScopedKey(base: string): string {
   const accountId = getActiveAccountId();
   return accountId ? `${base}:${accountId}` : base;
@@ -254,6 +277,7 @@ export type SeededAccountInput = {
   grade: string;
   school: string;
   childEmail?: string;
+  interests?: string[];
 };
 
 export type SeededAccountResult =
@@ -265,7 +289,17 @@ export async function ensureSeededAccount(input: SeededAccountInput): Promise<Se
   const email = input.email.trim().toLowerCase();
   const accounts = readAccounts();
   const existing = accounts.find((account) => account.id === input.id);
-  if (existing) return { ok: true, account: existing, created: false };
+  if (existing) {
+    // Keep demo accounts useful after this feature ships: fill in interests
+    // for a seeded account that predates the interest catalog.
+    const seededInterests = normalizeInterests(input.interests);
+    if (seededInterests.length > 0 && existing.interests.length === 0) {
+      const updated: StoredAccount = { ...existing, interests: seededInterests };
+      writeJson(ACCOUNTS_KEY, accounts.map((candidate) => (candidate.id === existing.id ? updated : candidate)));
+      return { ok: true, account: updated, created: false };
+    }
+    return { ok: true, account: existing, created: false };
+  }
   if (accounts.some((account) => account.email.toLowerCase() === email)) {
     return { ok: false, error: `A local account already uses ${email}.` };
   }
@@ -288,6 +322,7 @@ export async function ensureSeededAccount(input: SeededAccountInput): Promise<Se
     grade: input.grade,
     school: input.school,
     childEmail: input.childEmail?.trim().toLowerCase() ?? '',
+    interests: normalizeInterests(input.interests),
     salt,
     passwordHash,
     createdAt: now,
@@ -325,6 +360,7 @@ export async function registerAccount(input: RegisterInput): Promise<AuthResult>
     grade: input.grade,
     school: input.school,
     childEmail: input.childEmail?.trim().toLowerCase() ?? '',
+    interests: normalizeInterests(input.interests),
     salt,
     passwordHash,
     createdAt: now,

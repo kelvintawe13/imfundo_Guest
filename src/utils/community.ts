@@ -1,13 +1,17 @@
 import { useSyncExternalStore } from 'react';
 import {
+  communityRooms,
   seedMessages,
   seedPapers,
   seedSessions
 } from '../data/community';
+import { MAX_ROOM_INTERESTS, normalizeInterests } from '../data/interests';
 import type {
+  CommunityAccent,
   CommunityAttachment,
   CommunityMessage,
   CommunityReply,
+  CommunityRoom,
   CommunityState,
   PastPaper,
   PastPaperKind,
@@ -22,6 +26,10 @@ const MAX_PAPERS = 100;
 
 function isRole(value: unknown): value is AppRole {
   return value === 'learner' || value === 'staff' || value === 'parent';
+}
+
+function isAccent(value: unknown): value is CommunityAccent {
+  return value === 'sun' || value === 'teal' || value === 'sky' || value === 'coral';
 }
 
 function stringList(value: unknown): string[] {
@@ -144,26 +152,88 @@ function normalizeSession(value: unknown): StudySession | null {
   };
 }
 
+function normalizeRoom(value: unknown): CommunityRoom | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const room = value as Record<string, unknown>;
+  if (
+    typeof room.id !== 'string' ||
+    typeof room.name !== 'string' ||
+    typeof room.description !== 'string' ||
+    typeof room.emoji !== 'string' ||
+    !isAccent(room.accent)
+  ) {
+    return null;
+  }
+  return {
+    id: room.id,
+    name: room.name.slice(0, 60),
+    description: room.description.slice(0, 160),
+    emoji: room.emoji.slice(0, 8),
+    accent: room.accent,
+    interests: normalizeInterests(room.interests, MAX_ROOM_INTERESTS),
+    kind: room.kind === 'learner' ? 'learner' : 'curated',
+    createdBy: typeof room.createdBy === 'string' ? room.createdBy : undefined,
+    createdAt:
+      typeof room.createdAt === 'number' && Number.isFinite(room.createdAt) ? room.createdAt : undefined,
+    memberCount:
+      typeof room.memberCount === 'number' && Number.isFinite(room.memberCount)
+        ? Math.max(0, Math.floor(room.memberCount))
+        : 0,
+    memberIds: stringList(room.memberIds),
+    reportedBy: stringList(room.reportedBy)
+  };
+}
+
+function normalizeReads(value: unknown): Record<string, Record<string, number>> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const result: Record<string, Record<string, number>> = {};
+  for (const [accountId, rooms] of Object.entries(value)) {
+    if (!rooms || typeof rooms !== 'object' || Array.isArray(rooms)) continue;
+    const next: Record<string, number> = {};
+    for (const [roomId, at] of Object.entries(rooms)) {
+      if (typeof at === 'number' && Number.isFinite(at)) next[roomId] = at;
+    }
+    if (Object.keys(next).length > 0) result[accountId] = next;
+  }
+  return result;
+}
+
+function cloneRooms(): CommunityRoom[] {
+  return communityRooms.map((room) => ({
+    ...room,
+    interests: [...room.interests],
+    memberIds: [...room.memberIds],
+    reportedBy: [...room.reportedBy]
+  }));
+}
+
 function normalizeState(value: unknown): CommunityState | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const state = value as Record<string, unknown>;
   if (!Array.isArray(state.messages) || !Array.isArray(state.papers) || !Array.isArray(state.sessions)) {
     return null;
   }
+  const rooms = Array.isArray(state.rooms)
+    ? state.rooms.map(normalizeRoom).filter((room): room is CommunityRoom => room !== null)
+    : [];
   return {
-    version: 1,
+    version: 2,
     messages: state.messages.map(normalizeMessage).filter((message): message is CommunityMessage => message !== null),
     papers: state.papers.map(normalizePaper).filter((paper): paper is PastPaper => paper !== null),
-    sessions: state.sessions.map(normalizeSession).filter((session): session is StudySession => session !== null)
+    sessions: state.sessions.map(normalizeSession).filter((session): session is StudySession => session !== null),
+    rooms: rooms.length > 0 ? rooms : cloneRooms(),
+    reads: normalizeReads(state.reads)
   };
 }
 
 function seedState(): CommunityState {
   return {
-    version: 1,
+    version: 2,
     messages: seedMessages.map((message) => ({ ...message, supportedBy: [...message.supportedBy] })),
     papers: seedPapers.map((paper) => ({ ...paper })),
-    sessions: seedSessions.map((session) => ({ ...session, joinedBy: [...session.joinedBy] }))
+    sessions: seedSessions.map((session) => ({ ...session, joinedBy: [...session.joinedBy] })),
+    rooms: cloneRooms(),
+    reads: {}
   };
 }
 
@@ -219,8 +289,41 @@ export function useCommunity(): CommunityState {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
+export function getRoom(roomId: string): CommunityRoom | null {
+  return getSnapshot().rooms.find((room) => room.id === roomId) ?? null;
+}
+
 export function isCommunityRoom(roomId: string): boolean {
-  return getSnapshot().messages.some((message) => message.roomId === roomId);
+  return getSnapshot().rooms.some((room) => room.id === roomId);
+}
+
+export function roomMemberCount(room: CommunityRoom): number {
+  return room.memberCount + room.memberIds.length;
+}
+
+export function isRoomMember(room: CommunityRoom, accountId: string | null): boolean {
+  return Boolean(accountId && room.memberIds.includes(accountId));
+}
+
+export function roomMatchScore(room: CommunityRoom, interests: string[]): number {
+  if (interests.length === 0 || room.interests.length === 0) return 0;
+  const wanted = new Set(interests);
+  return room.interests.reduce((score, id) => score + (wanted.has(id) ? 1 : 0), 0);
+}
+
+export function roomLastMessageAt(state: CommunityState, roomId: string): number {
+  return state.messages.reduce(
+    (latest, message) => (message.roomId === roomId ? Math.max(latest, message.at) : latest),
+    0
+  );
+}
+
+export function unreadRoomCount(state: CommunityState, roomId: string, accountId: string | null): number {
+  if (!accountId) return 0;
+  const readAt = state.reads[accountId]?.[roomId] ?? 0;
+  return state.messages.filter(
+    (message) => message.roomId === roomId && message.authorId !== accountId && message.at > readAt
+  ).length;
 }
 
 export function sendCommunityMessage(input: {
@@ -234,6 +337,9 @@ export function sendCommunityMessage(input: {
   if (!account || (!text && !input.attachment)) return false;
 
   const state = getSnapshot();
+  const room = state.rooms.find((item) => item.id === input.roomId);
+  if (!room) return false;
+
   const message: CommunityMessage = {
     id: `message-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     roomId: input.roomId,
@@ -254,8 +360,16 @@ export function sendCommunityMessage(input: {
     supportedBy: []
   };
 
+  // Sending a message is also a way of joining a room.
+  const rooms = room.memberIds.includes(account.id)
+    ? state.rooms
+    : state.rooms.map((item) =>
+        item.id === room.id ? { ...item, memberIds: [...item.memberIds, account.id] } : item
+      );
+
   persist({
     ...state,
+    rooms,
     messages: [...state.messages, message].slice(-MAX_MESSAGES)
   });
   return true;
@@ -288,6 +402,131 @@ export function deleteCommunityMessage(messageId: string) {
     ...state,
     messages: state.messages.filter((message) => message.id !== messageId || message.authorId !== account.id)
   });
+}
+
+export type CreateRoomInput = {
+  name: string;
+  description: string;
+  interests: string[];
+  emoji?: string;
+  accent?: CommunityAccent;
+};
+
+export type CreateRoomResult =
+  | { ok: true; room: CommunityRoom }
+  | { ok: false; error: string };
+
+export function createCommunityRoom(input: CreateRoomInput): CreateRoomResult {
+  const account = getSessionAccount();
+  if (!account) return { ok: false, error: 'Sign in to create a room.' };
+  if (account.role !== 'learner') return { ok: false, error: 'Only learner accounts can create study rooms.' };
+
+  const name = input.name.trim().replace(/\s+/g, ' ').slice(0, 48);
+  if (name.length < 3) return { ok: false, error: 'Give the room a name with at least 3 characters.' };
+
+  const interests = normalizeInterests(input.interests, MAX_ROOM_INTERESTS);
+  if (interests.length === 0) return { ok: false, error: 'Pick at least one interest so learners can find the room.' };
+
+  const state = getSnapshot();
+  if (state.rooms.some((room) => room.name.toLowerCase() === name.toLowerCase())) {
+    return { ok: false, error: 'A room with that name already exists. Try a more specific name.' };
+  }
+
+  const room: CommunityRoom = {
+    id: `room-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    name,
+    description: input.description.trim().replace(/\s+/g, ' ').slice(0, 160) || 'A learner-created study room.',
+    emoji: input.emoji?.slice(0, 8) || '💬',
+    accent: input.accent ?? 'teal',
+    interests,
+    kind: 'learner',
+    createdBy: account.id,
+    createdAt: Date.now(),
+    memberCount: 0,
+    memberIds: [account.id],
+    reportedBy: []
+  };
+
+  persist({ ...state, rooms: [...state.rooms, room] });
+  return { ok: true, room };
+}
+
+export function toggleRoomMembership(roomId: string) {
+  const account = getSessionAccount();
+  if (!account) return;
+  const state = getSnapshot();
+  persist({
+    ...state,
+    rooms: state.rooms.map((room) => {
+      if (room.id !== roomId) return room;
+      const joined = room.memberIds.includes(account.id);
+      return {
+        ...room,
+        memberIds: joined
+          ? room.memberIds.filter((id) => id !== account.id)
+          : [...room.memberIds, account.id]
+      };
+    })
+  });
+}
+
+export function markRoomRead(roomId: string) {
+  const account = getSessionAccount();
+  if (!account) return;
+  const state = getSnapshot();
+  const latest = roomLastMessageAt(state, roomId);
+  const current = state.reads[account.id]?.[roomId] ?? 0;
+  if (latest <= current) return;
+  persist({
+    ...state,
+    reads: {
+      ...state.reads,
+      [account.id]: { ...(state.reads[account.id] ?? {}), [roomId]: latest }
+    }
+  });
+}
+
+export function reportCommunityRoom(roomId: string): { ok: boolean; error?: string } {
+  const account = getSessionAccount();
+  if (!account) return { ok: false, error: 'Sign in to report a room.' };
+  const state = getSnapshot();
+  const room = state.rooms.find((item) => item.id === roomId);
+  if (!room) return { ok: false, error: 'That room no longer exists.' };
+  if (room.kind !== 'learner') return { ok: false, error: 'Curated rooms are already reviewed by the Imfundo team.' };
+  if (room.reportedBy.includes(account.id)) return { ok: true };
+
+  persist({
+    ...state,
+    rooms: state.rooms.map((item) =>
+      item.id === roomId ? { ...item, reportedBy: [...item.reportedBy, account.id] } : item
+    )
+  });
+  return { ok: true };
+}
+
+export function deleteCommunityRoom(roomId: string): { ok: boolean; error?: string } {
+  const account = getSessionAccount();
+  if (!account) return { ok: false, error: 'Sign in to manage this room.' };
+  const state = getSnapshot();
+  const room = state.rooms.find((item) => item.id === roomId);
+  if (!room) return { ok: false, error: 'That room no longer exists.' };
+  if (room.kind !== 'learner' || room.createdBy !== account.id) {
+    return { ok: false, error: 'Only the learner who created this room can delete it.' };
+  }
+
+  persist({
+    ...state,
+    rooms: state.rooms.filter((item) => item.id !== roomId),
+    messages: state.messages.filter((message) => message.roomId !== roomId),
+    reads: Object.fromEntries(
+      Object.entries(state.reads).map(([accountId, rooms]) => {
+        const next = { ...rooms };
+        delete next[roomId];
+        return [accountId, next];
+      })
+    )
+  });
+  return { ok: true };
 }
 
 export function addCommunityPaper(input: {

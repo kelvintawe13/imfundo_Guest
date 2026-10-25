@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { ActivityIcon, HardDriveIcon, Settings2Icon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ActivityIcon, HardDriveIcon, HeartIcon, MessagesSquareIcon, Settings2Icon } from 'lucide-react';
 import { Toggle } from '../components/ui/Toggle';
 import { EmptyState } from '../components/ui/EmptyState';
 import { LanguageSwitcher } from '../components/layout/LanguageSwitcher';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useApp } from '../contexts/AppContext';
+import { interestCatalog, MAX_INTERESTS } from '../data/interests';
 import { buildAchievements } from '../utils/achievements';
-import { useAuth } from '../utils/auth';
+import { updateInterests, useAuth } from '../utils/auth';
 import { levelFromXp, relativeTime, totalXpFromProgress, useLearnerData } from '../utils/learnerData';
 import { formatBytes, readStorageStats } from '../utils/localStorageStats';
 import { readPreferences, writePreferences, type LearnerPreferences } from '../utils/preferences';
@@ -19,6 +21,8 @@ export function Profile() {
   const account = useAuth();
   const learnerData = useLearnerData();
   const [prefs, setPrefs] = useState<LearnerPreferences>(readPreferences);
+  const [interests, setInterests] = useState<string[]>(account?.interests ?? []);
+  const [interestError, setInterestError] = useState('');
   const totalXp = totalXpFromProgress(quizProgress);
   const { level, xpIntoLevel, xpForNext } = levelFromXp(totalXp);
   const xpPct = xpForNext > 0 ? Math.min(100, Math.round(xpIntoLevel / xpForNext * 100)) : 0;
@@ -31,6 +35,26 @@ export function Profile() {
     const next = { ...prefs, [key]: value };
     setPrefs(next);
     writePreferences(next);
+  };
+
+  useEffect(() => {
+    setInterests(account?.interests ?? []);
+  }, [account]);
+
+  const toggleInterest = (id: string) => {
+    setInterestError('');
+    const next = interests.includes(id)
+      ? interests.filter((item) => item !== id)
+      : interests.length >= MAX_INTERESTS
+        ? interests
+        : [...interests, id];
+    if (next === interests) {
+      setInterestError(`Pick up to ${MAX_INTERESTS} interests.`);
+      return;
+    }
+    setInterests(next);
+    const result = updateInterests(next);
+    if (!result.ok) setInterestError(result.error);
   };
 
   return (
@@ -98,6 +122,49 @@ export function Profile() {
         </div>
 
         <div className="min-w-0 space-y-3">
+          <section className="glass-card p-3" aria-labelledby="interests-title">
+            <div className="flex items-center justify-between gap-2">
+              <h2 id="interests-title" className="flex items-center gap-2 font-display text-sm font-extrabold">
+                <HeartIcon className="h-3.5 w-3.5 text-coral" /> Your interests
+              </h2>
+              <span className="text-[11px] text-slate-400">
+                {interests.length}/{MAX_INTERESTS}
+              </span>
+            </div>
+            <p className="mt-0.5 text-[11px] leading-snug text-slate-400">
+              We use these to put the most relevant study rooms first and to match you with learners who care about the
+              same things.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {interestCatalog.map((interest) => {
+                const active = interests.includes(interest.id);
+                return (
+                  <button
+                    key={interest.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => toggleInterest(interest.id)}
+                    className={`inline-flex items-center gap-1 rounded-full border-2 px-2.5 py-1 text-[11px] font-bold transition-colors ${
+                      active
+                        ? 'border-ink bg-sun text-ink shadow-pop-sm'
+                        : 'border-ink/25 bg-slate-900 text-slate-400 hover:border-ink hover:bg-sun-light hover:text-ink'
+                    }`}>
+                    <span aria-hidden="true">{interest.emoji}</span>
+                    {interest.label}
+                  </button>
+                );
+              })}
+            </div>
+            {interestError && (
+              <p role="alert" className="mt-2 rounded-lg border-2 border-danger/40 bg-coral/10 px-2.5 py-1.5 text-[11px] font-semibold text-danger">
+                {interestError}
+              </p>
+            )}
+            <Link to="/community" className="btn-secondary mt-2 w-full !py-1.5 text-xs">
+              <MessagesSquareIcon className="h-3.5 w-3.5" /> Find your study rooms
+            </Link>
+          </section>
+
           <section className="glass-card p-3" aria-labelledby="badges-title">
             <div className="flex items-center justify-between gap-2">
               <h2 id="badges-title" className="font-display text-sm font-extrabold">

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { GraduationCapIcon, HeartHandshakeIcon, LoaderCircleIcon, PresentationIcon } from 'lucide-react';
 import { PasswordInput } from '../../components/auth/PasswordInput';
 import { PasswordStrengthMeter } from '../../components/auth/PasswordStrengthMeter';
+import { interestCatalog, MAX_INTERESTS } from '../../data/interests';
 import { isValidEmail, scorePassword } from '../../utils/password';
 import { homePathForRole, registerAccount } from '../../utils/auth';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -47,10 +48,19 @@ export function Signup() {
   const [grade, setGrade] = useState('11');
   const [subject, setSubject] = useState('maths');
   const [childEmail, setChildEmail] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
   const [password, setPassword] = useState('');
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
+
+  const toggleInterest = (id: string) => {
+    setInterests((current) => {
+      if (current.includes(id)) return current.filter((item) => item !== id);
+      if (current.length >= MAX_INTERESTS) return current;
+      return [...current, id];
+    });
+  };
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,7 +84,8 @@ export function Signup() {
       role: accountRole,
       grade: role === 'learner' || role === 'parent' ? `Grade ${grade}` : '',
       school: school.trim(),
-      childEmail: role === 'parent' ? childEmail : ''
+      childEmail: role === 'parent' ? childEmail : '',
+      interests: role === 'learner' ? interests : []
     });
 
     if (!result.ok) {
@@ -202,6 +213,39 @@ export function Signup() {
             </select>
           )}
         </motion.div>
+
+        {role === 'learner' && (
+          <motion.fieldset variants={fieldVariants} className="min-w-0 sm:col-span-2">
+            <legend className="field-label-pop">
+              Interests <span className="font-normal text-ink-soft">(pick up to {MAX_INTERESTS})</span>
+            </legend>
+            <p className="mt-0.5 text-[11px] leading-snug text-ink-soft">
+              We use these to match you with study rooms and learners who care about the same things. You can change
+              them later in Profile.
+            </p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {interestCatalog.map((interest) => {
+                const active = interests.includes(interest.id);
+                return (
+                  <button
+                    key={interest.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => toggleInterest(interest.id)}
+                    className={`inline-flex items-center gap-1 rounded-full border-2 border-ink px-2.5 py-1 text-[11px] font-bold transition-colors duration-150 ${
+                      active
+                        ? 'bg-sun text-ink shadow-pop-sm'
+                        : 'bg-white text-ink-soft hover:bg-sun-light hover:text-ink'
+                    }`}
+                  >
+                    <span aria-hidden="true">{interest.emoji}</span>
+                    {interest.label}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.fieldset>
+        )}
 
         {role === 'parent' && (
           <motion.div variants={fieldVariants} className="min-w-0 sm:col-span-2">
